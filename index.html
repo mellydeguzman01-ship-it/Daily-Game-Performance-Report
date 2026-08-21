@@ -28,7 +28,8 @@
 .section-grid{display:block!important}.section-grid>.panel{position:static!important;width:100%!important;height:auto!important;min-height:0!important;margin:0 0 14px!important}.player-analysis-panel{display:none!important}.player-behavior-section,.player-behavior-panel{display:block!important;width:100%!important}.section-grid>.player-behavior-section,.section-grid>.player-behavior-panel{background:#f8fbff!important}.table-scroll{overflow-x:auto}.behavior-table{min-width:0!important}@media(max-width:1100px){.player-behavior-row:first-child,.player-behavior-row,.player-behavior-row.betting-row{display:block!important}.player-behavior-row:first-child .behavior-card,.player-behavior-row .behavior-card{margin-bottom:12px}.feature-card{display:block!important}}
 </style>
 <style id="dashboard-final-layout">
-.section-grid{display:grid!important;grid-template-columns:repeat(10,minmax(0,1fr))!important;align-items:start}
+.section-grid{display:grid!important;grid-template-columns:repeat(10,minmax(0,1fr))!important;align-items:start;gap:0!important;padding:0!important}
+.dashboard-stage{padding:0!important}
 .section-grid>.panel{width:auto!important;margin:0!important}
 .summary-panel{grid-column:1/-1!important;grid-row:1!important}
 .hourly-chart-panel{grid-column:1/6!important;grid-row:2!important}
@@ -42,7 +43,7 @@
 @media(max-width:1100px){.section-grid{grid-template-columns:1fr!important}.section-grid>.panel{grid-column:1/-1!important;grid-row:auto!important}.player-behavior-section{grid-row:auto!important}.ticket-outcome-card .behavior-split{grid-template-columns:1fr}}
 </style>
 <div class="dashboard-stage"><main class="report">
-<header class="topbar"><section class="brand"><div class="brand-identity"><div><img class="ge-logo ge-logo-full" src="assets/ge-logo-full.png" alt="GE Game Engine"><div class="brand-sub">DAILY GAME PERFORMANCE</div></div></div><div class="brand-reporting-date"><label for="report-date">Reporting date:</label><select id="report-date" aria-label="Reporting date"><option value="2026-06-01">June 1, 2026</option></select></div></section></header>
+<header class="topbar"><section class="brand"><div class="brand-identity"><div><img class="ge-logo ge-logo-full" src="assets/ge-logo-full.png" alt="GE Game Engine"><div class="brand-sub">DAILY GAME PERFORMANCE</div></div></div><div class="brand-reporting-date"><label for="report-date">Reporting date:</label><select id="report-date" aria-label="Reporting date"><option value="2026-08-17">August 17, 2026</option></select></div></section></header>
 <section class="section-grid"><article class="panel summary-panel"><h2 class="section-title">Daily Performance Summary</h2><div class="summary-grid">
 <div class="summary-item"><div class="kpi-icon">&#8369;</div><div class="kpi-label">Total Bet</div><div class="kpi-value">&#8369;1,105,885</div><div class="kpi-delta">CP1 / Banana Craze</div><div class="kpi-vs">June 1, 2026</div></div>
 <div class="summary-item"><div class="kpi-icon">&#8369;</div><div class="kpi-label">Total Payout</div><div class="kpi-value">&#8369;1,211,515</div><div class="kpi-delta negative">Above bet</div><div class="kpi-vs">June 1, 2026</div></div>
@@ -70,8 +71,8 @@
   <section class="behavior-card feature-card"><h3>Player Feature / Bonus Behavior <span class="muted-label">(unique players, mutually exclusive)</span></h3><svg id="feature-treemap" class="feature-treemap-live" viewBox="0 0 680 330" role="img" aria-label="Feature and bonus behavior treemap"></svg><div class="feature-treemap-legend" aria-hidden="true"><span>New - no buy</span><span>New - bonus</span><span>New - buy</span><span>Returning - no buy</span><span>Returning - bonus</span><span>Returning - buy</span></div></section><p class="behavior-note" id="player-behavior-validation"></p>
 </div></article></section>
 </main></div>
-<script type="application/json" id="daily-performance-30-data">{"standardRtp":97,"rows":[{"date":"2026-06-01","product":"CP1","game":"BANANA CRAZE","players":323,"newPlayers":null,"returningPlayers":null,"d1Retention":null,"bet":1105885.0,"pay":1211515.0,"ggr":-105630.0,"tickets":14778,"winningTickets":5094,"rtp":109.55162607323545,"maxWin":50000.0,"maxMultiplier":250.0}]}</script>
-<script type="application/json" id="hourly-data">{"date":"2026-06-01","labels":["00:59","01:59","02:59","03:59","04:59","05:59","06:59","07:59","08:59","09:59","10:59","11:59","12:59","13:59","14:59","15:59","16:59","17:59","18:59","19:59","20:59","21:59","22:59","23:59"],"series":[{"name":"Betting Amount","unit":"currency","values":[null,null,null,null,null,null,null,null,null,null,125495.0,498020.0,11700.0,null,260.0,57880.0,29070.0,162800.0,34460.0,50280.0,22435.0,38030.0,19335.0,56120.0]},{"name":"Payout","unit":"currency","values":[null,null,null,null,null,null,null,null,null,null,156995.0,556662.5,59440.0,null,160.0,42280.0,33742.5,157145.0,30517.5,56160.0,15035.0,38542.5,18902.5,45932.5]},{"name":"Tickets","unit":"count","values":[null,null,null,null,null,null,null,null,null,null,1168,3490,69,null,28,918,422,1214,816,785,807,1301,2297,1463]},{"name":"RTP","unit":"percent","values":[null,null,null,null,null,null,null,null,null,null,125.10060161759434,111.77512951287096,508.034188034188,null,61.53846153846154,73.04768486523842,116.07327141382868,96.52641277641277,88.55919907138711,111.69451073985681,67.01582349008245,101.34762029976334,97.76312386863202,81.84693513898789]},{"name":"Hit Rate","unit":"percent","values":[null,null,null,null,null,null,null,null,null,null,40.32534246575342,39.11174785100287,37.68115942028986,null,25.0,31.699346405228756,35.308056872037916,31.713344316309723,31.25,32.48407643312102,32.342007434944236,33.20522674865488,32.08532868959512,31.44224196855776]}]}</script>
+<script type="application/json" id="daily-performance-30-data">{"standardRtp":97,"rows":[{"date":"2026-08-17","product":"BP1","game":"BANANA CRAZE","players":30,"newPlayers":18,"returningPlayers":12,"d1Retention":null,"bet":35335.0,"pay":34011.25,"ggr":1323.75,"tickets":3728,"winningTickets":1078,"rtp":96.25371444743173,"maxWin":1000.0,"maxMultiplier":50.0}]}</script>
+<script type="application/json" id="hourly-data">{"date":"2026-08-17","labels":["00:00","01:00","02:00","03:00","04:00","05:00","06:00","07:00","08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00","18:00","19:00","20:00","21:00","22:00","23:00"],"series":[{"name":"Betting Amount","unit":"currency","values":[null,null,null,null,null,null,null,null,null,null,null,null,555,7925,18405,2135,1260,null,455,null,null,725,2825,1050]},{"name":"Payout","unit":"currency","values":[null,null,null,null,null,null,null,null,null,null,null,null,525,8003.75,16747.5,2528.75,747.5,null,503.75,null,null,657.5,3405,892.5]},{"name":"Tickets","unit":"count","values":[null,null,null,null,null,null,null,null,null,null,null,null,111,1140,1545,405,115,null,91,null,null,145,134,42]},{"name":"RTP","unit":"percent","values":[null,null,null,null,null,null,null,null,null,null,null,null,94.5945945945946,100.99369085173502,90.99429502852485,118.44262295081967,59.32539682539682,null,110.71428571428572,null,null,90.6896551724138,120.53097345132744,85]},{"name":"Hit Rate","unit":"percent","values":[null,null,null,null,null,null,null,null,null,null,null,null,29.72972972972973,30.438596491228072,26.34304207119741,29.38271604938272,24.347826086956523,null,34.06593406593407,null,null,35.86206896551724,38.059701492537314,23.809523809523807]}]}</script>
 <script>(function(){
   const ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:64,r:64,t:28,b:52};
   const colors=['#386edb','#1b9c4a','#df4545','#f4a51c'];
@@ -4320,7 +4321,7 @@
 /* Temporary visual fill only. Replace with verified source values on the next report refresh. */
 .sample-chart-note{margin:8px 0 0;padding:7px 9px;border-radius:6px;background:#fff8e8;color:#8a5a00;font-size:9px;line-height:1.35}.sample-chart-note b{font-weight:900}
 </style>
-<script id="temporary-sample-hourly-and-30day-charts">
+<script type="application/x-disabled" id="temporary-sample-hourly-and-30day-charts">
 (function(){
   /* These values are intentionally illustrative and are kept separate from the verified source JSON. */
   const NS='http://www.w3.org/2000/svg',peso=String.fromCharCode(8369),random=seed=>()=>{seed|=0;seed=seed+0x6D2B79F5|0;let value=Math.imul(seed^seed>>>15,1|seed);value=value+Math.imul(value^value>>>7,61|value)^value;return((value^value>>>14)>>>0)/4294967296;},sample=random(20260601);
@@ -4334,45 +4335,6 @@
   function renderHourly(){const svg=document.getElementById('hourly-rtp-trend-chart'),panel=svg?.closest('.hourly-chart-panel');if(!svg||!panel)return;const W=760,H=300,p={l:58,r:58,t:34,b:58},plotH=H-p.t-p.b,leftMax=Math.ceil(Math.max(...hourly.bet,...hourly.pay)/50000)*50000,pctMax=140,x=index=>p.l+(W-p.l-p.r)*index/23,yL=value=>H-p.b-value/leftMax*plotH,yR=value=>H-p.b-value/pctMax*plotH;svg.replaceChildren();svg.setAttribute('aria-label','Sample hourly RTP trend, hours 00 through 23');for(let tick=0;tick<=4;tick++){const amount=leftMax*tick/4,y=yL(amount);add(svg,'line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});text(svg,p.l-8,y+4,money(amount),{'text-anchor':'end','font-size':9});const percent=pctMax*tick/4;text(svg,W-p.r+8,y+4,percent.toFixed(0)+'%',{'font-size':9});}text(svg,W/2,18,'Hourly sample data • 00:00–23:00',{'text-anchor':'middle',fill:'#8a5a00','font-size':11,'font-weight':800});hourly.labels.forEach((label,index)=>text(svg,x(index),H-36,label,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(index)+' '+(H-36)+')'}));const slot=(W-p.l-p.r)/24,bw=Math.max(2,slot*.22);[['bet','#386edb'],['pay','#4fb4bd'],['rounds','#7a5cc7']].forEach(([key,color],seriesIndex)=>hourly[key].forEach((value,index)=>{const height=key==='rounds'?value/Math.max(...hourly.rounds)*plotH*.78:value/leftMax*plotH;add(svg,'rect',{x:x(index)+(seriesIndex-1)*bw-bw/2,y:H-p.b-height,width:bw-1,height:Math.max(1,height),rx:2,fill:color,opacity:.9});}));const line=(values,color,width)=>{const points=values.map((value,index)=>[x(index),yR(value)]);let path='M '+points[0].join(' ');for(let index=1;index<points.length;index++){const previous=points[index-1],point=points[index],mid=(previous[0]+point[0])/2;path+=' C '+mid+' '+previous[1]+' '+mid+' '+point[1]+' '+point[0]+' '+point[1];}add(svg,'path',{d:path,fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round'});points.forEach(point=>add(svg,'circle',{cx:point[0],cy:point[1],r:width>2?3:2.2,fill:color,stroke:'#fff','stroke-width':1}));};line(hourly.rtp,'#f4a51c',3);line(hourly.hit,'#1b9c4a',1.7);ensureNote(panel,'Illustrative hourly values for layout review; not from the June 1 export.');}
   function renderDaily(){const svg=document.getElementById('daily-performance-30-chart'),panel=svg?.closest('.thirty-day-chart-panel');if(!svg||!panel)return;const W=1100,H=360,p={l:70,r:70,t:34,b:78},plotH=H-p.t-p.b,leftMax=Math.ceil(Math.max(...daily.map(row=>Math.max(row.bet,row.pay)))/100000)*100000,pctMax=120,x=index=>p.l+(W-p.l-p.r)*index/29,yL=value=>H-p.b-value/leftMax*plotH,yR=value=>H-p.b-value/pctMax*plotH;svg.replaceChildren();svg.setAttribute('aria-label','Sample 30-day daily performance chart');for(let tick=0;tick<=6;tick++){const amount=leftMax*tick/6,y=yL(amount);add(svg,'line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});text(svg,p.l-8,y+4,money(amount),{'text-anchor':'end','font-size':9});text(svg,W-p.r+8,y+4,(pctMax*tick/6).toFixed(0)+'%',{'font-size':9});}text(svg,W/2,18,'30-Day Daily Performance • Sample data',{'text-anchor':'middle',fill:'#8a5a00','font-size':13,'font-weight':800});daily.forEach((row,index)=>text(svg,x(index),H-48,row.date.slice(5).replace('-','/'),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(index)+' '+(H-48)+')'}));const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.22);[['bet','#386edb'],['pay','#4fb4bd'],['rounds','#7a5cc7']].forEach(([key,color],seriesIndex)=>daily.forEach((row,index)=>{const height=key==='rounds'?row[key]/Math.max(...daily.map(value=>value.rounds))*plotH*.78:row[key]/leftMax*plotH;add(svg,'rect',{x:x(index)+(seriesIndex-1)*bw-bw/2,y:H-p.b-height,width:bw-1,height:Math.max(1,height),rx:2,fill:color,opacity:.9});}));const standardY=yR(97);add(svg,'line',{x1:p.l,x2:W-p.r,y1:standardY,y2:standardY,stroke:'#64748b','stroke-width':1.5,'stroke-dasharray':'7 5'});text(svg,W-p.r-4,standardY-6,'Standard RTP 97%',{'text-anchor':'end',fill:'#475569','font-size':10});const points=daily.map((row,index)=>[x(index),yR(row.rtp)]),area='M '+points[0][0]+' '+(H-p.b)+' L '+points.map(point=>point.join(' ')).join(' L ')+' L '+points.at(-1)[0]+' '+(H-p.b)+' Z';const defs=add(svg,'defs',{}),gradient=add(defs,'linearGradient',{id:'temporary-sample-rtp-fill',x1:0,y1:0,x2:0,y2:1});add(gradient,'stop',{offset:'0%','stop-color':'#f4a51c','stop-opacity':'.28'});add(gradient,'stop',{offset:'100%','stop-color':'#f4a51c','stop-opacity':'0'});add(svg,'path',{d:area,fill:'url(#temporary-sample-rtp-fill)'});let path='M '+points[0].join(' ');for(let index=1;index<points.length;index++){const previous=points[index-1],point=points[index],mid=(previous[0]+point[0])/2;path+=' C '+mid+' '+previous[1]+' '+mid+' '+point[1]+' '+point[0]+' '+point[1];}add(svg,'path',{d:path,fill:'none',stroke:'#f4a51c','stroke-width':3,'stroke-linecap':'round'});points.forEach(point=>add(svg,'circle',{cx:point[0],cy:point[1],r:3,fill:'#f4a51c',stroke:'#fff','stroke-width':1.2}));ensureNote(panel,'Illustrative 30-day values for layout review; verified history remains unchanged.');}
   const render=()=>{renderHourly();renderDaily();};render();document.getElementById('report-date')?.addEventListener('change',()=>requestAnimationFrame(render));
-}());
-</script>
-<style id="chart-hover-tooltip-style">
-.chart-tooltip-live{position:fixed;z-index:1000;max-width:230px;padding:9px 11px;border:1px solid #4b5563;border-radius:7px;background:#111827;color:#f9fafb;font:600 11px/1.5 Inter,ui-sans-serif,system-ui,sans-serif;white-space:pre-line;box-shadow:0 8px 24px #0008;pointer-events:none}.chart-tooltip-live[hidden]{display:none}.chart-hover-dot{cursor:help;pointer-events:all}.chart-hover-dot:focus{outline:none;stroke:#fff;stroke-width:2.5}
-</style>
-<script id="chart-hover-tooltips">
-(function(){
-  const peso=String.fromCharCode(8369),tooltip=document.createElement('div');
-  tooltip.id='chart-hover-tooltip';tooltip.className='chart-tooltip chart-tooltip-live';tooltip.setAttribute('role','tooltip');tooltip.hidden=true;document.body.appendChild(tooltip);
-  const money=value=>Number.isFinite(Number(value))?peso+Number(value).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}):'N/A';
-  const percent=value=>Number.isFinite(Number(value))?Number(value).toFixed(2)+'%':'N/A';
-  const safeJson=id=>{try{return JSON.parse(document.getElementById(id)?.textContent||'{}')}catch{return {}}};
-  const sampleRows=()=>{
-    const random=seed=>()=>{seed|=0;seed=seed+0x6D2B79F5|0;let value=Math.imul(seed^seed>>>15,1|seed);value=value+Math.imul(value^value>>>7,61|value)^value;return((value^value>>>14)>>>0)/4294967296;},next=random(20260601);
-    const hourly=Array.from({length:24},(_,hour)=>{const rush=hour>=10&&hour<=22?1.3:hour>=6?0.65:0.24,bet=Math.round((26000+next()*110000)*rush/5)*5,rtp=82+next()*34,pay=Math.round(bet*rtp/100/5)*5,rounds=Math.max(18,Math.round(bet/(32+next()*55))),hit=25+next()*20;return {label:String(hour).padStart(2,'0')+':00',bet,pay,rounds,rtp,hit};});
-    const daily=Array.from({length:30},(_,offset)=>{const date=new Date(Date.UTC(2026,5,1-offset)),bet=Math.round((430000+next()*530000)/5)*5,rtp=86+next()*25,pay=Math.round(bet*rtp/100/5)*5,rounds=Math.round(bet/(42+next()*30));return {date:date.toISOString().slice(0,10),bet,pay,rounds,rtp};});
-    return {hourly,daily};
-  };
-  const show=(event,content)=>{tooltip.textContent=content;tooltip.hidden=false;const x=Math.min(event.clientX+14,window.innerWidth-tooltip.offsetWidth-8),y=Math.min(event.clientY+14,window.innerHeight-tooltip.offsetHeight-8);tooltip.style.left=Math.max(8,x)+'px';tooltip.style.top=Math.max(8,y)+'px';};
-  const hide=()=>{tooltip.hidden=true;};
-  const bind=(dot,content)=>{if(dot.dataset.chartHoverBound)return;dot.dataset.chartHoverBound='true';dot.classList.add('chart-hover-dot');dot.setAttribute('tabindex','0');dot.setAttribute('aria-describedby',tooltip.id);dot.setAttribute('aria-label',content.replace(/\n/g,', '));const title=document.createElementNS('http://www.w3.org/2000/svg','title');title.textContent=content.replace(/\n/g,' | ');dot.appendChild(title);dot.addEventListener('pointerenter',event=>show(event,content));dot.addEventListener('pointermove',event=>show(event,content));dot.addEventListener('pointerleave',hide);dot.addEventListener('blur',hide);dot.addEventListener('focus',()=>{const box=dot.getBoundingClientRect();show({clientX:box.left+box.width/2,clientY:box.top},content);});};
-  const wire=()=>{
-    const samples=sampleRows(),hourlySvg=document.getElementById('hourly-rtp-trend-chart'),dailySvg=document.getElementById('daily-performance-30-chart');
-    const hourlySource=safeJson('hourly-data'),hourlySeries=Object.fromEntries((hourlySource.series||[]).map(series=>[series.name,series.values]));
-    const verifiedHourly=(hourlySource.labels||[]).map((label,index)=>({label,bet:hourlySeries['Betting Amount']?.[index],pay:hourlySeries.Payout?.[index],rounds:hourlySeries.Tickets?.[index],rtp:hourlySeries.RTP?.[index],hit:hourlySeries['Hit Rate']?.[index]})).filter(row=>Number.isFinite(Number(row.rtp)));
-    if(hourlySvg){const orange=[...hourlySvg.querySelectorAll('circle[fill="#f4a51c"]')],green=[...hourlySvg.querySelectorAll('circle[fill="#1b9c4a"]')],rows=orange.length===samples.hourly.length?samples.hourly:verifiedHourly;orange.forEach((dot,index)=>{const row=rows[index];if(row)bind(dot,`${row.label}\nBet: ${money(row.bet)}\nPayout: ${money(row.pay)}\nTotal Rounds: ${Number(row.rounds).toLocaleString('en-US')}\nRTP: ${percent(row.rtp)}\nHit Rate: ${percent(row.hit)}`);});green.forEach((dot,index)=>{const row=rows[index];if(row)bind(dot,`${row.label}\nBet: ${money(row.bet)}\nPayout: ${money(row.pay)}\nTotal Rounds: ${Number(row.rounds).toLocaleString('en-US')}\nRTP: ${percent(row.rtp)}\nHit Rate: ${percent(row.hit)}`);});}
-    const dailySource=safeJson('daily-performance-30-data'),verifiedDaily=(dailySource.rows||[]).map(row=>({date:row.date,bet:row.bet,pay:row.pay,rounds:row.tickets,rtp:row.rtp}));
-    if(dailySvg){const dots=[...dailySvg.querySelectorAll('circle[fill="#f4a51c"]')],rows=dots.length===samples.daily.length?samples.daily:verifiedDaily;dots.forEach((dot,index)=>{const row=rows[index];if(row)bind(dot,`${row.date}\nBet: ${money(row.bet)}\nPayout: ${money(row.pay)}\nTotal Rounds: ${Number(row.rounds).toLocaleString('en-US')}\nRTP: ${percent(row.rtp)}\nStandard RTP: 97.00%`);});}
-  };
-  wire();['hourly-rtp-trend-chart','daily-performance-30-chart'].forEach(id=>{const svg=document.getElementById(id);if(svg)new MutationObserver(wire).observe(svg,{childList:true});});
-}());
-</script>
-<style id="chart-sample-hover-guide-style">
-.chart-sample-hover-guide{margin:7px 0 0;color:#8a5a00;font-size:10px;font-weight:800}.chart-hover-dot{transition:r .12s ease,filter .12s ease}.chart-hover-dot:hover{filter:brightness(1.15)}
-</style>
-<script id="chart-sample-hover-guide">
-(function(){
-  const enhance=svg=>svg?.querySelectorAll('circle[fill="#f4a51c"],circle[fill="#1b9c4a"]').forEach(dot=>dot.setAttribute('r',String(Math.max(6,Number(dot.getAttribute('r'))||0))));
-  [['hourly-rtp-trend-chart','Hourly sample data: hover any orange or green trend dot for its values.'],['daily-performance-30-chart','30-day sample data: hover any orange RTP dot for its daily values.']].forEach(([id,message])=>{const svg=document.getElementById(id),panel=svg?.closest('.panel');if(!svg||!panel)return;enhance(svg);new MutationObserver(()=>enhance(svg)).observe(svg,{childList:true});if(!panel.querySelector('.chart-sample-hover-guide')){const hint=document.createElement('p');hint.className='chart-sample-hover-guide';hint.textContent=message;(panel.querySelector('.sample-chart-note')||panel.querySelector('.chart-wrap'))?.insertAdjacentElement('afterend',hint);}});
 }());
 </script>
 <style id="distribution-horizontal-bar-chart-style">
@@ -4585,4 +4547,586 @@
 <style id="full-distribution-metric-titles">
 .hourly-players-row .distribution-breakdown-table th{font-size:6.5px!important;white-space:normal!important;overflow-wrap:anywhere!important;line-height:1.15!important}
 </style>
+<style id="august-17-source-tooltip-style">
+.aug17-source-tooltip{position:fixed;z-index:9999;max-width:240px;padding:9px 11px;border:1px solid #4b5563;border-radius:7px;background:#111827;color:#f9fafb;font:600 11px/1.5 Inter,ui-sans-serif,system-ui,sans-serif;white-space:pre-line;box-shadow:0 8px 24px #0008;pointer-events:none}.aug17-source-tooltip[hidden]{display:none}
+</style>
+<style id="hide-main-kpi-secondary-lines">
+#header-kpi-strip .kpi-delta,#header-kpi-strip .kpi-vs{display:none!important}
+</style>
+<script id="august-17-source-data-binding">
+(() => {
+  const peso=String.fromCharCode(8369),ns='http://www.w3.org/2000/svg';
+  const data={date:'2026-08-17',dateLabel:'August 17, 2026',product:'BP1',game:'BANANA CRAZE',bet:35335,pay:34011.25,ggr:1323.75,rtp:96.25371444743173,tickets:3728,players:30,newPlayers:18,maxWin:1000,maxMultiplier:50,profitTickets:557,nonProfitTickets:3171};
+  const fmtMoney=value=>(Number(value)<0?'-':'')+peso+Math.abs(Number(value||0)).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}),fmtCount=value=>Number(value||0).toLocaleString('en-US'),fmtPct=value=>Number(value||0).toFixed(2)+'%',ggrClass=value=>Number(value)>1?'positive':Number(value)<=0?'negative':'',rtpClass=value=>Number(value)<100?'positive':Number(value)>100?'negative':'';
+  const hourly={labels:['00:00','01:00','02:00','03:00','04:00','05:00','06:00','07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'],bet:[null,null,null,null,null,null,null,null,null,null,null,null,555,7925,18405,2135,1260,null,455,null,null,725,2825,1050],pay:[null,null,null,null,null,null,null,null,null,null,null,null,525,8003.75,16747.5,2528.75,747.5,null,503.75,null,null,657.5,3405,892.5],tickets:[null,null,null,null,null,null,null,null,null,null,null,null,111,1140,1545,405,115,null,91,null,null,145,134,42],rtp:[null,null,null,null,null,null,null,null,null,null,null,null,94.5945945945946,100.99369085173502,90.99429502852485,118.44262295081967,59.32539682539682,null,110.71428571428572,null,null,90.6896551724138,120.53097345132744,85],hit:[null,null,null,null,null,null,null,null,null,null,null,null,29.72972972972973,30.438596491228072,26.34304207119741,29.38271604938272,24.347826086956523,null,34.06593406593407,null,null,35.86206896551724,38.059701492537314,23.809523809523807]};
+  const betRanges=[['₱5–₱10',3018,18235,17898.75,336.25,98.15601864546203,876,10],['₱11–₱20',624,12480,11230,1250,89.98397435897436,163,20],['₱21–₱50',73,2720,3302.5,-582.5,121.41544117647058,26,50],['₱51–₱100',11,1100,882.5,217.5,80.22727272727272,11,100],['₱101–₱200',1,200,135,65,67.5,1,200],['₱201–₱500',0,0,0,0,null,0,0],['₱501–₱1,000',1,600,562.5,37.5,93.75,1,600]];
+  const multiplierRanges=[['0x',2650,23985,0,23985,0,0,0],['0.01x–1x',521,6215,4341.25,1873.75,69.85116653258247,521,1],['>1x–2x',163,1610,2748.75,-1138.75,170.72981366459626,163,2],['>2x–5x',241,2210,7815,-5605,353.61990950226243,241,5],['>5x–10x',61,470,4046.25,-3576.25,860.904255319149,61,10],['>10x–25x',86,785,12242.5,-11457.5,1559.5541401273886,86,25],['>25x',6,60,2817.5,-2757.5,4695.833333333334,6,50]];
+  const add=(svg,tag,attrs,text)=>{const el=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>el.setAttribute(k,v));if(text!==undefined)el.textContent=text;svg.appendChild(el);return el;};
+  let tooltip=document.getElementById('aug17-source-tooltip');if(!tooltip){tooltip=document.createElement('div');tooltip.id='aug17-source-tooltip';tooltip.className='aug17-source-tooltip';tooltip.hidden=true;document.body.appendChild(tooltip);}const hide=()=>tooltip.hidden=true,hover=(el,text)=>{const show=event=>{tooltip.textContent=text;tooltip.hidden=false;tooltip.style.left=Math.min(event.clientX+12,window.innerWidth-tooltip.offsetWidth-8)+'px';tooltip.style.top=Math.min(event.clientY+12,window.innerHeight-tooltip.offsetHeight-8)+'px';};el.setAttribute('tabindex','0');const title=document.createElementNS(ns,'title');title.textContent=text.replace(/\n/g,' | ');el.appendChild(title);el.addEventListener('pointerenter',show);el.addEventListener('pointermove',show);el.addEventListener('pointerleave',hide);el.addEventListener('focus',()=>{const r=el.getBoundingClientRect();show({clientX:r.left+r.width/2,clientY:r.top});});el.addEventListener('blur',hide);};
+  const select=document.getElementById('report-date');if(select){select.replaceChildren();const option=document.createElement('option');option.value=data.date;option.textContent=data.dateLabel;select.appendChild(option);}
+  const cardValues={'TOTAL BET':data.bet,'TOTAL PAYOUT':data.pay,'GGR':data.ggr,'RTP':data.rtp,'MTD GGR (MONTH TO DATE)':data.ggr};
+  document.querySelectorAll('.header-kpi-strip .summary-item').forEach(card=>{const label=card.querySelector('.kpi-label')?.textContent.trim().toUpperCase(),value=cardValues[label];if(value===undefined)return;const field=card.querySelector('.kpi-value');field.textContent=label==='RTP'?fmtPct(value):fmtMoney(value);field.classList.remove('positive','negative');if(label==='RTP')field.classList.add(rtpClass(value));if(label.includes('GGR'))field.classList.add(ggrClass(value));let note=card.querySelector('.kpi-yesterday');if(!note){note=document.createElement('div');note.className='kpi-yesterday';card.appendChild(note);}note.textContent=label.includes('MTD')?'August MTD: 1 verified day':'No prior-day data available';});
+  document.querySelectorAll('.summary-subitem').forEach(item=>{const label=item.querySelector('.summary-sub-label')?.textContent.trim().toUpperCase()||'',value=item.querySelector('b'),note=item.querySelector('small');const map={'TOTAL ROUNDS':fmtCount(data.tickets),'TICKETS':fmtCount(data.tickets),'PLAYERS':fmtCount(data.players),'NEW PLAYERS':fmtCount(data.newPlayers),'ABPU':fmtMoney(data.bet/data.players),'MAX WIN':fmtMoney(data.maxWin),'MAX PAYOUT':fmtMoney(data.maxWin),'MAX MULTIPLIER':'50x','D1 RETENTION RATE':'No data available'};if(value&&map[label]!==undefined)value.textContent=map[label];if(note)note.textContent='No prior-day data available';});
+  document.querySelectorAll('.daily-metric-yesterday,.daily-metrics-dod-note').forEach(el=>el.textContent='No prior-day data available');
+  document.querySelectorAll('.monthly-performance-detail').forEach(detail=>{const body=detail.querySelector('tbody');if(body)body.innerHTML='<tr><td>BANANA CRAZE</td><td>'+fmtMoney(data.bet)+'</td><td>'+fmtMoney(data.pay)+'</td><td class="'+ggrClass(data.ggr)+'">'+fmtMoney(data.ggr)+'</td><td class="'+rtpClass(data.rtp)+'">'+fmtPct(data.rtp)+'</td><td>'+fmtCount(data.players)+'</td><td>'+fmtCount(data.newPlayers)+'</td><td>'+fmtMoney(data.maxWin)+'</td><td>'+data.maxMultiplier+'x</td></tr>';});
+  document.querySelectorAll('.thirty-day-chart-panel .section-title').forEach(el=>el.textContent='30-Day Daily Performance (August 17 only)');document.querySelectorAll('.hourly-chart-panel .section-title').forEach(el=>el.textContent='Hourly RTP Trend — Banana Craze (August 17, 2026)');document.querySelectorAll('.thirty-day-chart-panel .table-note').forEach(el=>el.textContent='Source: SET AUG 17.xlsx • BP1 / BANANA CRAZE • one verified August 17 daily point.');
+  const renderHourly=()=>{const svg=document.getElementById('hourly-rtp-trend-chart');if(!svg)return;const W=760,H=300,p={l:58,r:58,t:34,b:58},plotH=H-p.t-p.b,maxAmount=20000,maxPct=140,x=i=>p.l+(W-p.l-p.r)*i/23,yA=v=>H-p.b-v/maxAmount*plotH,yP=v=>H-p.b-v/maxPct*plotH;svg.replaceChildren();for(let tick=0;tick<=4;tick++){const value=maxAmount*tick/4,y=yA(value);add(svg,'line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});add(svg,'text',{x:p.l-8,y:y+4,'text-anchor':'end',fill:'#556275','font-size':9},fmtMoney(value));add(svg,'text',{x:W-p.r+8,y:y+4,fill:'#556275','font-size':9},(maxPct*tick/4).toFixed(0)+'%');}hourly.labels.forEach((label,i)=>add(svg,'text',{x:x(i),y:H-36,'text-anchor':'end',fill:'#556275','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-36)+')'},label));[['bet','#386edb'],['pay','#4fb4bd']].forEach(([key,color],n)=>hourly[key].forEach((value,i)=>{if(!Number.isFinite(value))return;const h=H-p.b-yA(value);add(svg,'rect',{x:x(i)+(n?1:-1)*4-3,y:H-p.b-h,width:6,height:Math.max(1,h),rx:2,fill:color,opacity:.9});}));const draw=(values,color,width)=>{let run=[];const paint=()=>{if(run.length>1)add(svg,'polyline',{points:run.join(' '),fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round'});run=[];};values.forEach((v,i)=>{if(Number.isFinite(v))run.push(x(i)+','+yP(v));else paint();});paint();};draw(hourly.rtp,'#f4a51c',3);draw(hourly.hit,'#1b9c4a',1.7);add(svg,'line',{x1:p.l,x2:W-p.r,y1:yP(97),y2:yP(97),stroke:'#64748b','stroke-width':1.4,'stroke-dasharray':'6 4'});add(svg,'text',{x:W-p.r-3,y:yP(97)-5,'text-anchor':'end',fill:'#475569','font-size':9},'Standard RTP 97%');hourly.rtp.forEach((value,i)=>{if(!Number.isFinite(value))return;const dot=add(svg,'circle',{cx:x(i),cy:yP(value),r:3,fill:'#f4a51c',stroke:'#fff','stroke-width':1.2});hover(dot,hourly.labels[i]+'\nBet: '+fmtMoney(hourly.bet[i])+'\nPayout: '+fmtMoney(hourly.pay[i])+'\nTickets: '+fmtCount(hourly.tickets[i])+'\nRTP: '+fmtPct(value)+'\nHit Rate: '+fmtPct(hourly.hit[i]));});};
+  const renderDaily=()=>{const svg=document.getElementById('daily-performance-30-chart');if(!svg)return;const W=1100,H=360,p={l:70,r:70,t:34,b:78},plotH=H-p.t-p.b,maxAmount=40000,maxPct=120,x=W/2,yA=v=>H-p.b-v/maxAmount*plotH,yP=v=>H-p.b-v/maxPct*plotH;svg.replaceChildren();for(let tick=0;tick<=4;tick++){const value=maxAmount*tick/4,y=yA(value);add(svg,'line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});add(svg,'text',{x:p.l-8,y:y+4,'text-anchor':'end',fill:'#556275','font-size':10},fmtMoney(value));add(svg,'text',{x:W-p.r+8,y:y+4,fill:'#556275','font-size':10},(maxPct*tick/4).toFixed(0)+'%');}add(svg,'rect',{x:x-43,y:yA(data.bet),width:34,height:H-p.b-yA(data.bet),rx:3,fill:'#386edb'});add(svg,'rect',{x:x+9,y:yA(data.pay),width:34,height:H-p.b-yA(data.pay),rx:3,fill:'#4fb4bd'});add(svg,'line',{x1:p.l,x2:W-p.r,y1:yP(97),y2:yP(97),stroke:'#64748b','stroke-width':1.5,'stroke-dasharray':'7 5'});add(svg,'text',{x:W-p.r-4,y:yP(97)-6,'text-anchor':'end',fill:'#475569','font-size':10},'Standard RTP 97%');const dot=add(svg,'circle',{cx:x,cy:yP(data.rtp),r:3,fill:'#f4a51c',stroke:'#fff','stroke-width':1.2});hover(dot,data.dateLabel+'\nBet: '+fmtMoney(data.bet)+'\nPayout: '+fmtMoney(data.pay)+'\nTickets: '+fmtCount(data.tickets)+'\nRTP: '+fmtPct(data.rtp)+'\nGGR: '+fmtMoney(data.ggr));add(svg,'text',{x,y:H-48,'text-anchor':'middle',fill:'#556275','font-size':10},'Aug 17');add(svg,'text',{x:W/2,y:H-18,'text-anchor':'middle',fill:'#65738a','font-size':10},'One verified daily point in the provided workbook');};
+  const drawDonut=(svg,values,labels,colors,totalLabel)=>{if(!svg)return;svg.replaceChildren();const total=values.reduce((sum,value)=>sum+value,0),r=65,c=2*Math.PI*r;let offset=0;add(svg,'circle',{cx:110,cy:106,r,fill:'none',stroke:'#e4ebf4','stroke-width':34});values.forEach((value,index)=>{const length=c*value/total,arc=add(svg,'circle',{cx:110,cy:106,r,fill:'none',stroke:colors[index],'stroke-width':34,'stroke-dasharray':length+' '+(c-length),'stroke-dashoffset':-offset,transform:'rotate(-90 110 106)'});hover(arc,labels[index]+': '+fmtCount(value)+' ('+fmtPct(value/total*100)+')');offset+=length;});add(svg,'circle',{cx:110,cy:106,r:41,fill:'#fff'});add(svg,'text',{x:110,y:102,'text-anchor':'middle',fill:'#101a2f','font-size':22,'font-weight':800},fmtCount(total));add(svg,'text',{x:110,y:121,'text-anchor':'middle',fill:'#65738a','font-size':9},totalLabel);};
+  const noDataSvg=(svg,message)=>{if(!svg)return;svg.replaceChildren();add(svg,'rect',{x:12,y:25,width:216,height:150,rx:8,fill:'#f8fafc',stroke:'#cbd5e1','stroke-dasharray':'5 4'});add(svg,'text',{x:120,y:95,'text-anchor':'middle',fill:'#65738a','font-size':15,'font-weight':800},'No data available');add(svg,'text',{x:120,y:116,'text-anchor':'middle',fill:'#718096','font-size':9},message);};
+  const scope=document.getElementById('player-behavior-scope');if(scope)scope.textContent='Selected date: August 17, 2026 | BP1 / BANANA CRAZE | 3,728 settled records';const cohortBody=document.getElementById('cohort-table-body');if(cohortBody)cohortBody.innerHTML='<tr><th>New Players</th><td>18</td><td>60.0%</td></tr><tr><th>Returning Players</th><td>12</td><td>40.0%</td></tr><tr><th>Total</th><th>30</th><th>100.0%</th></tr>';drawDonut(document.getElementById('cohort-pie-chart'),[18,12],['New Players','Returning Players'],['#386edb','#159a8a'],'players');
+  const retentionTitle=document.querySelector('.behavior-retention-card h3');if(retentionTitle)retentionTitle.textContent='Day 1 Player Retention';noDataSvg(document.getElementById('retention-donut-chart'),'Requires next-day player activity.');const retentionBody=document.getElementById('retention-table-body');if(retentionBody)retentionBody.innerHTML='<tr><td colspan="3">No data available — August 18 activity is required.</td></tr>';
+  noDataSvg(document.getElementById('betting-behavior-chart'),'Cohort-linked transaction data is unavailable.');const bettingBody=document.getElementById('betting-table-body');if(bettingBody)bettingBody.innerHTML='<tr><td colspan="3">No data available — new-player identities are not linked to transactions.</td></tr>';
+  const featureTitle=document.querySelector('.feature-card h3');if(featureTitle)featureTitle.textContent='Player Feature / Bonus Behavior (BET_AMOUNT)';const feature=document.getElementById('feature-treemap');if(feature){feature.replaceChildren();const W=680,H=330,left=155,plot=470;betRanges.forEach(([label,tickets,bet,pay,ggr],index)=>{const share=tickets/data.tickets*100,y=32+index*38;add(feature,'text',{x:left-10,y:y+13,'text-anchor':'end',fill:'#334155','font-size':12,'font-weight':700},label);add(feature,'rect',{x:left,y,width:plot,height:20,rx:4,fill:'#e7edf5'});if(share>0){const bar=add(feature,'rect',{x:left,y,width:plot*share/100,height:20,rx:4,fill:'#159a8a'});hover(bar,label+'\nTickets: '+fmtCount(tickets)+'\nShare: '+fmtPct(share)+'\nTotal Bet: '+fmtMoney(bet)+'\nPayout: '+fmtMoney(pay)+'\nGGR: '+fmtMoney(ggr));}add(feature,'text',{x:left+plot+9,y:y+14,fill:'#334155','font-size':11,'font-weight':800},fmtPct(share));});const legend=document.querySelector('.feature-treemap-legend');if(legend)legend.textContent='BET_AMOUNT distribution of 3,728 settled tickets — hover a bar for details.';}
+  const outcome=document.getElementById('ticket-outcome-card');if(outcome){const body=outcome.querySelector('tbody');if(body)body.innerHTML='<tr><th>Player Win (WIN_LOSS &gt; 0)</th><td>557</td><td>14.9%</td></tr><tr><th>Player Loss / Non-win</th><td>3,171</td><td>85.1%</td></tr><tr><th>Total</th><td>3,728</td><td>100.0%</td></tr>';drawDonut(outcome.querySelector('svg'),[557,3171],['Player Win','Player Loss / Non-win'],['#1b9c4a','#df4545'],'settled tickets');const note=outcome.querySelector('.ticket-outcome-note');if(note)note.textContent='Settled August 17 tickets. Outcome is based on WIN_LOSS: 557 positive, 2,989 negative, and 182 break-even.';}
+  const updateDistribution=(panel,rows,kind)=>{if(!panel)return;const bars=panel.querySelector('.distribution-bars');if(bars){bars.innerHTML=rows.map(([label,tickets,bet,pay,ggr])=>{const share=tickets/data.tickets*100;return '<div class="distribution-bar-row"><div class="distribution-bar-meta"><span>'+label+'</span><b>'+fmtPct(share)+'</b></div><div class="distribution-bar-track"><i style="width:'+share+'%"></i></div><small class="distribution-bar-count">'+fmtCount(tickets)+' Total Rounds</small></div>';}).join('');}const total=panel.querySelector('.distribution-chart-total');if(total)total.textContent='Total: '+fmtCount(data.tickets)+' Total Rounds • 100.00%';const detail=panel.querySelector('.distribution-breakdown');if(detail){detail.innerHTML='<h3>'+kind+' Distribution Metrics</h3><div class="distribution-breakdown-wrap"><table class="distribution-breakdown-table"><thead><tr><th>Range</th><th>Tickets</th><th>Total Bet</th><th>Total Payout</th><th>GGR</th><th>RTP</th><th>Bonus Hits</th></tr></thead><tbody>'+rows.map(([label,tickets,bet,pay,ggr,rtp,bonus])=>'<tr><td>'+label+'</td><td>'+fmtCount(tickets)+'</td><td>'+fmtMoney(bet)+'</td><td>'+fmtMoney(pay)+'</td><td class="'+ggrClass(ggr)+'">'+fmtMoney(ggr)+'</td><td class="'+rtpClass(rtp)+'">'+(rtp===null?'N/A':fmtPct(rtp))+'</td><td>'+fmtCount(bonus)+'</td></tr>').join('')+'</tbody><tfoot><tr><td>Total</td><td>'+fmtCount(data.tickets)+'</td><td>'+fmtMoney(data.bet)+'</td><td>'+fmtMoney(data.pay)+'</td><td class="positive">'+fmtMoney(data.ggr)+'</td><td class="positive">'+fmtPct(data.rtp)+'</td><td>1,078</td></tr></tfoot></table></div><p class="distribution-breakdown-note">Source: SET AUG 17.xlsx • BP1 / BANANA CRAZE • settled records only.</p>';}};
+  updateDistribution(document.querySelector('.bet-distribution-panel'),betRanges,'Bet Amount');updateDistribution(document.querySelector('.multiplier-distribution-panel'),multiplierRanges,'Multiplier');
+  renderHourly();renderDaily();
+})();
+</script>
+<script id="august-17-template-visible-data-correction">
+(() => {
+  const peso=String.fromCharCode(8369),money=value=>(Number(value)<0?'-':'')+peso+Math.abs(Number(value||0)).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}),pct=value=>Number(value||0).toFixed(2)+'%';
+  const kpis={'TOTAL BET':35335,'TOTAL PAYOUT':34011.25,'GGR':1323.75,'RTP':96.25371444743173,'MTD GGR':1323.75,'MTD GGR (MONTH TO DATE)':1323.75};
+  document.querySelectorAll('.header-kpi-strip .summary-item').forEach(card=>{const label=card.querySelector('.kpi-label')?.textContent.trim().toUpperCase(),value=kpis[label];if(value===undefined)return;const field=card.querySelector('.kpi-value');field.textContent=label==='RTP'?pct(value):money(value);field.classList.remove('positive','negative');if(label==='RTP')field.classList.add(value<100?'positive':value>100?'negative':'');if(label.includes('GGR'))field.classList.add(value>1?'positive':value<=0?'negative':'');const delta=card.querySelector('.kpi-delta'),vs=card.querySelector('.kpi-vs');if(delta)delta.textContent=label==='TOTAL BET'?'BP1 / BANANA CRAZE':label==='TOTAL PAYOUT'?'Below total bet':label==='GGR'||label.includes('MTD')?'Positive GGR':'Below 100%';if(vs)vs.textContent=label.includes('MTD')?'August 2026 | 1 verified day':'August 17, 2026';const note=card.querySelector('.kpi-yesterday');if(note)note.textContent=label.includes('MTD')?'August MTD: 1 verified day':'No prior-day data available';});
+  document.querySelectorAll('.summary-subitem').forEach(item=>{const label=item.querySelector('.summary-sub-label')?.textContent.trim().toUpperCase(),field=item.querySelector('b');if(label==='MAXIMUM BET'&&field)field.textContent=money(600);});
+  const empty=document.getElementById('player-behavior-empty'),content=document.getElementById('player-behavior-content');if(empty)empty.hidden=true;if(content)content.hidden=false;
+  document.querySelectorAll('.summary-alert-list').forEach(list=>{list.innerHTML='<li><span>GGR Status</span><strong class="positive">'+money(1323.75)+'</strong><small>Positive GGR: total bet exceeds payout</small></li><li><span>RTP Status</span><strong class="positive">96.25%</strong><small>RTP is below 100%</small></li><li><span>Fuse Breaker</span><strong>No status reported</strong><small>Not included in the source export</small></li><li><span>Max Payout Observed</span><strong>'+money(1000)+' | 50x</strong><small>Highest settled payout</small></li>';});
+  document.querySelectorAll('.monthly-insights-placeholder').forEach(box=>{box.innerHTML='<h3>Insights</h3><ul><li><strong>Positive GGR.</strong> Total bet was '+money(35335)+' and payout was '+money(34011.25)+', resulting in '+money(1323.75)+' GGR.</li><li><strong>14:00 was the largest settled-hour bet bucket.</strong> It recorded '+money(18405)+' in bet across 1,545 tickets.</li><li><strong>August MTD has one verified day.</strong> Only the August 17 export is included in this report.</li></ul>';});
+  document.querySelectorAll('.distribution-source-note').forEach(note=>note.textContent='Source: SET AUG 17.xlsx • BP1 / BANANA CRAZE • 3,728 settled records. Multiplier = Payout / Bet Amount.');
+  const dashboard=document.querySelector('.feature-dashboard-infographic');if(dashboard){const groups=[{label:'₱5–₱10',tickets:3018,share:80.95493562231759,bet:18235,pay:17898.75,ggr:336.25,rtp:98.15601864546203},{label:'₱11–₱20',tickets:624,share:16.738197424892704,bet:12480,pay:11230,ggr:1250,rtp:89.98397435897436},{label:'₱21+',tickets:86,share:2.306866952789701,bet:4620,pay:4882.5,ggr:-262.5,rtp:105.68181818181819}];const total=dashboard.querySelector('.feature-dashboard-total');if(total){total.querySelector('b').textContent='3,728';total.querySelector('em').textContent='100%';}dashboard.querySelectorAll('.feature-dashboard-tile').forEach((tile,index)=>{const row=groups[index];if(!row)return;tile.querySelector('.feature-tile-label').textContent=row.label;tile.querySelector('.feature-tile-subtitle').textContent='BET_AMOUNT RANGE';const totalValue=tile.querySelector('.feature-tile-total');totalValue.querySelector('b').textContent=row.tickets.toLocaleString('en-US');totalValue.querySelector('span').textContent=pct(row.share);const split=tile.querySelectorAll('.feature-tile-split > div');if(split.length===2){split[0].querySelector('span').textContent='TOTAL BET';split[0].querySelector('b').textContent=money(row.bet);split[0].querySelector('small').textContent='RTP '+pct(row.rtp);split[1].querySelector('span').textContent='PAYOUT';split[1].querySelector('b').textContent=money(row.pay);split[1].querySelector('small').textContent='GGR '+money(row.ggr);}});const footer=dashboard.querySelector('.feature-dashboard-footer');if(footer)footer.innerHTML='<span>BET_AMOUNT RANGE • SETTLED TICKETS</span><span>SET AUG 17.xlsx</span>';}
+})();
+</script>
+<script id="august-17-postload-data-guard">
+(() => {
+  const peso=String.fromCharCode(8369),money=value=>peso+Number(value).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2});
+  const apply=()=>{const empty=document.getElementById('player-behavior-empty'),content=document.getElementById('player-behavior-content');if(empty)empty.hidden=true;if(content)content.hidden=false;document.querySelectorAll('.summary-alert-list').forEach(list=>{if(list.textContent.includes('Positive GGR:'))return;list.innerHTML='<li><span>GGR Status</span><strong class="positive">'+money(1323.75)+'</strong><small>Positive GGR: total bet exceeds payout</small></li><li><span>RTP Status</span><strong class="positive">96.25%</strong><small>RTP is below 100%</small></li><li><span>Fuse Breaker</span><strong>No status reported</strong><small>Not included in the source export</small></li><li><span>Max Payout Observed</span><strong>'+money(1000)+' | 50x</strong><small>Highest settled payout</small></li>';});};
+  apply();requestAnimationFrame(()=>requestAnimationFrame(apply));window.addEventListener('load',apply,{once:true});new MutationObserver(apply).observe(document.body,{childList:true,subtree:true});
+})();
+</script>
+<style id="feature-dashboard-bet-type-no-data-style">
+.feature-dashboard-tile.feature-tile-no-data .feature-tile-total b{font-size:28px!important}.feature-dashboard-tile.feature-tile-no-data .feature-tile-total span{font-size:12px!important}.feature-dashboard-tile.feature-tile-no-data .feature-tile-split b{font-size:14px!important}
+</style>
+<script id="august-17-feature-dashboard-bet-type-data">
+(() => {
+  const peso=String.fromCharCode(8369),money=value=>peso+Number(value||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}),pct=value=>Number(value||0).toFixed(2)+'%';
+  const groups=[
+    {label:'NORMAL SPIN',subtitle:'NORMAL_BET',tickets:3715,share:99.6519313304721,bet:33435,payout:32431.25,ggr:1003.75,rtp:97.0},
+    {label:'BUY FEATURE',subtitle:'BUY_FEATURE',tickets:13,share:0.348068669527896,bet:1900,payout:1580,ggr:320,rtp:83.1578947368421},
+    {label:'BONUS TRIGGER',subtitle:'NO SEPARATE DATA FIELD',noData:true}
+  ];
+  const apply=()=>{
+    const dashboard=document.querySelector('.feature-dashboard-infographic');
+    if(!dashboard)return;
+    const title=dashboard.querySelector('.feature-dashboard-title');
+    if(title)title.textContent='Player Feature / Bonus Behavior (BET_TYPE)';
+    const total=dashboard.querySelector('.feature-dashboard-total');
+    if(total){total.querySelector('b').textContent='3,728';total.querySelector('em').textContent='100%';}
+    dashboard.querySelectorAll('.feature-dashboard-tile').forEach((tile,index)=>{
+      const row=groups[index];if(!row)return;
+      tile.classList.toggle('feature-tile-no-data',Boolean(row.noData));
+      tile.querySelector('.feature-tile-label').textContent=row.label;
+      tile.querySelector('.feature-tile-subtitle').textContent=row.subtitle;
+      const totalValue=tile.querySelector('.feature-tile-total'),split=tile.querySelectorAll('.feature-tile-split > div');
+      if(row.noData){
+        totalValue.querySelector('b').textContent='—';totalValue.querySelector('span').textContent='No data available';
+        if(split.length===2){split[0].querySelector('span').textContent='STATUS';split[0].querySelector('b').textContent='No data';split[0].querySelector('small').textContent='No separate ticket type';split[1].querySelector('span').textContent='DETAIL';split[1].querySelector('b').textContent='—';split[1].querySelector('small').textContent='BONUS_MULTIPLE overlaps bet types';}
+        return;
+      }
+      totalValue.querySelector('b').textContent=row.tickets.toLocaleString('en-US');
+      totalValue.querySelector('span').textContent=pct(row.share);
+      if(split.length===2){
+        split[0].querySelector('span').textContent='TOTAL BET';split[0].querySelector('b').textContent=money(row.bet);split[0].querySelector('small').textContent='RTP '+pct(row.rtp);
+        split[1].querySelector('span').textContent='PAYOUT';split[1].querySelector('b').textContent=money(row.payout);split[1].querySelector('small').textContent='GGR '+money(row.ggr);
+      }
+    });
+    const footer=dashboard.querySelector('.feature-dashboard-footer');
+    if(footer)footer.innerHTML='<span>BET_TYPE • SETTLED TICKETS</span><span>SET AUG 17.xlsx</span>';
+  };
+  apply();
+  window.addEventListener('load',apply,{once:true});
+})();
+</script>
+<style id="remove-unavailable-day-one-retention-style">
+#player-behavior-content .player-behavior-row.cohort-only-row{grid-template-columns:minmax(0,1fr)!important}
+</style>
+<script id="remove-unavailable-day-one-retention">
+(() => {
+  const apply=()=>{
+    const card=document.querySelector('.behavior-retention-card');
+    if(card)card.remove();
+    const row=document.querySelector('#player-behavior-content > .player-behavior-row');
+    if(row)row.classList.add('cohort-only-row');
+  };
+  apply();
+  window.addEventListener('load',apply,{once:true});
+})();
+</script>
+<script id="august-17-dynamic-rtp-adjust-type-data">
+(() => {
+  const peso=String.fromCharCode(8369),money=value=>(Number(value)<0?'-':'')+peso+Math.abs(Number(value||0)).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}),pct=value=>Number(value).toFixed(2)+'%';
+  const rows=[
+    {type:'CUMULATIVE',tickets:31,rtp:243.35443038,ggr:-566.25},
+    {type:'DAILY',tickets:27,rtp:223.07692308,ggr:-720},
+    {type:'DISCARD',tickets:11,rtp:0,ggr:65},
+    {type:'NON',tickets:3657,rtp:92.57584597,ggr:2545},
+    {type:'REROLL',tickets:2,rtp:100,ggr:0}
+  ];
+  const rtpClass=value=>value<100?'positive':value>100?'negative':'',ggrClass=value=>value>1?'positive':value<=0?'negative':'';
+  const apply=()=>{
+    const card=document.querySelector('.summary-dynamic-rtp-card');
+    if(!card)return;
+    card.setAttribute('aria-label','Dynamic RTP by ADJUST_TYPE');
+    card.innerHTML='<h3 class="summary-support-title">Dynamic RTP</h3><table class="dynamic-rtp-table" aria-label="Dynamic RTP by ADJUST_TYPE"><thead><tr><th>Adjust Type</th><th>Tickets</th><th>RTP</th><th>GGR</th></tr></thead><tbody>'+rows.map(row=>'<tr><td>'+row.type+'</td><td>'+row.tickets.toLocaleString('en-US')+'</td><td class="'+rtpClass(row.rtp)+'">'+pct(row.rtp)+'</td><td class="'+ggrClass(row.ggr)+'">'+money(row.ggr)+'</td></tr>').join('')+'<tr><td>Total</td><td>3,728</td><td class="positive">96.25%</td><td class="positive">'+money(1323.75)+'</td></tr></tbody></table><p class="dynamic-rtp-footnote">Source: SET AUG 17.xlsx • RTP = Payout ÷ Bet Amount • 3,728 settled tickets.</p>';
+  };
+  apply();
+  window.addEventListener('load',apply,{once:true});
+})();
+</script>
+<style id="maximize-main-kpis-and-thin-daily-metrics">
+/* Let the five headline values use the available card space. */
+@media(min-width:1101px){
+  .header-kpi-strip .summary-item{min-height:130px!important;padding:15px 12px 12px 50px!important}
+  .header-kpi-strip .kpi-icon{top:15px!important;left:12px!important;width:28px!important;height:28px!important}
+  .header-kpi-strip .kpi-label{font-size:10px!important}
+  .header-kpi-strip .kpi-value{font-size:clamp(26px,2vw,36px)!important;line-height:1.04!important;letter-spacing:-.035em!important;margin:8px 0!important}
+}
+/* Keep the lower Daily Metrics cards compact while retaining their key figures. */
+.summary-metrics-card .summary-support-title{margin-bottom:6px!important}
+.summary-metrics-card .summary-metric-bullets{gap:8px!important}
+.summary-metrics-card .summary-subitem{min-height:62px!important;padding:8px 9px 8px 13px!important}
+.summary-metrics-card .summary-sub-label{font-size:8px!important;line-height:1.15!important}
+.summary-metrics-card .summary-subitem b{margin-top:4px!important;font-size:16px!important;line-height:1.05!important}
+.summary-metrics-card .summary-subitem small{display:none!important}
+.summary-metrics-card .daily-metric-yesterday{display:none!important}
+.summary-metrics-card .summary-subitem .daily-metric-yesterday{display:none!important}
+.header-kpi-strip .kpi-yesterday{display:none!important}
+@media(max-width:1100px){.header-kpi-strip .kpi-value{font-size:26px!important}.summary-metrics-card .summary-subitem{min-height:60px!important}}
+@media(max-width:650px){.header-kpi-strip .kpi-value{font-size:23px!important}.summary-metrics-card .summary-subitem{min-height:58px!important}}
+</style>
+<style id="player-behavior-four-equal-columns">
+/* Four equal Player Behavior cards: 25% each across the available desktop width. */
+#player-behavior-content{grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important;align-items:start!important}
+#player-behavior-content>.behavior-quarter{grid-column:auto!important;width:auto!important;min-width:0!important}
+@media(max-width:900px){#player-behavior-content{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media(max-width:600px){#player-behavior-content{grid-template-columns:1fr!important}}
+</style>
+<style id="feature-dashboard-fit-quarter-width">
+/* The three feature types stack inside their 25% card so no labels or totals are clipped. */
+@container(max-width:500px){
+  .feature-card.feature-dashboard-card .feature-dashboard-infographic{display:flex!important;flex-direction:column!important;min-height:420px!important;padding:11px!important}
+  .feature-dashboard-header{align-items:center!important;flex-direction:row!important;gap:7px!important;padding-bottom:8px!important}
+  .feature-dashboard-kicker,.feature-dashboard-title{display:none!important}
+  .feature-dashboard-total{grid-template-columns:1fr auto!important;gap:2px 8px!important;width:100%!important;min-width:0!important;padding:7px 9px!important}
+  .feature-dashboard-total span{font-size:8px!important}.feature-dashboard-total b{font-size:18px!important}.feature-dashboard-total em{padding:4px 6px!important;font-size:10px!important}
+  .feature-dashboard-cards{grid-template-columns:1fr!important;grid-template-rows:repeat(2,minmax(0,1fr))!important;flex:1!important;gap:6px!important;margin-top:8px!important;min-height:0!important}
+  .feature-dashboard-tile{grid-template-columns:1fr auto!important;grid-template-rows:auto 1fr!important;aspect-ratio:auto!important;min-height:0!important;padding:11px 12px!important}
+  .feature-tile-label{font-size:12px!important;line-height:1.1!important}.feature-tile-subtitle{margin-top:2px!important;font-size:7px!important;letter-spacing:.6px!important}
+  .feature-tile-total{grid-column:2!important;grid-row:1!important;align-self:start!important;text-align:right!important}.feature-tile-total b{font-size:17px!important}.feature-tile-total span{margin-top:2px!important;font-size:10px!important}
+  .feature-tile-split{grid-column:1/-1!important;grid-row:2!important;align-self:stretch!important;align-items:center!important;margin-top:7px!important;padding-top:7px!important}
+  .feature-tile-split>div,.feature-tile-split>div+div{display:grid!important;grid-template-columns:1fr!important;gap:2px!important;padding:0!important}.feature-tile-split>div+div{padding-left:9px!important;border-left:1px solid rgba(255,255,255,.30)!important}
+  .feature-tile-split span,.feature-tile-split b,.feature-tile-split small{display:block!important;white-space:normal!important}.feature-tile-split span{font-size:7px!important}.feature-tile-split b{margin:0!important;font-size:13px!important}.feature-tile-split small{margin:0!important;font-size:8px!important;line-height:1.2!important}
+  .feature-dashboard-footer{display:none!important}
+}
+</style>
+<script id="august-17-betting-behavior-cohort-data">
+(() => {
+  const ns='http://www.w3.org/2000/svg';
+  const cohorts={new:{name:'New Players',players:18,tickets:683,bet:7700,payout:7515,ggr:185,color:'#245dc8'},returning:{name:'Returning Players',players:12,tickets:3045,bet:27635,payout:26496.25,ggr:1138.75,color:'#159a8b'}};
+  const money=value=>(Number(value)<0?'-':'')+String.fromCharCode(8369)+Math.abs(Number(value||0)).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:2}),axisMoney=value=>String.fromCharCode(8369)+(value/1000).toFixed(value%1000?1:0)+'K';
+  const add=(svg,tag,attrs,text)=>{const node=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([key,value])=>node.setAttribute(key,value));if(text!==undefined)node.textContent=text;svg.appendChild(node);return node;};
+  const apply=()=>{
+    const svg=document.getElementById('betting-behavior-chart'),body=document.getElementById('betting-table-body');
+    if(svg){
+      const W=520,H=270,p={l:60,r:18,t:18,b:55},max=30000,plotH=H-p.t-p.b,metrics=[['Total Bet','bet'],['Total Payout','payout'],['GGR','ggr']],x=index=>p.l+84+index*((W-p.l-p.r-168)/2),y=value=>H-p.b-value/max*plotH;
+      svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.setAttribute('aria-label','Betting Behavior by supplied new and returning player cohorts');svg.replaceChildren();
+      for(let tick=0;tick<=4;tick++){const value=max*tick/4,yy=y(value);add(svg,'line',{x1:p.l,x2:W-p.r,y1:yy,y2:yy,stroke:'#dce4ef','stroke-width':1});add(svg,'text',{x:p.l-8,y:yy+4,'text-anchor':'end',fill:'#64748b','font-size':9},axisMoney(value));}
+      add(svg,'text',{x:16,y:H/2,'text-anchor':'middle',fill:'#64748b','font-size':9,transform:'rotate(-90 16 '+H/2+')'},'Amount (₱)');
+      metrics.forEach(([label,key],index)=>{const center=x(index);[['new',-20],['returning',12]].forEach(([cohort,offset])=>{const source=cohorts[cohort],value=source[key],bar=add(svg,'rect',{x:center+offset,y:y(value),width:24,height:Math.max(1,H-p.b-y(value)),rx:3,fill:source.color});const title=add(bar,'title',{},source.name+' | '+label+': '+money(value)+' | '+source.tickets.toLocaleString('en-US')+' tickets');});add(svg,'text',{x:center+8,y:H-22,'text-anchor':'middle',fill:'#334155','font-size':10,'font-weight':800},label);});
+    }
+    if(body)body.innerHTML='<tr><th>Total Bet</th><td>'+money(cohorts.new.bet)+'</td><td>'+money(cohorts.returning.bet)+'</td></tr><tr><th>Total Payout</th><td>'+money(cohorts.new.payout)+'</td><td>'+money(cohorts.returning.payout)+'</td></tr><tr><th>GGR</th><td class="positive">'+money(cohorts.new.ggr)+'</td><td class="positive">'+money(cohorts.returning.ggr)+'</td></tr>';
+  };
+  apply();
+  window.addEventListener('load',apply,{once:true});
+})();
+</script>
+<style id="feature-dashboard-two-ticket-types">
+@container(min-width:501px){.feature-card.feature-dashboard-card .feature-dashboard-cards{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+</style>
+<script id="keep-normal-spin-and-buy-feature-only">
+(() => {
+  const apply=()=>{
+    const dashboard=document.querySelector('.feature-dashboard-infographic');
+    if(!dashboard)return;
+    [...dashboard.querySelectorAll('.feature-dashboard-tile')].slice(2).forEach(tile=>tile.remove());
+  };
+  apply();
+  window.addEventListener('load',apply,{once:true});
+})();
+</script>
+<style id="raise-new-returning-player-table">
+/* Bring the cohort table closer to the donut so its card space is used efficiently. */
+@media(min-width:901px){
+  #player-behavior-content .behavior-cohort-card .table-scroll{position:relative!important;z-index:1!important;margin-top:-52px!important}
+}
+</style>
+<style id="player-behavior-remove-forced-card-height">
+/* Keep the 25% columns, but let each card end after its own content. */
+#player-behavior-content>.behavior-quarter{height:auto!important;align-self:start!important}
+</style>
+<script id="august-17-relaunch-insight">
+(() => {
+  const insight='Yesterday marked the first day of the game’s relaunch on BP1, with initial performance recording ₱35,335 in total bets, ₱1,323.75 GGR, and 96.25% RTP, indicating a stable start. Player participation remained relatively low, with 14:00 recording the highest settled activity, which will be important to monitor as player engagement increases in the succeeding days.';
+  const apply=()=>document.querySelectorAll('.monthly-insights-placeholder').forEach(box=>box.innerHTML='<h3>Insights</h3><ul><li>'+insight+'</li></ul>');
+  apply();
+  window.addEventListener('load',apply,{once:true});
+})();
+</script>
+
+<script type="application/json" id="hourly-recovery-report-data-2026-08-20">{"reportDate":"2026-08-20","reportDateLabel":"August 20, 2026","retrievedAt":"2026-08-21T07:54:56+08:00","current":{"bet":13295.0,"payout":12665.0,"ggr":630.0,"rtp":95.26137646,"rounds":1278,"players":28,"maxPayout":1550.0,"maxBet":1000.0,"maxMultiplier":21.0,"positiveWinLoss":236,"breakEven":73,"newPlayers":25,"returningPlayers":3,"d1Retention":3.125},"prior":{"bet":22035.0,"payout":21722.5,"ggr":312.5,"rtp":98.5818016791468,"rounds":2285,"players":37,"maxPayout":1000.0,"maxBet":100.0,"maxMultiplier":50.0,"positiveWinLoss":379,"breakEven":102,"date":"2026-08-19","product":"BP1","game":"BANANA CRAZE","newPlayers":32,"returningPlayers":5,"d1Retention":14.285714285714285},"daily":[{"bet":35335.0,"payout":34011.25,"ggr":1323.75,"rtp":96.25371444743173,"rounds":3728,"players":30,"maxPayout":1000.0,"maxBet":600.0,"maxMultiplier":50.0,"positiveWinLoss":557,"breakEven":182,"date":"2026-08-17","product":"BP1","game":"BANANA CRAZE","newPlayers":30,"returningPlayers":0,"d1Retention":null},{"bet":15340.0,"payout":15677.5,"ggr":-337.5,"rtp":102.20013037809647,"rounds":1313,"players":23,"maxPayout":1010.0,"maxBet":400.0,"maxMultiplier":50.0,"positiveWinLoss":219,"breakEven":59,"date":"2026-08-18","product":"BP1","game":"BANANA CRAZE","newPlayers":21,"returningPlayers":2,"d1Retention":null},{"bet":22035.0,"payout":21722.5,"ggr":312.5,"rtp":98.5818016791468,"rounds":2285,"players":37,"maxPayout":1000.0,"maxBet":100.0,"maxMultiplier":50.0,"positiveWinLoss":379,"breakEven":102,"date":"2026-08-19","product":"BP1","game":"BANANA CRAZE","newPlayers":32,"returningPlayers":5,"d1Retention":14.285714285714285},{"bet":13295.0,"payout":12665.0,"ggr":630.0,"rtp":95.26137646,"rounds":1278,"players":28,"maxPayout":1550.0,"maxBet":1000.0,"maxMultiplier":21.0,"positiveWinLoss":236,"breakEven":73,"newPlayers":25,"returningPlayers":3,"d1Retention":3.125,"date":"2026-08-20","product":"BP1","game":"BANANA CRAZE"}],"mtd":{"bet":86005.0,"payout":84076.25,"ggr":1928.75,"rtp":97.75739783,"rounds":8604,"players":108,"maxPayout":1550.0,"maxBet":1000.0,"maxMultiplier":50.0,"positiveWinLoss":1391,"breakEven":416,"newPlayers":25,"days":4},"hourly":[{"bet":205.0,"payout":205.0,"ggr":0.0,"rtp":100.0,"rounds":41,"players":2,"maxPayout":105.0,"maxBet":5.0,"maxMultiplier":21.0,"positiveWinLoss":6,"breakEven":3,"hour":"00:00","hitRate":14.63414634},{"bet":610.0,"payout":415.0,"ggr":195.0,"rtp":68.03278689,"rounds":61,"players":1,"maxPayout":50.0,"maxBet":10.0,"maxMultiplier":5.0,"positiveWinLoss":12,"breakEven":5,"hour":"01:00","hitRate":19.67213115},{"bet":2425.0,"payout":2378.75,"ggr":46.25,"rtp":98.09278351,"rounds":174,"players":2,"maxPayout":305.0,"maxBet":200.0,"maxMultiplier":20.0,"positiveWinLoss":30,"breakEven":11,"hour":"02:00","hitRate":17.24137931},{"bet":0.0,"payout":0.0,"ggr":0.0,"rtp":null,"rounds":0,"players":0,"maxPayout":0.0,"maxBet":0.0,"maxMultiplier":0,"positiveWinLoss":0,"breakEven":0,"hour":"03:00","hitRate":null},{"bet":0.0,"payout":0.0,"ggr":0.0,"rtp":null,"rounds":0,"players":0,"maxPayout":0.0,"maxBet":0.0,"maxMultiplier":0,"positiveWinLoss":0,"breakEven":0,"hour":"04:00","hitRate":null},{"bet":525.0,"payout":405.0,"ggr":120.0,"rtp":77.14285714,"rounds":67,"players":2,"maxPayout":92.5,"maxBet":100.0,"maxMultiplier":5.0,"positiveWinLoss":18,"breakEven":5,"hour":"05:00","hitRate":26.86567164},{"bet":285.0,"payout":137.5,"ggr":147.5,"rtp":48.24561404,"rounds":17,"players":2,"maxPayout":50.0,"maxBet":100.0,"maxMultiplier":4.0,"positiveWinLoss":3,"breakEven":1,"hour":"06:00","hitRate":17.64705882},{"bet":0.0,"payout":0.0,"ggr":0.0,"rtp":null,"rounds":0,"players":0,"maxPayout":0.0,"maxBet":0.0,"maxMultiplier":0,"positiveWinLoss":0,"breakEven":0,"hour":"07:00","hitRate":null},{"bet":0.0,"payout":0.0,"ggr":0.0,"rtp":null,"rounds":0,"players":0,"maxPayout":0.0,"maxBet":0.0,"maxMultiplier":0,"positiveWinLoss":0,"breakEven":0,"hour":"08:00","hitRate":null},{"bet":1030.0,"payout":951.25,"ggr":78.75,"rtp":92.35436893,"rounds":139,"players":1,"maxPayout":150.0,"maxBet":20.0,"maxMultiplier":17.0,"positiveWinLoss":18,"breakEven":5,"hour":"09:00","hitRate":12.94964029},{"bet":0.0,"payout":0.0,"ggr":0.0,"rtp":null,"rounds":0,"players":0,"maxPayout":0.0,"maxBet":0.0,"maxMultiplier":0,"positiveWinLoss":0,"breakEven":0,"hour":"10:00","hitRate":null},{"bet":1695.0,"payout":1571.25,"ggr":123.75,"rtp":92.69911504,"rounds":144,"players":3,"maxPayout":210.0,"maxBet":20.0,"maxMultiplier":13.5,"positiveWinLoss":24,"breakEven":11,"hour":"11:00","hitRate":16.66666667},{"bet":835.0,"payout":577.5,"ggr":257.5,"rtp":69.16167665,"rounds":47,"players":3,"maxPayout":130.0,"maxBet":200.0,"maxMultiplier":5.0,"positiveWinLoss":10,"breakEven":5,"hour":"12:00","hitRate":21.27659574},{"bet":0.0,"payout":0.0,"ggr":0.0,"rtp":null,"rounds":0,"players":0,"maxPayout":0.0,"maxBet":0.0,"maxMultiplier":0,"positiveWinLoss":0,"breakEven":0,"hour":"13:00","hitRate":null},{"bet":365.0,"payout":342.5,"ggr":22.5,"rtp":93.83561644,"rounds":73,"players":2,"maxPayout":50.0,"maxBet":5.0,"maxMultiplier":10.0,"positiveWinLoss":15,"breakEven":1,"hour":"14:00","hitRate":20.54794521},{"bet":0.0,"payout":0.0,"ggr":0.0,"rtp":null,"rounds":0,"players":0,"maxPayout":0.0,"maxBet":0.0,"maxMultiplier":0,"positiveWinLoss":0,"breakEven":0,"hour":"15:00","hitRate":null},{"bet":0.0,"payout":0.0,"ggr":0.0,"rtp":null,"rounds":0,"players":0,"maxPayout":0.0,"maxBet":0.0,"maxMultiplier":0,"positiveWinLoss":0,"breakEven":0,"hour":"16:00","hitRate":null},{"bet":0.0,"payout":0.0,"ggr":0.0,"rtp":null,"rounds":0,"players":0,"maxPayout":0.0,"maxBet":0.0,"maxMultiplier":0,"positiveWinLoss":0,"breakEven":0,"hour":"17:00","hitRate":null},{"bet":185.0,"payout":120.0,"ggr":65.0,"rtp":64.86486486,"rounds":18,"players":2,"maxPayout":57.5,"maxBet":100.0,"maxMultiplier":5.0,"positiveWinLoss":3,"breakEven":2,"hour":"18:00","hitRate":16.66666667},{"bet":455.0,"payout":427.5,"ggr":27.5,"rtp":93.95604396,"rounds":91,"players":1,"maxPayout":100.0,"maxBet":5.0,"maxMultiplier":20.0,"positiveWinLoss":18,"breakEven":2,"hour":"19:00","hitRate":19.78021978},{"bet":2400.0,"payout":2400.0,"ggr":0.0,"rtp":100.0,"rounds":284,"players":4,"maxPayout":250.0,"maxBet":20.0,"maxMultiplier":20.0,"positiveWinLoss":58,"breakEven":17,"hour":"20:00","hitRate":20.42253521},{"bet":1750.0,"payout":2325.0,"ggr":-575.0,"rtp":132.85714286,"rounds":16,"players":1,"maxPayout":1550.0,"maxBet":1000.0,"maxMultiplier":5.0,"positiveWinLoss":5,"breakEven":1,"hour":"21:00","hitRate":31.25},{"bet":525.0,"payout":398.75,"ggr":126.25,"rtp":75.95238095,"rounds":105,"players":2,"maxPayout":100.0,"maxBet":5.0,"maxMultiplier":20.0,"positiveWinLoss":15,"breakEven":4,"hour":"22:00","hitRate":14.28571429},{"bet":5.0,"payout":10.0,"ggr":-5.0,"rtp":200.0,"rounds":1,"players":1,"maxPayout":10.0,"maxBet":5.0,"maxMultiplier":2.0,"positiveWinLoss":1,"breakEven":0,"hour":"23:00","hitRate":100.0}],"activeHours":{"previous":[0,1,1,1,0,0,0,0,0,3,2,2,3,2,6,1,2,2,2,0,1,3,4,7],"current":[2,1,2,0,0,2,2,0,0,1,0,3,3,0,2,0,0,0,2,1,4,1,2,1]},"cohorts":{"new":{"players":25,"bet":10260.0,"payout":9957.5,"ggr":302.5,"rtp":97.05165692,"rounds":933,"maxPayout":1550.0,"maxBet":1000.0,"maxMultiplier":21.0,"positiveWinLoss":184,"breakEven":58},"returning":{"players":3,"bet":3035.0,"payout":2707.5,"ggr":327.5,"rtp":89.2092257,"rounds":345,"maxPayout":210.0,"maxBet":20.0,"maxMultiplier":20.0,"positiveWinLoss":52,"breakEven":15}},"retention":{"priorNew":32,"retained":1,"rate":3.125},"betRanges":[{"label":"₱5–₱10","bet":7055.0,"payout":6465.0,"ggr":590.0,"rtp":91.63713678,"rounds":1077,"players":23,"maxPayout":200.0,"maxBet":10.0,"maxMultiplier":21.0,"positiveWinLoss":201,"breakEven":64,"bonusHits":334},{"label":"₱11–₱20","bet":3540.0,"payout":3320.0,"ggr":220.0,"rtp":93.78531073,"rounds":177,"players":6,"maxPayout":305.0,"maxBet":20.0,"maxMultiplier":15.25,"positiveWinLoss":30,"breakEven":8,"bonusHits":53},{"label":"₱21–₱50","bet":800.0,"payout":775.0,"ggr":25.0,"rtp":96.875,"rounds":16,"players":2,"maxPayout":250.0,"maxBet":50.0,"maxMultiplier":5.0,"positiveWinLoss":4,"breakEven":1,"bonusHits":5},{"label":"₱51–₱100","bet":500.0,"payout":280.0,"ggr":220.0,"rtp":56.0,"rounds":5,"players":4,"maxPayout":92.5,"maxBet":100.0,"maxMultiplier":0.925,"positiveWinLoss":0,"breakEven":0,"bonusHits":5},{"label":"₱101–₱200","bet":400.0,"payout":275.0,"ggr":125.0,"rtp":68.75,"rounds":2,"players":2,"maxPayout":145.0,"maxBet":200.0,"maxMultiplier":0.725,"positiveWinLoss":0,"breakEven":0,"bonusHits":2},{"label":"₱201–₱500","bet":0.0,"payout":0.0,"ggr":0.0,"rtp":null,"rounds":0,"players":0,"maxPayout":0.0,"maxBet":0.0,"maxMultiplier":0,"positiveWinLoss":0,"breakEven":0,"bonusHits":0},{"label":"₱501–₱1,000","bet":1000.0,"payout":1550.0,"ggr":-550.0,"rtp":155.0,"rounds":1,"players":1,"maxPayout":1550.0,"maxBet":1000.0,"maxMultiplier":1.55,"positiveWinLoss":1,"breakEven":0,"bonusHits":1}],"multiplierRanges":[{"label":"0x","bet":7855.0,"payout":0.0,"ggr":7855.0,"rtp":0.0,"rounds":878,"players":25,"maxPayout":0.0,"maxBet":50.0,"maxMultiplier":0.0,"positiveWinLoss":0,"breakEven":0,"bonusHits":0},{"label":"0.01x–1x","bet":2295.0,"payout":1575.0,"ggr":720.0,"rtp":68.62745098,"rounds":164,"players":26,"maxPayout":145.0,"maxBet":200.0,"maxMultiplier":1.0,"positiveWinLoss":0,"breakEven":73,"bonusHits":164},{"label":">1x–2x","bet":1635.0,"payout":2677.5,"ggr":-1042.5,"rtp":163.76146789,"rounds":72,"players":20,"maxPayout":1550.0,"maxBet":1000.0,"maxMultiplier":2.0,"positiveWinLoss":72,"breakEven":0,"bonusHits":72},{"label":">2x–5x","bet":1125.0,"payout":4132.5,"ggr":-3007.5,"rtp":367.33333333,"rounds":122,"players":23,"maxPayout":250.0,"maxBet":50.0,"maxMultiplier":5.0,"positiveWinLoss":122,"breakEven":0,"bonusHits":122},{"label":">5x–10x","bet":170.0,"payout":1396.25,"ggr":-1226.25,"rtp":821.32352941,"rounds":20,"players":9,"maxPayout":185.0,"maxBet":20.0,"maxMultiplier":10.0,"positiveWinLoss":20,"breakEven":0,"bonusHits":20},{"label":">10x–25x","bet":215.0,"payout":2883.75,"ggr":-2668.75,"rtp":1341.27906977,"rounds":22,"players":9,"maxPayout":305.0,"maxBet":20.0,"maxMultiplier":21.0,"positiveWinLoss":22,"breakEven":0,"bonusHits":22},{"label":">25x","bet":0.0,"payout":0.0,"ggr":0.0,"rtp":null,"rounds":0,"players":0,"maxPayout":0.0,"maxBet":0.0,"maxMultiplier":0,"positiveWinLoss":0,"breakEven":0,"bonusHits":0}],"betTypes":[{"type":"BUY_FEATURE","bet":1800.0,"payout":2055.0,"ggr":-255.0,"rtp":114.16666667,"rounds":7,"players":5,"maxPayout":1550.0,"maxBet":1000.0,"maxMultiplier":1.55,"positiveWinLoss":1,"breakEven":0},{"type":"NORMAL_BET","bet":11495.0,"payout":10610.0,"ggr":885.0,"rtp":92.30100043,"rounds":1271,"players":27,"maxPayout":305.0,"maxBet":100.0,"maxMultiplier":21.0,"positiveWinLoss":235,"breakEven":73}],"adjustTypes":[{"type":"CUMULATIVE","bet":140.0,"payout":475.0,"ggr":-335.0,"rtp":339.28571429,"rounds":17,"players":11,"maxPayout":100.0,"maxBet":20.0,"maxMultiplier":5.0,"positiveWinLoss":17,"breakEven":0},{"type":"DAILY","bet":140.0,"payout":567.5,"ggr":-427.5,"rtp":405.35714286,"rounds":16,"players":8,"maxPayout":210.0,"maxBet":20.0,"maxMultiplier":10.5,"positiveWinLoss":15,"breakEven":1},{"type":"DISCARD","bet":60.0,"payout":250.0,"ggr":-190.0,"rtp":416.66666667,"rounds":5,"players":5,"maxPayout":250.0,"maxBet":20.0,"maxMultiplier":12.5,"positiveWinLoss":1,"breakEven":0},{"type":"NON","bet":12955.0,"payout":11372.5,"ggr":1582.5,"rtp":87.78463914,"rounds":1240,"players":28,"maxPayout":1550.0,"maxBet":1000.0,"maxMultiplier":21.0,"positiveWinLoss":203,"breakEven":72}],"reconciliation":{"bill_ids_in_both":1278,"bet_only_bill_ids":0,"settle_only_bill_ids":0}}</script>
+<script id="hourly-recovery-data-binding-2026-08-20">
+(() => {
+  const payloadNode=document.getElementById('hourly-recovery-report-data-2026-08-20');
+  if(!payloadNode)return;
+  const D=JSON.parse(payloadNode.textContent),C=D.current,P=D.prior,M=D.mtd,NS='http://www.w3.org/2000/svg',peso=String.fromCharCode(8369);
+  const money=value=>{const n=Number(value||0);return(n<0?'-':'')+peso+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});};
+  const count=value=>Number(value||0).toLocaleString('en-US');
+  const pct=value=>value==null?'N/A':Number(value).toFixed(2)+'%';
+  const rtpClass=value=>Number(value)<100?'positive':Number(value)>100?'negative':'';
+  const ggrClass=value=>Number(value)>0?'positive':Number(value)<0?'negative':'';
+  const change=(current,prior)=>prior===0?null:(current-prior)/Math.abs(prior)*100;
+  const changeText=(current,prior,unit='percent')=>{const value=unit==='pp'?current-prior:change(current,prior);if(value==null)return'N/A';return(value>0?'+':'')+value.toFixed(2)+(unit==='pp'?' pp':'%');};
+  const signedMoney=value=>{const n=Number(value||0);return(n>0?'+':n<0?'-':'')+peso+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});};
+  const signedMetric=(value,type)=>{const n=Number(value||0),sign=n>0?'+':n<0?'-':'';if(type==='money')return sign+peso+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});if(type==='pp')return sign+Math.abs(n).toFixed(2)+' pp';if(type==='multiplier')return sign+Math.abs(n).toLocaleString('en-US',{maximumFractionDigits:1})+'x';return sign+Math.round(Math.abs(n)).toLocaleString('en-US');};
+  const metricType=label=>label.includes('RETENTION')?'pp':label.includes('MULTIPLIER')?'multiplier':(['ABPU','MAX WIN','MAX PAYOUT','MAXIMUM BET'].includes(label)?'money':'count');
+  const direction=value=>value>0?'up':value<0?'down':'neutral',arrow=value=>value>0?'↑':value<0?'↓':'↔';
+  const setText=(node,value)=>{if(node&&node.textContent!==String(value))node.textContent=String(value);};
+  const setHtml=(node,value)=>{if(node&&node.innerHTML!==String(value))node.innerHTML=String(value);};
+  const add=(svg,tag,attrs={},text)=>{const node=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([key,value])=>node.setAttribute(key,value));if(text!==undefined)node.textContent=text;svg.appendChild(node);return node;};
+  const dailyNode=document.getElementById('daily-performance-30-data'),hourlyNode=document.getElementById('hourly-data');
+  const hourlyJson={date:D.reportDate,labels:D.hourly.map(row=>row.hour),series:[
+    {name:'Betting Amount',unit:'currency',values:D.hourly.map(row=>row.rounds?row.bet:null)},
+    {name:'Payout',unit:'currency',values:D.hourly.map(row=>row.rounds?row.payout:null)},
+    {name:'Tickets',unit:'count',values:D.hourly.map(row=>row.rounds?row.rounds:null)},
+    {name:'RTP',unit:'percent',values:D.hourly.map(row=>row.rtp)},
+    {name:'Hit Rate',unit:'percent',values:D.hourly.map(row=>row.hitRate)}
+  ]};
+  if(dailyNode)dailyNode.textContent=JSON.stringify({standardRtp:97,rows:D.daily.map(row=>({date:row.date,product:'BP1',game:'BANANA CRAZE',players:row.players,newPlayers:row.newPlayers,returningPlayers:row.returningPlayers,d1Retention:row.d1Retention,bet:row.bet,pay:row.payout,ggr:row.ggr,tickets:row.rounds,winningTickets:row.positiveWinLoss,rtp:row.rtp,maxWin:row.maxPayout,maxMultiplier:row.maxMultiplier}))});
+  if(hourlyNode)hourlyNode.textContent=JSON.stringify(hourlyJson);
+  const hourlySvg=document.getElementById('hourly-rtp-trend-chart');if(hourlySvg)hourlySvg.dataset.series=JSON.stringify(hourlyJson);
+
+  function drawDonut(svg,values,labels,colors,totalLabel){
+    if(!svg)return;svg.replaceChildren();const total=values.reduce((sum,value)=>sum+value,0),r=65,c=2*Math.PI*r;let offset=0;
+    add(svg,'circle',{cx:110,cy:106,r,fill:'none',stroke:'#e4ebf4','stroke-width':34});
+    values.forEach((value,index)=>{const length=total?c*value/total:0,arc=add(svg,'circle',{cx:110,cy:106,r,fill:'none',stroke:colors[index],'stroke-width':34,'stroke-dasharray':length+' '+(c-length),'stroke-dashoffset':-offset,transform:'rotate(-90 110 106)'});const title=document.createElementNS(NS,'title');title.textContent=labels[index]+': '+count(value)+' ('+(total?pct(value/total*100):'N/A')+')';arc.appendChild(title);offset+=length;});
+    add(svg,'circle',{cx:110,cy:106,r:41,fill:'#fff'});add(svg,'text',{x:110,y:102,'text-anchor':'middle',fill:'#101a2f','font-size':22,'font-weight':800},count(total));add(svg,'text',{x:110,y:121,'text-anchor':'middle',fill:'#65738a','font-size':9},totalLabel);
+  }
+
+  function renderHourly(){
+    const svg=document.getElementById('hourly-rtp-trend-chart');if(!svg)return;const W=760,H=300,p={l:58,r:58,t:34,b:58},plotH=H-p.t-p.b,maxAmount=Math.max(1000,Math.ceil(Math.max(...D.hourly.map(row=>Math.max(row.bet,row.payout)))/1000)*1000),maxPct=Math.max(160,Math.ceil(Math.max(...D.hourly.map(row=>row.rtp||0),97)/20)*20),x=i=>p.l+(W-p.l-p.r)*i/23,yA=v=>H-p.b-v/maxAmount*plotH,yP=v=>H-p.b-v/maxPct*plotH;
+    svg.replaceChildren();for(let tick=0;tick<=4;tick++){const amount=maxAmount*tick/4,y=yA(amount);add(svg,'line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});add(svg,'text',{x:p.l-8,y:y+4,'text-anchor':'end',fill:'#556275','font-size':9},money(amount));add(svg,'text',{x:W-p.r+8,y:y+4,fill:'#556275','font-size':9},(maxPct*tick/4).toFixed(0)+'%');}
+    D.hourly.forEach((row,i)=>{add(svg,'text',{x:x(i),y:H-36,'text-anchor':'end',fill:'#556275','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-36)+')'},row.hour);if(!row.rounds)return;[['bet','#386edb',-7],['payout','#4fb4bd',1]].forEach(([key,color,offset])=>{const h=H-p.b-yA(row[key]);const rect=add(svg,'rect',{x:x(i)+offset,y:H-p.b-h,width:6,height:Math.max(1,h),rx:2,fill:color,opacity:.9});const title=document.createElementNS(NS,'title');title.textContent=row.hour+' | '+key+': '+money(row[key]);rect.appendChild(title);});});
+    const line=(key,color,width)=>{let run=[];const paint=()=>{if(run.length>1)add(svg,'polyline',{points:run.join(' '),fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round'});run=[];};D.hourly.forEach((row,i)=>{const value=row[key];if(Number.isFinite(value))run.push(x(i)+','+yP(value));else paint();});paint();};line('rtp','#f4a51c',3);line('hitRate','#1b9c4a',1.7);add(svg,'line',{x1:p.l,x2:W-p.r,y1:yP(97),y2:yP(97),stroke:'#64748b','stroke-width':1.4,'stroke-dasharray':'6 4'});add(svg,'text',{x:W-p.r-3,y:yP(97)-5,'text-anchor':'end',fill:'#475569','font-size':9},'Standard RTP 97%');
+  }
+
+  function renderDaily(){
+    const svg=document.getElementById('daily-performance-30-chart');if(!svg)return;const rows=D.daily,W=1100,H=360,p={l:70,r:70,t:34,b:78},plotH=H-p.t-p.b,maxAmount=Math.ceil(Math.max(...rows.map(row=>Math.max(row.bet,row.payout)))/10000)*10000,maxPct=Math.max(120,Math.ceil(Math.max(...rows.map(row=>row.rtp),97)/20)*20),slot=190,x=i=>W/2+(i-(rows.length-1)/2)*slot,yA=v=>H-p.b-v/maxAmount*plotH,yP=v=>H-p.b-v/maxPct*plotH;
+    svg.replaceChildren();for(let tick=0;tick<=4;tick++){const amount=maxAmount*tick/4,y=yA(amount);add(svg,'line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});add(svg,'text',{x:p.l-8,y:y+4,'text-anchor':'end',fill:'#556275','font-size':10},money(amount));add(svg,'text',{x:W-p.r+8,y:y+4,fill:'#556275','font-size':10},(maxPct*tick/4).toFixed(0)+'%');}
+    rows.forEach((row,i)=>{const center=x(i);[['bet','#386edb',-38],['payout','#4fb4bd',4]].forEach(([key,color,offset])=>{const h=H-p.b-yA(row[key]);const rect=add(svg,'rect',{x:center+offset,y:H-p.b-h,width:30,height:Math.max(1,h),rx:3,fill:color});const title=document.createElementNS(NS,'title');title.textContent=row.date+' | '+key+': '+money(row[key]);rect.appendChild(title);});add(svg,'text',{x:center,y:H-48,'text-anchor':'middle',fill:'#556275','font-size':10},'Aug '+Number(row.date.slice(-2)));});
+    add(svg,'line',{x1:p.l,x2:W-p.r,y1:yP(97),y2:yP(97),stroke:'#64748b','stroke-width':1.5,'stroke-dasharray':'7 5'});add(svg,'text',{x:W-p.r-4,y:yP(97)-6,'text-anchor':'end',fill:'#475569','font-size':10},'Standard RTP 97%');const points=rows.map((row,i)=>x(i)+','+yP(row.rtp));add(svg,'polyline',{points:points.join(' '),fill:'none',stroke:'#f4a51c','stroke-width':3,'stroke-linecap':'round','stroke-linejoin':'round'});rows.forEach((row,i)=>{const dot=add(svg,'circle',{cx:x(i),cy:yP(row.rtp),r:3,fill:'#f4a51c',stroke:'#fff','stroke-width':1.2});const title=document.createElementNS(NS,'title');title.textContent=row.date+' | RTP: '+pct(row.rtp)+' | GGR: '+money(row.ggr);dot.appendChild(title);});
+  }
+
+  function renderActivePlayers(){
+    const panel=document.querySelector('.active-players-panel'),svg=panel?.querySelector('svg');if(!svg)return;const W=760,H=300,p={l:48,r:18,t:26,b:50},max=Math.max(1,...D.activeHours.previous,...D.activeHours.current),x=i=>p.l+(W-p.l-p.r)*i/23,y=v=>H-p.b-v/max*(H-p.t-p.b),line=(values,color)=>add(svg,'polyline',{points:values.map((value,i)=>x(i)+','+y(value)).join(' '),fill:'none',stroke:color,'stroke-width':2.5,'stroke-linecap':'round','stroke-linejoin':'round'});
+    svg.replaceChildren();for(let tick=0;tick<=4;tick++){const value=Math.round(max*tick/4),yy=y(value);add(svg,'line',{x1:p.l,x2:W-p.r,y1:yy,y2:yy,stroke:'#dce4ef'});add(svg,'text',{x:p.l-7,y:yy+4,'text-anchor':'end',fill:'#64748b','font-size':9},value);}D.activeHours.current.forEach((_,i)=>{if(i%2===0)add(svg,'text',{x:x(i),y:H-28,'text-anchor':'middle',fill:'#64748b','font-size':8},String(i).padStart(2,'0')+':00');});line(D.activeHours.previous,'#8c99ad');line(D.activeHours.current,'#2563c7');
+    const title=panel.querySelector('.section-title');setText(title,'Active Players by Hour — Aug 19 vs Aug 20');const legends=panel.querySelectorAll('.active-players-legend span');if(legends[0])setText(legends[0],'Yesterday: August 19');if(legends[1])setText(legends[1],'Current: August 20');
+  }
+
+  function updateDistribution(panel,rows,kind){
+    if(!panel)return;const bars=panel.querySelector('.distribution-bars');if(bars)bars.innerHTML=rows.map(row=>{const share=row.rounds/C.rounds*100;return'<div class="distribution-bar-row"><div class="distribution-bar-meta"><span>'+row.label+'</span><b>'+pct(share)+'</b></div><div class="distribution-bar-track"><i style="width:'+share+'%"></i></div><small class="distribution-bar-count">'+count(row.rounds)+' Total Rounds</small></div>';}).join('');const total=panel.querySelector('.distribution-chart-total');setText(total,'Total: '+count(C.rounds)+' Total Rounds • 100.00%');const detail=panel.querySelector('.distribution-breakdown');if(detail)detail.innerHTML='<h3>'+kind+' Distribution Metrics</h3><div class="distribution-breakdown-wrap"><table class="distribution-breakdown-table"><thead><tr><th>Range</th><th>Rounds</th><th>Total Bet</th><th>Total Payout</th><th>GGR</th><th>RTP</th><th>Bonus Hits</th></tr></thead><tbody>'+rows.map(row=>'<tr><td>'+row.label+'</td><td>'+count(row.rounds)+'</td><td>'+money(row.bet)+'</td><td>'+money(row.payout)+'</td><td class="'+ggrClass(row.ggr)+'">'+money(row.ggr)+'</td><td class="'+rtpClass(row.rtp)+'">'+pct(row.rtp)+'</td><td>'+count(row.bonusHits)+'</td></tr>').join('')+'</tbody></table></div><p class="distribution-breakdown-note">Fresh API-validated August 20 Settle Time data.</p>';
+  }
+
+  function applyText(){
+    document.title='Daily Game Performance Report — '+D.reportDateLabel;
+    const select=document.getElementById('report-date');if(select){select.replaceChildren();const option=document.createElement('option');option.value=D.reportDate;option.textContent=D.reportDateLabel;select.appendChild(option);}
+    const headerValues={'TOTAL BET':[money(C.bet),C.bet,P.bet],'TOTAL PAYOUT':[money(C.payout),C.payout,P.payout],'GGR':[money(C.ggr),C.ggr,P.ggr],'RTP':[pct(C.rtp),C.rtp,P.rtp],'MTD GGR (MONTH TO DATE)':[money(M.ggr),M.ggr,null],'MTD GGR':[money(M.ggr),M.ggr,null]};
+    document.querySelectorAll('#header-kpi-strip .summary-item').forEach(card=>{const label=card.querySelector('.kpi-label')?.textContent.trim().toUpperCase(),entry=headerValues[label];if(!entry)return;const value=card.querySelector('.kpi-value');setText(value,entry[0]);if(value){value.classList.remove('positive','negative');const cls=label==='RTP'?rtpClass(entry[1]):ggrClass(entry[1]);if(cls)value.classList.add(cls);}let note=card.querySelector('.kpi-yesterday');if(label.startsWith('MTD GGR')){if(note)note.remove();return;}if(!note){note=document.createElement('div');note.className='kpi-yesterday';card.appendChild(note);}const gap=entry[2]==null?null:entry[1]-entry[2],absoluteDod=label==='RTP'?signedMetric(gap,'pp'):signedMoney(gap),dodPercent=entry[2]===0?null:changeText(entry[1],entry[2]);note.className='kpi-yesterday is-'+direction(gap);setHtml(note,gap==null?'':'<span class="kpi-arrow">'+arrow(gap)+'</span><span>DoD: '+absoluteDod+(dodPercent==null?'':' ('+dodPercent+')')+'</span>');});
+    const metricMap={'TOTAL ROUNDS':[count(C.rounds),C.rounds,P.rounds,count],'TICKETS':[count(C.rounds),C.rounds,P.rounds,count],'PLAYERS':[count(C.players),C.players,P.players,count],'NEW PLAYERS':[count(C.newPlayers),C.newPlayers,P.newPlayers,count],'ABPU':[money(C.bet/C.players),C.bet/C.players,P.bet/P.players,money],'MAX WIN':[money(C.maxPayout),C.maxPayout,P.maxPayout,money],'MAX PAYOUT':[money(C.maxPayout),C.maxPayout,P.maxPayout,money],'MAXIMUM BET':[money(C.maxBet),C.maxBet,P.maxBet,money],'MAX MULTIPLIER':[C.maxMultiplier+'x',C.maxMultiplier,P.maxMultiplier,value=>value+'x'],'D1 RETENTION RATE':[pct(C.d1Retention),C.d1Retention,P.d1Retention,pct]};
+    document.querySelectorAll('.summary-subitem').forEach(item=>{const label=item.querySelector('.summary-sub-label')?.textContent.trim().toUpperCase(),entry=metricMap[label];if(!entry)return;setText(item.querySelector('b'),entry[0]);const note=item.querySelector('small');if(!note)return;const gap=entry[2]==null?null:entry[1]-entry[2],type=metricType(label),absoluteDod=signedMetric(gap,type),dodPercent=entry[2]===0?null:changeText(entry[1],entry[2]);note.className='daily-metric-yesterday is-'+direction(gap);setHtml(note,gap==null?'<span class="daily-metric-arrow">↔</span> Yesterday: N/A<br>DoD: N/A':'<span class="daily-metric-arrow">'+arrow(gap)+'</span> Yesterday: '+(type==='pp'?pct(entry[2]):entry[3](entry[2]))+'<br>DoD: '+absoluteDod+(dodPercent==null?'':' ('+dodPercent+')'));});
+    document.querySelectorAll('.monthly-performance-detail').forEach(detail=>{setText(detail.querySelector('h3'),'Monthly Performance (MTD) — Banana Craze (August 17–20, 2026)');const body=detail.querySelector('tbody');if(body)body.innerHTML='<tr><td>BANANA CRAZE</td><td>'+money(M.bet)+'</td><td>'+money(M.payout)+'</td><td class="'+ggrClass(M.ggr)+'">'+money(M.ggr)+'</td><td class="'+rtpClass(M.rtp)+'">'+pct(M.rtp)+'</td><td>'+count(M.players)+'</td><td>'+count(M.newPlayers)+'</td><td>'+money(M.maxPayout)+'</td><td>'+M.maxMultiplier+'x</td></tr>';});
+    document.querySelectorAll('.thirty-day-chart-panel .section-title').forEach(node=>setText(node,'30-Day Daily Performance (Aug 17–20, 2026)'));document.querySelectorAll('.hourly-chart-panel .section-title').forEach(node=>setText(node,'Hourly RTP Trend — Banana Craze (August 20, 2026)'));
+    const scope=document.getElementById('player-behavior-scope');setText(scope,'Selected date: August 20, 2026 | BP1 / BANANA CRAZE | '+count(C.rounds)+' settled records | Bet Time and Settle Time reconciled');
+    const cohortBody=document.getElementById('cohort-table-body');if(cohortBody)cohortBody.innerHTML='<tr><th>New Players</th><td>'+count(C.newPlayers)+'</td><td>'+pct(C.newPlayers/C.players*100)+'</td></tr><tr><th>Returning Players</th><td>'+count(C.returningPlayers)+'</td><td>'+pct(C.returningPlayers/C.players*100)+'</td></tr><tr><th>Total</th><th>'+count(C.players)+'</th><th>100.00%</th></tr>';
+    const retentionTitle=document.querySelector('.behavior-retention-card h3');setText(retentionTitle,'Day 1 Player Retention — August 19 cohort');const retentionBody=document.getElementById('retention-table-body');if(retentionBody)retentionBody.innerHTML='<tr><th>August 19 New Players</th><td>'+count(D.retention.retained)+'</td><td>'+count(D.retention.priorNew-D.retention.retained)+'</td></tr><tr><th>Retention Rate</th><td>'+pct(D.retention.rate)+'</td><td>'+pct(100-D.retention.rate)+'</td></tr>';
+    const bettingBody=document.getElementById('betting-table-body');if(bettingBody)bettingBody.innerHTML='<tr><th>Total Bet</th><td>'+money(D.cohorts.new.bet)+'</td><td>'+money(D.cohorts.returning.bet)+'</td></tr><tr><th>Total Payout</th><td>'+money(D.cohorts.new.payout)+'</td><td>'+money(D.cohorts.returning.payout)+'</td></tr><tr><th>GGR</th><td class="'+ggrClass(D.cohorts.new.ggr)+'">'+money(D.cohorts.new.ggr)+'</td><td class="'+ggrClass(D.cohorts.returning.ggr)+'">'+money(D.cohorts.returning.ggr)+'</td></tr>';
+    const outcome=document.getElementById('ticket-outcome-card');if(outcome){const body=outcome.querySelector('tbody'),loss=C.rounds-C.positiveWinLoss;if(body)body.innerHTML='<tr><th>Player Win (WIN_LOSS &gt; 0)</th><td>'+count(C.positiveWinLoss)+'</td><td>'+pct(C.positiveWinLoss/C.rounds*100)+'</td></tr><tr><th>Player Loss / Non-win</th><td>'+count(loss)+'</td><td>'+pct(loss/C.rounds*100)+'</td></tr><tr><th>Total</th><td>'+count(C.rounds)+'</td><td>100.00%</td></tr>';const note=outcome.querySelector('.ticket-outcome-note');setText(note,'Fresh API-validated August 20 settled records; '+count(C.breakEven)+' break-even rounds.');}
+    const card=document.querySelector('.summary-dynamic-rtp-card');if(card)card.innerHTML='<h3 class="summary-support-title">Dynamic RTP</h3><table class="dynamic-rtp-table"><thead><tr><th>Adjust Type</th><th>Rounds</th><th>RTP</th><th>GGR</th></tr></thead><tbody>'+D.adjustTypes.map(row=>'<tr><td>'+row.type+'</td><td>'+count(row.rounds)+'</td><td class="'+rtpClass(row.rtp)+'">'+pct(row.rtp)+'</td><td class="'+ggrClass(row.ggr)+'">'+money(row.ggr)+'</td></tr>').join('')+'<tr><td>Total</td><td>'+count(C.rounds)+'</td><td class="'+rtpClass(C.rtp)+'">'+pct(C.rtp)+'</td><td class="'+ggrClass(C.ggr)+'">'+money(C.ggr)+'</td></tr></tbody></table><p class="dynamic-rtp-footnote">Fresh API-validated August 20 Settle Time data.</p>';
+    document.querySelectorAll('.summary-alert-list').forEach(list=>list.innerHTML='<li><span>GGR Status</span><strong class="positive">'+money(C.ggr)+'</strong><small>Positive GGR: total bet exceeds payout</small></li><li><span>RTP Status</span><strong class="positive">'+pct(C.rtp)+'</strong><small>RTP is below 100%</small></li><li><span>No Warning or Alarm in Fuse Breaker</span><strong class="positive">PASS</strong><small>Fuse breaker status clear</small></li><li><span>Max Payout Observed</span><strong>'+money(C.maxPayout)+' | '+C.maxMultiplier+'x</strong><small>Highest settled payout</small></li>');
+    const dashboard=document.querySelector('.feature-dashboard-infographic');if(dashboard){setText(dashboard.querySelector('.feature-dashboard-title'),'Player Feature / Bonus Behavior (BET_TYPE)');const total=dashboard.querySelector('.feature-dashboard-total');if(total){setText(total.querySelector('b'),count(C.rounds));setText(total.querySelector('em'),'100%');}dashboard.querySelectorAll('.feature-dashboard-tile').forEach((tile,index)=>{const row=D.betTypes[index];if(!row)return;setText(tile.querySelector('.feature-tile-label'),row.type==='NORMAL_BET'?'NORMAL SPIN':row.type.replaceAll('_',' '));setText(tile.querySelector('.feature-tile-subtitle'),row.type);const value=tile.querySelector('.feature-tile-total');if(value){setText(value.querySelector('b'),count(row.rounds));setText(value.querySelector('span'),pct(row.rounds/C.rounds*100));}const split=tile.querySelectorAll('.feature-tile-split > div');if(split[0]){setText(split[0].querySelector('span'),'TOTAL BET');setText(split[0].querySelector('b'),money(row.bet));setText(split[0].querySelector('small'),'RTP '+pct(row.rtp));}if(split[1]){setText(split[1].querySelector('span'),'PAYOUT');setText(split[1].querySelector('b'),money(row.payout));setText(split[1].querySelector('small'),'GGR '+money(row.ggr));}});setText(dashboard.querySelector('.feature-dashboard-footer'),'BET_TYPE • FRESH API-VALIDATED AUGUST 19 SETTLED RECORDS');}
+    const nonAdjustment=D.adjustTypes.find(row=>row.type==='NON'),dynamicAdjustments=D.adjustTypes.filter(row=>row.type!=='NON'),dynamicRounds=dynamicAdjustments.reduce((sum,row)=>sum+Number(row.rounds||0),0),dynamicInsight=nonAdjustment?'Dynamic RTP was primarily driven by NON adjustments: '+count(nonAdjustment.rounds)+' rounds ('+pct(nonAdjustment.rounds/C.rounds*100)+') delivered '+pct(nonAdjustment.rtp)+' RTP and '+money(nonAdjustment.ggr)+' GGR, while CUMULATIVE, DAILY, and DISCARD adjustments covered only '+count(dynamicRounds)+' rounds with RTP above 300%.':'Dynamic RTP insight is unavailable for the selected reporting date.';
+    document.querySelectorAll('.monthly-insights-placeholder').forEach(box=>box.innerHTML='<h3>Insights</h3><ul><li>August 20 closed with '+money(C.bet)+' in bets, '+money(C.ggr)+' positive GGR, and '+pct(C.rtp)+' RTP across '+count(C.rounds)+' settled rounds.</li><li>'+dynamicInsight+'</li></ul>');
+    document.querySelectorAll('.footer').forEach(node=>setText(node,'Source: production Daily Game Performance API — BP1 / BANANA CRAZE / PHP / SETTLED; reporting date August 20, 2026; Bet Time for players and Settle Time for financial metrics.'));
+  }
+
+  function applyCharts(){
+    renderHourly();renderDaily();renderActivePlayers();drawDonut(document.getElementById('cohort-pie-chart'),[C.newPlayers,C.returningPlayers],['New Players','Returning Players'],['#386edb','#159a8a'],'players');drawDonut(document.getElementById('retention-donut-chart'),[D.retention.retained,D.retention.priorNew-D.retention.retained],['Retained','Not retained'],['#1b9c4a','#dce4ef'],'Aug 18 new players');const outcome=document.getElementById('ticket-outcome-card');if(outcome)drawDonut(outcome.querySelector('svg'),[C.positiveWinLoss,C.rounds-C.positiveWinLoss],['Player Win','Player Loss / Non-win'],['#1b9c4a','#df4545'],'settled rounds');updateDistribution(document.querySelector('.bet-distribution-panel'),D.betRanges,'Bet Amount');updateDistribution(document.querySelector('.multiplier-distribution-panel'),D.multiplierRanges,'Multiplier');
+  }
+  const apply=()=>{applyText();applyCharts();};
+  apply();window.addEventListener('load',apply,{once:true});setTimeout(apply,250);setTimeout(apply,1500);
+  let queued=false;new MutationObserver(()=>{if(queued)return;queued=true;requestAnimationFrame(()=>{queued=false;applyText();});}).observe(document.body,{childList:true,subtree:true,characterData:true});
+})();
+
+</script>
+<style id="match-cohort-ticket-outcome-size">
+/* Keep New vs Returning Players exactly the same card height as Ticket Outcome Split. */
+@media (min-width:901px){
+  #player-behavior-content .behavior-cohort-card,
+  #player-behavior-content .ticket-outcome-card{box-sizing:border-box}
+  #player-behavior-content .behavior-cohort-card .behavior-chart svg{aspect-ratio:1/1!important}
+}
+</style>
+<script id="sync-cohort-ticket-outcome-size">
+(() => {
+  const sync=()=>{
+    const content=document.getElementById('player-behavior-content');
+    const cohort=content?.querySelector('.behavior-cohort-card');
+    const outcome=content?.querySelector('.ticket-outcome-card');
+    if(!cohort||!outcome)return;
+    if(window.matchMedia('(min-width:901px)').matches){
+      cohort.style.height='';outcome.style.height='';
+      const height=Math.ceil(Math.max(cohort.getBoundingClientRect().height,outcome.getBoundingClientRect().height));
+      cohort.style.height=height+'px';outcome.style.height=height+'px';
+    }else{cohort.style.height='';outcome.style.height='';}
+  };
+  sync();
+  window.addEventListener('load',sync,{once:true});
+  window.addEventListener('resize',sync);
+  if(window.ResizeObserver){
+    const observer=new ResizeObserver(()=>requestAnimationFrame(sync));
+    const content=document.getElementById('player-behavior-content');
+    if(content)observer.observe(content);
+  }
+})();
+</script>
+<style id="show-main-and-daily-dod">
+/* Show verified DoD details on daily cards; MTD GGR intentionally has no DoD. */
+#header-kpi-strip .kpi-yesterday{display:flex!important;align-items:center;gap:4px;margin-top:5px!important;color:#168a54;font-size:9px!important;font-weight:800;line-height:1.2!important;white-space:nowrap}
+#header-kpi-strip .kpi-yesterday.is-down{color:#c83f4a!important}
+#header-kpi-strip .kpi-yesterday.is-neutral{color:#718096!important}
+#header-kpi-strip .kpi-arrow{font-size:12px;line-height:0}
+#header-kpi-strip .mtd-ggr-card .kpi-yesterday{display:none!important}
+.summary-metrics-card .summary-subitem small.daily-metric-yesterday{display:block!important;margin-top:4px!important;color:#168a54!important;font-size:8px!important;font-weight:800!important;line-height:1.25!important;white-space:normal!important;overflow:visible!important}
+.summary-metrics-card .summary-subitem small.daily-metric-yesterday.is-down{color:#c83f4a!important}
+.summary-metrics-card .summary-subitem small.daily-metric-yesterday.is-neutral{color:#718096!important}
+.summary-metrics-card .daily-metric-arrow{font-size:11px;line-height:0;margin-right:2px}
+</style>
+<style id="reference-distribution-chart-format">
+/* Reference-style distribution charts: compact labels, value labels, and percentages stay visible. */
+.hourly-players-row>.bet-distribution-panel.reference-distribution-panel,
+.hourly-players-row>.multiplier-distribution-panel.reference-distribution-panel{padding:12px!important;background:#fff;overflow:hidden!important}
+.reference-distribution{display:flex;flex:1 1 auto;min-width:0;min-height:100%;flex-direction:column}
+.reference-distribution-title{margin:0 0 4px;color:#102d61;font-size:11px;line-height:1.25;font-weight:900;letter-spacing:.01em}
+.reference-distribution-svg{display:block;width:100%;height:278px;min-height:0;overflow:visible}
+.reference-distribution-svg text{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+.reference-distribution-foot{margin:auto 0 0;color:#718096;font-size:7px;line-height:1.35;white-space:normal}
+.reference-distribution-panel .reference-distribution-svg polygon,
+.reference-distribution-panel .reference-distribution-svg rect{outline:none}
+.reference-distribution-panel .reference-distribution-svg [tabindex="0"]{cursor:help}
+@media(max-width:1100px){.reference-distribution-svg{height:270px}}
+@media(max-width:900px){.reference-distribution-svg{height:300px}.reference-distribution-foot{font-size:8px}}
+@media(max-width:600px){.reference-distribution-svg{height:290px}.reference-distribution-title{font-size:12px}.reference-distribution-foot{font-size:8px}}
+</style>
+<script id="reference-style-distribution-charts-2026-08-20">
+(() => {
+  const NS='http://www.w3.org/2000/svg';
+  const peso=String.fromCharCode(8369);
+  const sourceNode=document.getElementById('hourly-recovery-report-data-2026-08-20');
+  let D={};
+  try{D=JSON.parse(sourceNode?.textContent||'{}');}catch(error){D={};}
+  const fallbackBet=[
+    {label:'₱5–₱10',bet:7055,rounds:1077},
+    {label:'₱11–₱20',bet:3540,rounds:177},
+    {label:'₱21–₱50',bet:800,rounds:16},
+    {label:'₱51–₱100',bet:500,rounds:5},
+    {label:'₱101–₱200',bet:400,rounds:2},
+    {label:'₱201–₱500',bet:0,rounds:0},
+    {label:'₱501–₱1,000',bet:1000,rounds:1}
+  ];
+  const fallbackMultiplier=[
+    {label:'0x',rounds:878},
+    {label:'0.01x–1x',rounds:164},
+    {label:'>1x–2x',rounds:72},
+    {label:'>2x–5x',rounds:122},
+    {label:'>5x–10x',rounds:20},
+    {label:'>10x–25x',rounds:22},
+    {label:'>25x',rounds:0}
+  ];
+  const rawBetRows=(Array.isArray(D.betRanges)&&D.betRanges.length?D.betRanges:fallbackBet).map(row=>({label:row.label,bet:Number(row.bet)||0,rounds:Number(row.rounds)||0,payout:Number(row.payout)||0,ggr:Number(row.ggr)||0}));
+  /* Match the requested funnel reading order while retaining each range's verified values. */
+  const funnelOrder=['₱5–₱10','₱11–₱20','₱21–₱50','₱51–₱100','₱501–₱1,000','₱101–₱200','₱201–₱500'];
+  const betRows=funnelOrder.map(label=>rawBetRows.find(row=>row.label===label)).filter(Boolean);
+  const multiplierRows=(Array.isArray(D.multiplierRanges)&&D.multiplierRanges.length?D.multiplierRanges:fallbackMultiplier).map(row=>({label:row.label,rounds:Number(row.rounds)||0,bet:Number(row.bet)||0,payout:Number(row.payout)||0,ggr:Number(row.ggr)||0}));
+  const money=value=>(value<0?'-':'')+peso+Math.abs(Number(value)||0).toLocaleString('en-US',{maximumFractionDigits:2});
+  const count=value=>Number(value||0).toLocaleString('en-US');
+  const pct=value=>Number(value||0).toFixed(2)+'%';
+  const add=(parent,tag,attrs,text)=>{const node=document.createElementNS(NS,tag);Object.entries(attrs||{}).forEach(([key,value])=>node.setAttribute(key,String(value)));if(text!==undefined)node.textContent=text;parent.appendChild(node);return node;};
+  const tooltip=(node,text)=>{const title=add(node,'title',{},text);node.setAttribute('tabindex','0');return title;};
+  const clearPanel=(panel,title,aria)=>{if(!panel)return null;panel.classList.add('reference-distribution-panel');panel.setAttribute('aria-label',aria);panel.innerHTML='';const wrap=document.createElement('section');wrap.className='reference-distribution';const heading=document.createElement('h2');heading.className='reference-distribution-title';heading.textContent=title;wrap.appendChild(heading);panel.appendChild(wrap);return wrap;};
+
+  function renderBet(){
+    const panel=document.querySelector('.bet-distribution-panel');
+    const wrap=clearPanel(panel,'BET AMOUNT DISTRIBUTION','Bet amount distribution funnel');
+    if(!wrap)return;
+    const svg=add(wrap,'svg',{class:'reference-distribution-svg reference-bet-svg',viewBox:'0 0 460 302',preserveAspectRatio:'none',role:'img','aria-label':'Bet amount distribution by bet range'});
+    add(svg,'desc',{},'Funnel widths represent each bet range\'s share of total bet amount.');
+    const totalBet=betRows.reduce((sum,row)=>sum+row.bet,0)||Number(D.current?.bet)||0;
+    /* Rank the funnel by contribution, so every successive segment is equal to or narrower than the one above it. */
+    const rankedBetRows=[...betRows].map(row=>({...row,share:totalBet?row.bet/totalBet*100:0})).sort((a,b)=>b.share-a.share||b.bet-a.bet||a.label.localeCompare(b.label));
+    const maxShare=Math.max(...rankedBetRows.map(row=>row.share),0.01);
+    const colors=['#386edb','#3aa6cc','#43a6a5','#2d9f38','#78b915','#e6bd00','#efb4a5'];
+    const left=10,center=230,right=445,top=13,rowHeight=39,segmentHeight=31,maxWidth=260;
+    const widths=rankedBetRows.map(row=>row.bet>0?Math.max(12,maxWidth*row.share/maxShare):12);
+    rankedBetRows.forEach((row,index)=>{
+      const y=top+index*rowHeight,topWidth=widths[index],bottomWidth=index<widths.length-1?widths[index+1]:Math.max(10,topWidth*.68),share=row.share;
+      const polygon=add(svg,'polygon',{points:[center-topWidth/2,y,center+topWidth/2,y,center+bottomWidth/2,y+segmentHeight,center-bottomWidth/2,y+segmentHeight].join(' '),fill:colors[index%colors.length],stroke:'#fff','stroke-width':1.2});
+      tooltip(polygon,row.label+' | '+money(row.bet)+' total bet | '+pct(share)+' of total bet | '+count(row.rounds)+' rounds');
+      add(svg,'text',{x:left,y:y+20,fill:'#334155','font-size':10,'font-weight':700},row.label);
+      add(svg,'text',{x:center,y:y+20,'text-anchor':'middle',fill:'#101a2f','font-size':11,'font-weight':900},money(row.bet));
+      add(svg,'text',{x:right,y:y+20,'text-anchor':'end',fill:'#102d61','font-size':10,'font-weight':900},pct(share));
+    });
+    const foot=document.createElement('p');foot.className='reference-distribution-foot';foot.textContent='Total Bet: '+money(totalBet)+' • '+count(Number(D.current?.rounds)||betRows.reduce((sum,row)=>sum+row.rounds,0))+' settled records • Hover a funnel segment for details.';wrap.appendChild(foot);
+  }
+
+  function renderMultiplier(){
+    const panel=document.querySelector('.multiplier-distribution-panel');
+    const wrap=clearPanel(panel,'MULTIPLIER AMOUNT DISTRIBUTION','Multiplier amount distribution by range');
+    if(!wrap)return;
+    const svg=add(wrap,'svg',{class:'reference-distribution-svg reference-multiplier-svg',viewBox:'0 0 460 302',preserveAspectRatio:'none',role:'img','aria-label':'Multiplier amount distribution by multiplier range'});
+    add(svg,'desc',{},'Horizontal bars represent settled round counts; percentages are based on all settled rounds.');
+    const totalRounds=multiplierRows.reduce((sum,row)=>sum+row.rounds,0)||Number(D.current?.rounds)||0;
+    const maxRounds=Math.max(...multiplierRows.map(row=>row.rounds),1);
+    const colors=['#386edb','#3aa6cc','#159a8b','#39a52e','#e0ae08','#efa500','#efb4a5'];
+    const left=10,trackLeft=106,trackWidth=258,right=445,top=16,rowHeight=35,barHeight=19;
+    [0,.5,1].forEach(ratio=>{const x=trackLeft+trackWidth*ratio;add(svg,'line',{x1:x,x2:x,y1:top-4,y2:top+rowHeight*multiplierRows.length-9,stroke:'#dce4ef','stroke-width':1});add(svg,'text',{x,y:top+rowHeight*multiplierRows.length+8,'text-anchor':'middle',fill:'#556275','font-size':8},count(Math.round(maxRounds*ratio)));});
+    multiplierRows.forEach((row,index)=>{
+      const y=top+index*rowHeight,width=row.rounds?Math.max(2,trackWidth*row.rounds/maxRounds):2,share=totalRounds?row.rounds/totalRounds*100:0,color=colors[index%colors.length];
+      add(svg,'text',{x:left,y:y+14,fill:'#334155','font-size':10,'font-weight':700},row.label);
+      const bar=add(svg,'rect',{x:trackLeft,y,width,height:barHeight,rx:2,fill:color});
+      tooltip(bar,row.label+' | '+count(row.rounds)+' rounds | '+pct(share)+' of settled rounds | '+money(row.bet)+' total bet');
+      const inside=width>=42;
+      add(svg,'text',{x:inside?trackLeft+width-7:trackLeft+width+7,y:y+14,'text-anchor':inside?'end':'start',fill:inside?'#101a2f':color,'font-size':9,'font-weight':900},count(row.rounds));
+      add(svg,'text',{x:right,y:y+14,'text-anchor':'end',fill:'#102d61','font-size':10,'font-weight':900},pct(share));
+    });
+    const foot=document.createElement('p');foot.className='reference-distribution-foot';foot.textContent='Total: '+count(totalRounds)+' settled records • Hover a bar segment for details.';wrap.appendChild(foot);
+  }
+
+  const apply=()=>{renderBet();renderMultiplier();};
+  apply();
+  window.addEventListener('load',apply,{once:true});
+  setTimeout(apply,250);
+  setTimeout(apply,1500);
+  const watchRoot=document.querySelector('.section-grid');
+  if(watchRoot&&window.MutationObserver){new MutationObserver(()=>{if(!document.querySelector('.bet-distribution-panel .reference-bet-svg')||!document.querySelector('.multiplier-distribution-panel .reference-multiplier-svg'))apply();}).observe(watchRoot,{childList:true,subtree:true});}
+})();
+</script>
+<style id="daily-metrics-dod-right-side-layout">
+/* Keep the main metric on the left and the Yesterday/DoD comparison in a slim right column. */
+.summary-metrics-card .summary-metric-bullets{display:grid!important;grid-template-columns:repeat(8,minmax(0,1fr))!important;gap:8px!important;overflow:visible!important;padding:0!important}
+.summary-metrics-card .summary-subitem{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(66px,.82fr)!important;grid-template-rows:auto auto!important;column-gap:7px!important;align-content:center!important;align-items:center!important;min-width:0!important;min-height:70px!important;height:70px!important;padding:8px 9px!important;overflow:hidden!important}
+.summary-metrics-card .summary-subitem .summary-sub-label{grid-column:1;grid-row:1;display:block!important;min-width:0!important;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important;font-size:8px!important;line-height:1.2!important}
+.summary-metrics-card .summary-subitem>b{grid-column:1;grid-row:2;display:block!important;min-width:0!important;margin:4px 0 0!important;overflow:visible!important;text-overflow:clip!important;white-space:nowrap!important;font-size:15px!important;line-height:1.05!important}
+.summary-metrics-card .summary-subitem>small.daily-metric-yesterday{grid-column:2;grid-row:1/3;display:block!important;align-self:center!important;min-width:0!important;margin:0!important;padding:0!important;overflow:visible!important;text-overflow:clip!important;white-space:normal!important;font-size:7px!important;font-weight:800!important;line-height:1.25!important;text-align:left!important}
+.summary-metrics-card .summary-subitem>small.daily-metric-yesterday .daily-metric-arrow{font-size:10px!important;line-height:1!important;margin-right:1px!important}
+@media(max-width:1100px){.summary-metrics-card .summary-metric-bullets{grid-template-columns:repeat(4,minmax(0,1fr))!important}.summary-metrics-card .summary-subitem{min-height:72px!important;height:72px!important}.summary-metrics-card .summary-subitem>small.daily-metric-yesterday{font-size:8px!important}}
+@media(max-width:700px){.summary-metrics-card .summary-metric-bullets{grid-template-columns:repeat(2,minmax(0,1fr))!important}.summary-metrics-card .summary-subitem{min-height:70px!important;height:70px!important}}
+@media(max-width:420px){.summary-metrics-card .summary-metric-bullets{grid-template-columns:1fr!important}}
+</style>
+<style id="player-behavior-equal-card-heights">
+/* The four Player Behavior cards share one row height and end on the same baseline. */
+#player-behavior-content{align-items:stretch!important}
+#player-behavior-content>.behavior-quarter{height:auto!important;align-self:stretch!important;min-height:0!important}
+#player-behavior-content>.behavior-quarter>.behavior-split{flex:0 0 auto!important}
+@media(max-width:600px){#player-behavior-content{align-items:stretch!important}}
+</style>
+<style id="daily-metrics-larger-dod-thinner-cards">
+/* Larger DoD comparison text inside a shorter Daily Metrics card. */
+.summary-metrics-card .summary-subitem{min-height:62px!important;height:62px!important;padding:6px 8px!important;grid-template-columns:minmax(0,1fr) minmax(74px,.9fr)!important;column-gap:6px!important}
+.summary-metrics-card .summary-subitem .summary-sub-label{font-size:8px!important}
+.summary-metrics-card .summary-subitem>b{font-size:19px!important;line-height:1!important;letter-spacing:-.03em!important;margin-top:3px!important}
+.summary-metrics-card .summary-subitem>small.daily-metric-yesterday{font-size:9px!important;line-height:1.15!important;font-weight:800!important}
+.summary-metrics-card .summary-subitem>small.daily-metric-yesterday .daily-metric-arrow{font-size:12px!important}
+@media(max-width:1100px){.summary-metrics-card .summary-subitem{min-height:62px!important;height:62px!important}.summary-metrics-card .summary-subitem>b{font-size:18px!important}.summary-metrics-card .summary-subitem>small.daily-metric-yesterday{font-size:9px!important}}
+@media(max-width:700px){.summary-metrics-card .summary-subitem{min-height:62px!important;height:62px!important}.summary-metrics-card .summary-subitem>b{font-size:17px!important}}
+</style>
+<script id="match-mtd-new-players-to-daily-metric-2026-08-20">
+(() => {
+  const sourceNode=document.getElementById('hourly-recovery-report-data-2026-08-20');
+  if(!sourceNode)return;
+  let D={};try{D=JSON.parse(sourceNode.textContent||'{}');}catch(error){D={};}
+  const value=Number(D.current?.newPlayers);
+  if(!Number.isFinite(value))return;
+  const apply=()=>document.querySelectorAll('.monthly-performance-detail tbody tr').forEach(row=>{const cell=row.cells?.[6];if(cell)cell.textContent=value.toLocaleString('en-US');});
+  apply();setTimeout(apply,250);setTimeout(apply,1600);window.addEventListener('load',()=>setTimeout(apply,20),{once:true});
+  document.getElementById('report-date')?.addEventListener('change',()=>requestAnimationFrame(apply));
+})();
+</script>
+<style id="match-cohort-donut-visual-size">
+/* Center the cohort donut and keep its overall footprint aligned with Ticket Outcome Split. */
+#player-behavior-content .behavior-cohort-card .behavior-chart{display:flex!important;justify-content:center!important;align-items:flex-start!important}
+#player-behavior-content .behavior-cohort-card .behavior-chart svg{display:block!important;max-width:100%!important;margin:0 auto!important}
+</style>
+<script id="sync-cohort-donut-to-ticket-outcome">
+(() => {
+  const sync=()=>{
+    const cohort=document.getElementById('cohort-pie-chart');
+    const outcome=document.querySelector('#ticket-outcome-card .behavior-chart svg');
+    const holder=cohort?.closest('.behavior-chart');
+    if(!cohort||!outcome||!holder)return;
+    const outcomeWidth=outcome.getBoundingClientRect().width;
+    const target=Math.min(holder.getBoundingClientRect().width,outcomeWidth);
+    if(target>0)cohort.style.width=target.toFixed(1)+'px';
+  };
+  sync();window.addEventListener('load',sync,{once:true});window.addEventListener('resize',sync);
+  setTimeout(sync,250);setTimeout(sync,1600);
+  if(window.ResizeObserver){const outcome=document.querySelector('#ticket-outcome-card .behavior-chart');if(outcome)new ResizeObserver(()=>requestAnimationFrame(sync)).observe(outcome);}
+})();
+</script>
+<style id="compact-cohort-donut-spacing">
+/* Remove the unused vertical canvas around the New vs Returning donut without changing its visible ring size. */
+#player-behavior-content .behavior-cohort-card h3{min-height:0!important;margin-bottom:4px!important}
+#player-behavior-content .behavior-cohort-card .behavior-split{gap:0!important}
+#player-behavior-content .behavior-cohort-card .behavior-chart{flex:0 0 auto!important;min-height:0!important;margin:0!important;padding:0!important;line-height:0!important}
+#player-behavior-content .behavior-cohort-card .behavior-chart svg{aspect-ratio:240/172!important;height:auto!important;min-height:0!important}
+#player-behavior-content .behavior-cohort-card .table-scroll{margin-top:0!important}
+</style>
+<script id="trim-cohort-donut-canvas">
+(() => {
+  const trim=()=>{
+    const donut=document.getElementById('cohort-pie-chart');
+    if(donut)donut.setAttribute('viewBox','0 20 240 172');
+  };
+  trim();
+  window.addEventListener('load',trim,{once:true});
+  setTimeout(trim,250);setTimeout(trim,1600);
+})();
+</script>
+<script id="match-ticket-outcome-donut-to-cohort">
+(() => {
+  const matchSize=()=>{
+    const cohort=document.getElementById('cohort-pie-chart'),ticket=document.getElementById('ticket-outcome-chart');
+    if(!cohort||!ticket)return;
+    const ring=svg=>[...svg.querySelectorAll('circle')].find(node=>node.getAttribute('fill')==='none'&&Number(node.getAttribute('stroke-width')||0)>=20);
+    const cohortRing=ring(cohort),ticketRing=ring(ticket);
+    if(!cohortRing||!ticketRing)return;
+    const visibleDiameter=(svg,circle)=>{const width=svg.getBoundingClientRect().width,viewBox=svg.viewBox.baseVal,radius=Number(circle.getAttribute('r')||0),stroke=Number(circle.getAttribute('stroke-width')||0);return width&&viewBox.width?(2*radius+stroke)*width/viewBox.width:0;};
+    const cohortDiameter=visibleDiameter(cohort,cohortRing),ticketDiameter=visibleDiameter(ticket,ticketRing);
+    if(!(cohortDiameter>0&&ticketDiameter>0)||ticketDiameter>=cohortDiameter)return;
+    const viewBox=ticket.viewBox.baseVal,scale=ticketDiameter/cohortDiameter,size=viewBox.width*scale,centerX=viewBox.x+viewBox.width/2,centerY=viewBox.y+viewBox.height/2;
+    ticket.setAttribute('viewBox',(centerX-size/2).toFixed(2)+' '+(centerY-size/2).toFixed(2)+' '+size.toFixed(2)+' '+size.toFixed(2));
+  };
+  matchSize();
+  window.addEventListener('load',matchSize,{once:true});
+  setTimeout(matchSize,250);setTimeout(matchSize,1600);
+})();
+</script>
 </body></html>
