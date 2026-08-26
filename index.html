@@ -5310,4 +5310,18 @@
   apply();window.addEventListener('load',apply,{once:true});setTimeout(apply,350);
 })();
 </script>
+<script id="remove-30-day-total-rounds">
+(() => {
+  const panel = document.querySelector('.thirty-day-chart-panel');
+  if (!panel) return;
+  const removeRounds = () => {
+    panel.querySelectorAll('.daily-legend span').forEach(item => {
+      if (/^(Tickets|Total Rounds)$/i.test(item.textContent.trim())) item.remove();
+    });
+    panel.querySelectorAll('#daily-performance-30-chart rect[fill="#7a5cc7"]').forEach(bar => bar.remove());
+  };
+  removeRounds();
+  new MutationObserver(removeRounds).observe(panel.querySelector('#daily-performance-30-chart'), { childList: true });
+})();
+</script>
 </body></html>
