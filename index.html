@@ -3521,7 +3521,7 @@
     const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[];
     while(walker.nextNode())nodes.push(walker.currentNode);
     nodes.forEach(node=>{const value=rename(node.nodeValue);if(value!==node.nodeValue)node.nodeValue=value;});
-    root.querySelectorAll('[title]').forEach(element=>{const value=element.getAttribute('title');if(value)element.setAttribute('title',rename(value));});
+    root.querySelectorAll('[title]').forEach(element=>{const value=element.getAttribute('title');if(value){const renamed=rename(value);if(renamed!==value)element.setAttribute('title',renamed);}});
   }
   ['feature-treemap','feature-table-body'].forEach(id=>{const root=document.getElementById(id);if(!root)return;update(root);new MutationObserver(()=>update(root)).observe(root,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:['title']});});
 }());
@@ -3537,7 +3537,7 @@
     '#d94f50':['RETURNING PLAYER','BUY FEATURE']
   };
   if(!svg)return;
-  function update(){svg.querySelectorAll('g').forEach(group=>{const rect=group.querySelector('rect[fill]'),parts=labels[rect?.getAttribute('fill')];if(!parts)return;const [playerType,feature]=parts,title=rect.querySelector('title');if(title){const suffix=title.textContent.replace(/^.*?:\s*/,'');title.textContent=playerType+' '+dash+' '+feature+': '+suffix;}});}
+  function update(){svg.querySelectorAll('g').forEach(group=>{const rect=group.querySelector('rect[fill]'),parts=labels[rect?.getAttribute('fill')];if(!parts)return;const [playerType,feature]=parts,title=rect.querySelector('title');if(title){const suffix=title.textContent.replace(/^.*?:\s*/,'');const repaired=playerType+' '+dash+' '+feature+': '+suffix;if(repaired!==title.textContent)title.textContent=repaired;}});}
   update();new MutationObserver(update).observe(svg,{childList:true,subtree:true,characterData:true});
 }());
 </script>
