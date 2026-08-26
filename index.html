@@ -5321,12 +5321,19 @@
       title.textContent = title.textContent.replace(/\s*\|\s*Total Rounds:\s*[\d,]+/i, '');
     });
   };
-  ['.thirty-day-chart-panel', '.hourly-chart-panel'].forEach(selector => {
-    const panel = document.querySelector(selector), chart = panel?.querySelector('svg');
-    if (!panel || !chart) return;
-    removeRounds(panel);
-    new MutationObserver(() => removeRounds(panel)).observe(chart, { childList: true, subtree: true });
-  });
+  const applyToAllCharts = () => {
+    document.querySelectorAll('.thirty-day-chart-panel, .hourly-chart-panel').forEach(panel => {
+      removeRounds(panel);
+      const chart = panel.querySelector('svg');
+      if (chart && !chart.dataset.totalRoundsObserver) {
+        chart.dataset.totalRoundsObserver = 'true';
+        new MutationObserver(() => removeRounds(panel)).observe(chart, { childList: true, subtree: true });
+      }
+    });
+  };
+  applyToAllCharts();
+  window.addEventListener('load', applyToAllCharts, { once: true });
+  [100, 400, 1200].forEach(delay => setTimeout(applyToAllCharts, delay));
 })();
 </script>
 </body></html>
