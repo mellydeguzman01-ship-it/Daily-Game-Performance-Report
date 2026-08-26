@@ -5318,7 +5318,8 @@
     });
     panel.querySelectorAll('rect[fill="#7a5cc7"]').forEach(bar => bar.remove());
     panel.querySelectorAll('title').forEach(title => {
-      title.textContent = title.textContent.replace(/\s*\|\s*Total Rounds:\s*[\d,]+/i, '');
+      const cleaned = title.textContent.replace(/\s*\|\s*Total Rounds:\s*[\d,]+/i, '');
+      if (cleaned !== title.textContent) title.textContent = cleaned;
     });
   };
   const applyToAllCharts = () => {
