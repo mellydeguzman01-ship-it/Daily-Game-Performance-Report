@@ -5312,16 +5312,21 @@
 </script>
 <script id="remove-30-day-total-rounds">
 (() => {
-  const panel = document.querySelector('.thirty-day-chart-panel');
-  if (!panel) return;
-  const removeRounds = () => {
-    panel.querySelectorAll('.daily-legend span').forEach(item => {
+  const removeRounds = panel => {
+    panel.querySelectorAll('.daily-legend span, .hourly-rtp-legend span').forEach(item => {
       if (/^(Tickets|Total Rounds)$/i.test(item.textContent.trim())) item.remove();
     });
-    panel.querySelectorAll('#daily-performance-30-chart rect[fill="#7a5cc7"]').forEach(bar => bar.remove());
+    panel.querySelectorAll('rect[fill="#7a5cc7"]').forEach(bar => bar.remove());
+    panel.querySelectorAll('title').forEach(title => {
+      title.textContent = title.textContent.replace(/\s*\|\s*Total Rounds:\s*[\d,]+/i, '');
+    });
   };
-  removeRounds();
-  new MutationObserver(removeRounds).observe(panel.querySelector('#daily-performance-30-chart'), { childList: true });
+  ['.thirty-day-chart-panel', '.hourly-chart-panel'].forEach(selector => {
+    const panel = document.querySelector(selector), chart = panel?.querySelector('svg');
+    if (!panel || !chart) return;
+    removeRounds(panel);
+    new MutationObserver(() => removeRounds(panel)).observe(chart, { childList: true, subtree: true });
+  });
 })();
 </script>
 </body></html>
