@@ -5343,4 +5343,65 @@
 .monthly-performance-detail .data-table th:first-child,.monthly-performance-detail .data-table td:first-child{width:20%!important;min-width:125px!important;text-align:left!important;overflow:visible!important;font-size:7.5px!important;letter-spacing:-.2px!important}
 .monthly-performance-detail .data-table th:nth-child(2),.monthly-performance-detail .data-table td:nth-child(2),.monthly-performance-detail .data-table th:nth-child(3),.monthly-performance-detail .data-table td:nth-child(3),.monthly-performance-detail .data-table th:nth-child(4),.monthly-performance-detail .data-table td:nth-child(4){width:11%!important}
 </style>
+<style id="player-analysis-five-chart-row">
+/* Five equal-width Player Analysis cards in one desktop row. */
+@media(min-width:1400px){
+  #player-behavior-content{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:10px!important;align-items:stretch!important}
+  #player-behavior-content>.player-behavior-row:first-child,
+  #player-behavior-content>.player-behavior-row.betting-row{display:contents!important}
+  #player-behavior-content .behavior-cohort-card{grid-column:1!important;grid-row:1!important}
+  #player-behavior-content .rounds-comparison-card{grid-column:2!important;grid-row:1!important}
+  #player-behavior-content .behavior-retention-card{display:none!important}
+  #player-behavior-content .feature-card.feature-dashboard-card{grid-column:3!important;grid-row:1!important}
+  #player-behavior-content .betting-behavior-card{grid-column:4!important;grid-row:1!important}
+  #player-behavior-content .ticket-outcome-card{grid-column:5!important;grid-row:1!important}
+  #player-behavior-content .behavior-note{grid-column:1/-1!important;grid-row:2!important}
+  #player-behavior-content :is(.behavior-cohort-card,.rounds-comparison-card,.behavior-retention-card,.betting-behavior-card,.ticket-outcome-card){height:auto!important;min-width:0!important;padding:10px!important;overflow:hidden!important}
+  #player-behavior-content :is(.behavior-cohort-card,.rounds-comparison-card,.behavior-retention-card,.betting-behavior-card,.ticket-outcome-card)>h3{min-height:30px!important;margin:0 0 5px!important;font-size:11px!important;line-height:1.25!important}
+  #player-behavior-content :is(.behavior-cohort-card,.behavior-retention-card,.betting-behavior-card,.ticket-outcome-card) .behavior-split{display:grid!important;grid-template-columns:1fr!important;gap:4px!important;align-content:start!important}
+  #player-behavior-content :is(.behavior-cohort-card,.behavior-retention-card,.betting-behavior-card,.ticket-outcome-card) .behavior-chart{min-height:0!important;margin:0!important;padding:0!important}
+  #player-behavior-content :is(.behavior-cohort-card,.behavior-retention-card,.ticket-outcome-card) .behavior-chart svg{width:100%!important;max-width:240px!important;height:auto!important;min-height:0!important;margin:0 auto!important;aspect-ratio:240/172!important}
+  #player-behavior-content .betting-behavior-card .behavior-chart svg{width:100%!important;height:auto!important;min-height:0!important;aspect-ratio:520/270!important}
+  #player-behavior-content :is(.behavior-cohort-card,.behavior-retention-card,.betting-behavior-card,.ticket-outcome-card) .table-scroll{margin:0!important;overflow:visible!important}
+  #player-behavior-content :is(.behavior-cohort-card,.behavior-retention-card,.betting-behavior-card,.ticket-outcome-card) .behavior-table{width:100%!important;min-width:0!important;table-layout:fixed!important}
+  #player-behavior-content :is(.behavior-cohort-card,.behavior-retention-card,.betting-behavior-card,.ticket-outcome-card) .behavior-table th,
+  #player-behavior-content :is(.behavior-cohort-card,.behavior-retention-card,.betting-behavior-card,.ticket-outcome-card) .behavior-table td{padding:4px 3px!important;font-size:8px!important;line-height:1.18!important;white-space:normal!important;overflow-wrap:anywhere!important}
+  #player-behavior-content .behavior-chart-legend{gap:6px!important;font-size:8px!important}
+  #player-behavior-content .ticket-outcome-note{font-size:8px!important;line-height:1.25!important}
+}
+.rounds-comparison-card{display:flex!important;flex-direction:column!important;background:#fff!important}
+.rounds-comparison-subtitle{margin:-1px 0 7px;color:#65738a;font-size:9px;line-height:1.35}
+.rounds-comparison-chart{display:block;width:100%;height:auto;min-height:180px;background:#f8fafc;border-radius:7px}
+.rounds-comparison-summary{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
+.rounds-comparison-summary span{display:block;border:1px solid #dce4ef;border-radius:6px;background:#f7f9fc;padding:6px;color:#65738a;font-size:8px;line-height:1.25}
+.rounds-comparison-summary b{display:block;margin-top:2px;color:#101a2f;font-size:12px}
+@media(min-width:901px) and (max-width:1400px){
+  #player-behavior-content{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important}
+  #player-behavior-content>.player-behavior-row:first-child,#player-behavior-content>.player-behavior-row.betting-row{display:contents!important}
+  #player-behavior-content .feature-card,#player-behavior-content .behavior-note{grid-column:1/-1!important}
+}
+@media(max-width:900px){.rounds-comparison-chart{min-height:150px}.rounds-comparison-card{margin-bottom:10px}}
+</style>
+<script id="player-rounds-comparison-chart">
+(() => {
+  const NS='http://www.w3.org/2000/svg';
+  const add=(svg,tag,attrs,text)=>{const node=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([key,value])=>node.setAttribute(key,value));if(text!==undefined)node.textContent=text;svg.appendChild(node);return node;};
+  const format=value=>Number(value||0).toLocaleString('en-US');
+  const render=()=>{
+    const content=document.getElementById('player-behavior-content'),cohort=content?.querySelector('.behavior-cohort-card'),payloadNode=document.querySelector('script[type="application/json"][id^="hourly-recovery-report-data-"]');
+    if(!content||!cohort||!payloadNode)return;
+    const bettingCard=content.querySelector('#betting-behavior-chart')?.closest('.behavior-card');if(bettingCard)bettingCard.classList.add('betting-behavior-card');
+    let payload={};try{payload=JSON.parse(payloadNode.textContent||'{}');}catch(error){return;}
+    const values=[Number(payload.cohorts?.new?.rounds||0),Number(payload.cohorts?.returning?.rounds||0)],labels=['New Players','Returning Players'],total=values[0]+values[1];
+    let card=content.querySelector('.rounds-comparison-card');
+    if(!card){card=document.createElement('section');card.className='behavior-card behavior-quarter rounds-comparison-card';card.innerHTML='<h3>Rounds Comparison</h3><p class="rounds-comparison-subtitle">Total rounds played by new and returning players.</p><svg class="rounds-comparison-chart" viewBox="0 0 320 200" role="img"></svg><div class="rounds-comparison-summary"><span>New Players<b></b></span><span>Returning Players<b></b></span></div>';cohort.insertAdjacentElement('afterend',card);}
+    const svg=card.querySelector('svg');if(!svg)return;svg.innerHTML='';svg.setAttribute('aria-label','Rounds comparison: New Players '+format(values[0])+' rounds; Returning Players '+format(values[1])+' rounds');
+    const left=82,right=306,top=24,bottom=168,width=right-left,maxValue=Math.max(...values,1),axisMax=Math.max(1000,Math.ceil(maxValue/2000)*2000),ticks=4;
+    for(let index=0;index<=ticks;index++){const x=left+width*index/ticks,value=axisMax*index/ticks;add(svg,'line',{x1:x,y1:top,x2:x,y2:bottom,stroke:'#d6deea','stroke-width':1,'stroke-dasharray':'3 4'});add(svg,'text',{x,y:190,'text-anchor':'middle',fill:'#64748b','font-size':9},format(value));}
+    values.forEach((value,index)=>{const y=43+index*72,barWidth=Math.max(2,width*value/axisMax);add(svg,'text',{x:left-8,y:y+18,'text-anchor':'end',fill:'#334155','font-size':9,'font-weight':700},labels[index]);const bar=add(svg,'rect',{x:left,y,width:barWidth,height:34,rx:6,fill:index===0?'#386edb':'#2558a6'});const title=add(bar,'title',{},labels[index]+': '+format(value)+' rounds');add(svg,'text',{x:Math.min(right-4,left+barWidth-6),y:y+21,'text-anchor':'end',fill:'#fff','font-size':10,'font-weight':800},format(value));});
+    const summary=card.querySelectorAll('.rounds-comparison-summary b');if(summary[0])summary[0].textContent=format(values[0])+' rounds';if(summary[1])summary[1].textContent=format(values[1])+' rounds';card.dataset.roundsTotal=String(total);
+  };
+  render();window.addEventListener('load',render,{once:true});setTimeout(render,350);setTimeout(render,1800);document.getElementById('report-date')?.addEventListener('change',render);
+})();
+</script>
 </body></html>
