@@ -4888,7 +4888,6 @@
 
   function applyText(){
     const mtdRange=document.querySelector('#header-kpi-strip .mtd-ggr-card .kpi-mtd-date-range');setText(mtdRange,'September 1 – September 3, 2026');
-    const mtdRange=document.querySelector('#header-kpi-strip .mtd-ggr-card .kpi-mtd-date-range');setText(mtdRange,'September 1 – September 2, 2026');
     document.title='Daily Game Performance Report — '+D.reportDateLabel;
     const select=document.getElementById('report-date');if(select){select.replaceChildren();const option=document.createElement('option');option.value=D.reportDate;option.textContent=D.reportDateLabel;select.appendChild(option);}
     const headerValues={'TOTAL BET':[money(C.bet),C.bet,P.bet],'TOTAL PAYOUT':[money(C.payout),C.payout,P.payout],'GGR':[money(C.ggr),C.ggr,P.ggr],'RTP':[pct(C.rtp),C.rtp,P.rtp],'MTD GGR (MONTH TO DATE)':[money(M.ggr),M.ggr,null],'MTD GGR':[money(M.ggr),M.ggr,null]};
