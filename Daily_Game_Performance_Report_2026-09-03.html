@@ -5412,4 +5412,26 @@
   render();window.addEventListener('load',render,{once:true});setTimeout(render,350);setTimeout(render,1800);document.getElementById('report-date')?.addEventListener('change',render);
 })();
 </script>
+<script id="ensure-recent-daily-labels">
+(() => {
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const apply=()=>{
+    const svg=document.getElementById('daily-performance-30-chart');
+    const source=document.querySelector('script[type="application/json"][id^="hourly-recovery-report-data-"]');
+    if(!svg||!source)return;
+    let rows=[];try{rows=(JSON.parse(source.textContent||'{}').daily||[]);}catch(error){return;}
+    if(!rows.length)return;
+    const W=1100,p={l:128,r:128},H=360,slot=(W-p.l-p.r)/Math.max(1,rows.length),start=Math.max(0,rows.length-3);
+    const existing=new Set([...svg.querySelectorAll('text')].map(node=>node.textContent));
+    rows.slice(start).forEach((row,offset)=>{
+      const label=months[Number(String(row.date).slice(5,7))-1]+' '+Number(String(row.date).slice(-2));
+      if(existing.has(label))return;
+      const index=start+offset,center=p.l+slot*(index+.5),node=document.createElementNS('http://www.w3.org/2000/svg','text');
+      node.setAttribute('x',center);node.setAttribute('y',H-48);node.setAttribute('text-anchor','middle');node.setAttribute('fill','#556275');node.setAttribute('font-size','8');node.textContent=label;svg.appendChild(node);existing.add(label);
+    });
+  };
+  apply();window.addEventListener('load',apply,{once:true});[100,500,1500,2500].forEach(delay=>setTimeout(apply,delay));
+  const svg=document.getElementById('daily-performance-30-chart');if(svg)new MutationObserver(apply).observe(svg,{childList:true});
+})();
+</script>
 </body></html>
