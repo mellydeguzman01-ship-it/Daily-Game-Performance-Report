@@ -5447,8 +5447,9 @@
     const existing=new Set([...svg.querySelectorAll('text')].map(node=>node.textContent));
     rows.forEach((row,index)=>{
       const date=String(row.date),label=months[Number(date.slice(5,7))-1]+' '+Number(date.slice(-2));
-      if(existing.has(label))return;
       const center=p.l+slot*(index+.5),node=document.createElementNS('http://www.w3.org/2000/svg','text');
+      const found=[...svg.querySelectorAll('text')].find(item=>item.textContent===label);
+      if(found){found.setAttribute('text-anchor','end');found.setAttribute('font-size','7');found.setAttribute('transform','rotate(-45 '+center+' '+(H-48)+')');return;}
       node.setAttribute('x',center);node.setAttribute('y',H-48);node.setAttribute('text-anchor','end');node.setAttribute('fill','#556275');node.setAttribute('font-size','7');node.setAttribute('transform','rotate(-45 '+center+' '+(H-48)+')');node.textContent=label;svg.appendChild(node);existing.add(label);
     });
   };
