@@ -5421,12 +5421,13 @@
     if(!svg||!source)return;
     let rows=[];try{rows=(JSON.parse(source.textContent||'{}').daily||[]);}catch(error){return;}
     if(!rows.length)return;
-    const W=1100,p={l:128,r:128},H=360,slot=(W-p.l-p.r)/Math.max(1,rows.length),start=Math.max(0,rows.length-3);
+    const W=1100,p={l:128,r:128},H=360,slot=(W-p.l-p.r)/Math.max(1,rows.length),lastIndex=rows.length-1;
     const existing=new Set([...svg.querySelectorAll('text')].map(node=>node.textContent));
-    rows.slice(start).forEach((row,offset)=>{
-      const label=months[Number(String(row.date).slice(5,7))-1]+' '+Number(String(row.date).slice(-2));
+    rows.forEach((row,index)=>{
+      const day=Number(String(row.date).slice(-2)),label=months[Number(String(row.date).slice(5,7))-1]+' '+day;
+      if(day>3&&index<Math.max(0,lastIndex-2))return;
       if(existing.has(label))return;
-      const index=start+offset,center=p.l+slot*(index+.5),node=document.createElementNS('http://www.w3.org/2000/svg','text');
+      const center=p.l+slot*(index+.5),node=document.createElementNS('http://www.w3.org/2000/svg','text');
       node.setAttribute('x',center);node.setAttribute('y',H-48);node.setAttribute('text-anchor','middle');node.setAttribute('fill','#556275');node.setAttribute('font-size','8');node.textContent=label;svg.appendChild(node);existing.add(label);
     });
   };
