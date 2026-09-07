@@ -5275,7 +5275,7 @@
 </script>
 <script id="add-change-log-v216">
 (() => {
-  const row='<tr data-release-version="v2.16"><td><strong>v2.16</strong></td><td><time datetime="2026-08-31">Planned Aug 31, 2026</time></td><td><code>No record ID</code></td><td>&#127820; Banana Craze Product Impact</td><td>Turbo is a global state shared by Base Game and Bonus; Bonus inherits the Base Game state, Turbo can be changed during Bonus, and Base Game inherits the final Bonus state.</td></tr>';
+  const row='<tr data-release-version="v2.16"><td><strong>NumericGame V2.16</strong></td><td><time datetime="2026-09-01">Deployed to Product – Sept. 1, 2026</time></td><td><code>—</code></td><td><strong>Banana Craze Product Upgrade</strong></td><td><ul style="margin:0;padding-left:14px"><li>Bonus Feature now supports Turbo, with Turbo state shared between Base Game and Bonus.</li><li>Bonus details are now displayed by page: Base Game as Page 1, followed by each Bonus round on a separate page.</li><li>Top Round Toast was removed from the Bonus page.</li><li>Rich Card/item denomination animation was optimized.</li><li>Activity entry switch now syncs with backend status in real time.</li></ul></td></tr>';
   const addEntry=()=>{const body=document.querySelector('.release-log-table tbody');if(body&&!body.querySelector('[data-release-version="v2.16"]'))body.insertAdjacentHTML('afterbegin',row);};
   addEntry();requestAnimationFrame(addEntry);window.addEventListener('load',addEntry,{once:true});setTimeout(addEntry,500);
 })();
