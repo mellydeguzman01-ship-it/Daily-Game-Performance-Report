@@ -5275,7 +5275,7 @@
 </script>
 <script id="add-change-log-v216">
 (() => {
-  const row='<tr data-release-version="v2.16"><td><strong>v2.16</strong></td><td><time datetime="2026-08-31">Planned Aug 31, 2026</time></td><td><code>No record ID</code></td><td>&#127820; Banana Craze Product Impact</td><td>Turbo is a global state shared by Base Game and Bonus; Bonus inherits the Base Game state, Turbo can be changed during Bonus, and Base Game inherits the final Bonus state.</td></tr>';
+  const row='<tr data-release-version="v2.16"><td><strong>NumericGame V2.16</strong></td><td><time datetime="2026-09-01">Deployed to Product – Sept. 1, 2026</time></td><td><code>—</code></td><td><strong>Banana Craze Product Upgrade</strong></td><td><ul style="margin:0;padding-left:14px"><li>Bonus Feature now supports Turbo, with Turbo state shared between Base Game and Bonus.</li><li>Bonus details are now displayed by page: Base Game as Page 1, followed by each Bonus round on a separate page.</li><li>Top Round Toast was removed from the Bonus page.</li><li>Rich Card/item denomination animation was optimized.</li><li>Activity entry switch now syncs with backend status in real time.</li></ul></td></tr>';
   const addEntry=()=>{const body=document.querySelector('.release-log-table tbody');if(body&&!body.querySelector('[data-release-version="v2.16"]'))body.insertAdjacentHTML('afterbegin',row);};
   addEntry();requestAnimationFrame(addEntry);window.addEventListener('load',addEntry,{once:true});setTimeout(addEntry,500);
 })();
@@ -5428,6 +5428,27 @@
       if(existing.has(label))return;
       const index=start+offset,center=p.l+slot*(index+.5),node=document.createElementNS('http://www.w3.org/2000/svg','text');
       node.setAttribute('x',center);node.setAttribute('y',H-48);node.setAttribute('text-anchor','middle');node.setAttribute('fill','#556275');node.setAttribute('font-size','8');node.textContent=label;svg.appendChild(node);existing.add(label);
+    });
+  };
+  apply();window.addEventListener('load',apply,{once:true});[100,500,1500,2500].forEach(delay=>setTimeout(apply,delay));
+  const svg=document.getElementById('daily-performance-30-chart');if(svg)new MutationObserver(apply).observe(svg,{childList:true});
+})();
+</script>
+<script id="ensure-all-daily-labels-slanted-v2">
+(() => {
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const apply=()=>{
+    const svg=document.getElementById('daily-performance-30-chart');
+    const source=document.querySelector('script[type="application/json"][id^="hourly-recovery-report-data-"]');
+    if(!svg||!source)return;
+    let rows=[];try{rows=(JSON.parse(source.textContent||'{}').daily||[]);}catch(error){return;}
+    const W=1100,p={l:128,r:128},H=360,slot=(W-p.l-p.r)/Math.max(1,rows.length);
+    const existing=[...svg.querySelectorAll('text')];
+    rows.forEach((row,index)=>{
+      const date=String(row.date),label=months[Number(date.slice(5,7))-1]+' '+Number(date.slice(-2)),center=p.l+slot*(index+.5);
+      const found=existing.find(item=>item.textContent===label);
+      if(found){found.setAttribute('x',center);found.setAttribute('y',H-48);found.setAttribute('text-anchor','end');found.setAttribute('font-size','7');found.setAttribute('transform','rotate(-45 '+center+' '+(H-48)+')');return;}
+      const node=document.createElementNS('http://www.w3.org/2000/svg','text');node.setAttribute('x',center);node.setAttribute('y',H-48);node.setAttribute('text-anchor','end');node.setAttribute('fill','#556275');node.setAttribute('font-size','7');node.setAttribute('transform','rotate(-45 '+center+' '+(H-48)+')');node.textContent=label;svg.appendChild(node);existing.push(node);
     });
   };
   apply();window.addEventListener('load',apply,{once:true});[100,500,1500,2500].forEach(delay=>setTimeout(apply,delay));
