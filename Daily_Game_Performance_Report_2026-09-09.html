@@ -5427,7 +5427,9 @@
   const bindToggle=toggle=>{
     if(toggle.dataset.reportToggleBound!=='true'){
       toggle.addEventListener('click',event=>{
-        const button=event.target.closest?.('[data-report-language]');
+        if(event.defaultPrevented)return;
+        const target=event.target;
+        const button=target&&typeof target.closest==='function'?target.closest('[data-report-language]'):null;
         if(!button||!toggle.contains(button))return;
         event.preventDefault();
         event.stopPropagation();
@@ -5435,6 +5437,15 @@
       });
       toggle.dataset.reportToggleBound='true';
     }
+    toggle.querySelectorAll('[data-report-language]').forEach(button=>{
+      if(button.dataset.reportLanguageBound==='true')return;
+      button.addEventListener('click',event=>{
+        event.preventDefault();
+        event.stopPropagation();
+        selectLanguage(button.dataset.reportLanguage);
+      });
+      button.dataset.reportLanguageBound='true';
+    });
     updateButtons();
   };
   const addToggle=()=>{
