@@ -5934,5 +5934,26 @@
 .hourly-chart-panel .chart-wrap{min-height:0!important}
 .hourly-chart-panel .combo-chart{min-height:0!important;aspect-ratio:760/225!important}
 .thirty-day-chart-panel .chart-wrap{min-height:0!important}
+.hourly-chart-panel .combo-chart{height:225px!important}
 </style>
+<script id="authoritative-30-day-chart-final">
+(() => {
+  const svg=document.getElementById('daily-performance-30-chart');
+  const payload=document.querySelector('script[type="application/json"][id^="hourly-recovery-report-data-"]');
+  if(!svg||!payload)return;
+  let data;try{data=JSON.parse(payload.textContent||'{}');}catch(_){return;}
+  const rows=(data.daily||[]).filter(row=>row&&/^\d{4}-\d{2}-\d{2}$/.test(row.date)).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!rows.length)return;
+  const NS='http://www.w3.org/2000/svg',W=1100,H=360,p={l:128,r:128,t:34,b:78},plotH=H-p.t-p.b,slot=(W-p.l-p.r)/rows.length,x=i=>p.l+slot*(i+.5),money=value=>String.fromCharCode(8369)+Number(value||0).toLocaleString('en-US',{maximumFractionDigits:2}),maxAmount=Math.max(1,Math.ceil(Math.max(...rows.flatMap(row=>[row.bet,row.payout]).filter(Number.isFinite),0)/10000)*10000),maxPct=Math.max(120,Math.ceil(Math.max(...rows.map(row=>row.rtp).filter(Number.isFinite),97,0)/20)*20),yAmount=value=>H-p.b-value/maxAmount*plotH,yPct=value=>H-p.b-value/maxPct*plotH,labelStep=rows.length>20?2:1,last=rows.length-1;
+  const render=()=>{
+    svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.replaceChildren();
+    const add=(tag,attrs,text)=>{const node=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([key,value])=>node.setAttribute(key,value));if(text!==undefined)node.textContent=text;svg.appendChild(node);return node;};
+    for(let tick=0;tick<=4;tick++){const amount=maxAmount*tick/4,y=yAmount(amount);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});add('text',{x:p.l-12,y:y+4,'text-anchor':'end',fill:'#556275','font-size':9},money(amount));add('text',{x:W-p.r+12,y:y+4,fill:'#556275','font-size':9},(maxPct*tick/4).toFixed(0)+'%');}
+    rows.forEach((row,index)=>{const center=x(index),label=row.date.slice(5).replace('-','/'),show=index===0||index===last||index%labelStep===0;[['bet','Betting Amount','#386edb',center-4],['payout','Payout','#4fb4bd',center+4]].forEach(([key,name,color,barX])=>{const value=Number(row[key]);if(!Number.isFinite(value))return;const height=H-p.b-yAmount(value),bar=add('rect',{x:barX-3,y:H-p.b-height,width:6,height:Math.max(1,height),rx:2,fill:color,opacity:.9});const title=document.createElementNS(NS,'title');title.textContent=row.date+' | '+name+': '+money(value);bar.appendChild(title);});if(show)add('text',{x:center,y:H-48,'text-anchor':'end',fill:'#556275','font-size':8,transform:'rotate(-45 '+center+' '+(H-48)+')'},label);});
+    add('line',{x1:p.l,x2:W-p.r,y1:yPct(data.standardRtp||97),y2:yPct(data.standardRtp||97),stroke:'#64748b','stroke-width':1.5,'stroke-dasharray':'7 5'});add('text',{x:W-p.r-4,y:yPct(data.standardRtp||97)-6,'text-anchor':'end',fill:'#475569','font-size':10},'Standard RTP '+(data.standardRtp||97)+'%');
+    const points=rows.map((row,index)=>Number.isFinite(Number(row.rtp))?[x(index),yPct(Number(row.rtp))]:null).filter(Boolean);if(points.length){let path='M '+points[0].join(' ');for(let index=1;index<points.length;index++){const a=points[index-1],b=points[index],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:'#f4a51c','stroke-width':3,'stroke-linecap':'round'});points.forEach(point=>add('circle',{cx:point[0],cy:point[1],r:4,fill:'#f4a51c',stroke:'#fff','stroke-width':1.5}));}
+  };
+  window.update30DayPerformance=render;render();window.addEventListener('load',render,{once:true});[250,1000,2500,5000,8000].forEach(delay=>setTimeout(render,delay));window.applyReportLanguage?.();
+})();
+</script>
 </body></html>
