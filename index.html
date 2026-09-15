@@ -51,6 +51,7 @@
     constructor(callback) {
       const languageObserver = window.__creatingReportLanguageObserver === true;
       super((...records) => {
+        if (window.__reportLanguageMuteUntil && performance.now() < window.__reportLanguageMuteUntil) return;
         if (!languageObserver && window.reportLanguage === 'zh') return;
         callback(...records);
       });
@@ -5852,7 +5853,8 @@
     while (node = walker.nextNode()) {
       if (!validText(node)) continue;
       const original = textOriginals.has(node) ? textOriginals.get(node) : (textOriginals.set(node,node.nodeValue),node.nodeValue);
-      node.nodeValue = language==='zh' ? translate(original) : normalize(original);
+      const next = language==='zh' ? translate(original) : normalize(original);
+      if (node.nodeValue !== next) node.nodeValue = next;
     }
     document.querySelectorAll('body *').forEach(element => {
       let originals = attributeOriginals.get(element);
@@ -5861,18 +5863,23 @@
         if (!element.hasAttribute(name)) return;
         if (originals[name] === undefined) originals[name] = element.getAttribute(name);
         const original = originals[name];
-        element.setAttribute(name, language==='zh' ? translate(original) : normalize(original));
+        const next = language==='zh' ? translate(original) : normalize(original);
+        if (element.getAttribute(name) !== next) element.setAttribute(name, next);
       });
     });
     if (!apply.titleOriginal) apply.titleOriginal = document.title;
-    document.title = language==='zh' ? translate(apply.titleOriginal) : normalize(apply.titleOriginal);
+    const nextTitle = language==='zh' ? translate(apply.titleOriginal) : normalize(apply.titleOriginal);
+    if (document.title !== nextTitle) document.title = nextTitle;
     document.documentElement.lang = language==='zh' ? 'zh-CN' : 'en';
     document.querySelectorAll('[data-report-language]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.reportLanguage===language)));
     applying = false;
   };
   const selectLanguage = next => {
-    language = next==='zh' ? 'zh' : 'en';
+    const requested = next==='zh' ? 'zh' : 'en';
+    if (language === requested) return;
+    language = requested;
     window.reportLanguage = language;
+    window.__reportLanguageMuteUntil = performance.now() + 1800;
     try { localStorage.setItem(storageKey, language); } catch (_) {}
     apply();
   };
@@ -5889,7 +5896,7 @@
   window.applyReportLanguage = apply;
   apply();
   window.__creatingReportLanguageObserver = true;
-  new MutationObserver(() => { if (!applying) apply(); }).observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:attributes});
+  new MutationObserver(() => { if (!applying && !(window.__reportLanguageMuteUntil && performance.now() < window.__reportLanguageMuteUntil)) apply(); }).observe(document.body,{childList:true,subtree:true,characterData:true,attributes:true,attributeFilter:attributes});
   window.__creatingReportLanguageObserver = false;
 })();
 </script>
