@@ -4856,8 +4856,8 @@
   ];
   const rawBetRows=(Array.isArray(D.betRanges)&&D.betRanges.length?D.betRanges:fallbackBet).map(row=>({label:row.label,bet:Number(row.bet)||0,rounds:Number(row.rounds)||0,payout:Number(row.payout)||0,ggr:Number(row.ggr)||0}));
   /* Match the requested funnel reading order while retaining each range's verified values. */
-  const funnelOrder=['₱5–₱10','₱11–₱20','₱21–₱50','₱51–₱100','₱501–₱1,000','₱101–₱200','₱201–₱500'];
-  const betRows=funnelOrder.map(label=>rawBetRows.find(row=>row.label===label)).filter(Boolean);
+  const funnelOrder=['₱0.50','₱1','₱2','₱3','₱5–₱10','₱11–₱20','₱21–₱50','₱51–₱100','₱501–₱1,000','₱101–₱200','₱201–₱500'];
+  const betRows=funnelOrder.map(label=>rawBetRows.find(row=>row.label===label)||({label,bet:0,rounds:0,payout:0,ggr:0}));
   const multiplierRows=(Array.isArray(D.multiplierRanges)&&D.multiplierRanges.length?D.multiplierRanges:fallbackMultiplier).map(row=>({label:row.label,rounds:Number(row.rounds)||0,bet:Number(row.bet)||0,payout:Number(row.payout)||0,ggr:Number(row.ggr)||0}));
   const money=value=>(value<0?'-':'')+peso+Math.abs(Number(value)||0).toLocaleString('en-US',{maximumFractionDigits:2});
   const count=value=>Number(value||0).toLocaleString('en-US');
@@ -4877,15 +4877,17 @@
     const rankedBetRows=[...betRows].map(row=>({...row,share:totalBet?row.bet/totalBet*100:0})).sort((a,b)=>b.share-a.share||b.bet-a.bet||a.label.localeCompare(b.label));
     const maxShare=Math.max(...rankedBetRows.map(row=>row.share),0.01);
     const colors=['#386edb','#3aa6cc','#43a6a5','#2d9f38','#78b915','#e6bd00','#efb4a5'];
-    const left=10,center=230,right=445,top=13,rowHeight=39,segmentHeight=31,maxWidth=260;
+    const compact=rankedBetRows.length>8;
+    const left=10,center=230,right=445,top=compact?8:13,rowHeight=compact?25:39,segmentHeight=compact?19:31,maxWidth=260;
+    const labelSize=compact?8:10,valueSize=compact?9:11,baseline=compact?13:20;
     const widths=rankedBetRows.map(row=>row.bet>0?Math.max(12,maxWidth*row.share/maxShare):12);
     rankedBetRows.forEach((row,index)=>{
       const y=top+index*rowHeight,topWidth=widths[index],bottomWidth=index<widths.length-1?widths[index+1]:Math.max(10,topWidth*.68),share=row.share;
       const polygon=add(svg,'polygon',{points:[center-topWidth/2,y,center+topWidth/2,y,center+bottomWidth/2,y+segmentHeight,center-bottomWidth/2,y+segmentHeight].join(' '),fill:colors[index%colors.length],stroke:'#fff','stroke-width':1.2});
       tooltip(polygon,row.label+' | '+money(row.bet)+' total bet | '+pct(share)+' of total bet | '+count(row.rounds)+' rounds');
-      add(svg,'text',{x:left,y:y+20,fill:'#334155','font-size':10,'font-weight':700},row.label);
-      add(svg,'text',{x:center,y:y+20,'text-anchor':'middle',fill:'#101a2f','font-size':11,'font-weight':900},money(row.bet));
-      add(svg,'text',{x:right,y:y+20,'text-anchor':'end',fill:'#102d61','font-size':10,'font-weight':900},pct(share));
+      add(svg,'text',{x:left,y:y+baseline,fill:'#334155','font-size':labelSize,'font-weight':700},row.label);
+      add(svg,'text',{x:center,y:y+baseline,'text-anchor':'middle',fill:'#101a2f','font-size':valueSize,'font-weight':900},money(row.bet));
+      add(svg,'text',{x:right,y:y+baseline,'text-anchor':'end',fill:'#102d61','font-size':labelSize,'font-weight':900},pct(share));
     });
     const foot=document.createElement('p');foot.className='reference-distribution-foot';foot.textContent='Total Bet: '+money(totalBet)+' • '+count(Number(D.current?.rounds)||betRows.reduce((sum,row)=>sum+row.rounds,0))+' settled records • Hover a funnel segment for details.';wrap.appendChild(foot);
   }
@@ -5897,5 +5899,45 @@
  const draw=(svg,rows,labelOf,withHit)=>{if(!svg||!rows.length)return;const W=1100,H=360,p={l:128,r:128,t:34,b:78},plotH=H-p.t-p.b,slot=(W-p.l-p.r)/rows.length,x=i=>p.l+slot*(i+.5),maxA=Math.max(10000,Math.ceil(Math.max(...rows.flatMap(r=>[Number(r.bet),Number(r.payout)]).filter(Number.isFinite),0)/10000)*10000),maxP=Math.max(160,Math.ceil(Math.max(...rows.map(r=>Number(r.rtp)||0),97)/20)*20),yA=v=>H-p.b-v/maxA*plotH,yP=v=>H-p.b-v/maxP*plotH;svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.replaceChildren();for(let i=0;i<=4;i++){const a=maxA*i/4,y=yA(a);add(svg,'line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});add(svg,'text',{x:p.l-12,y:y+4,'text-anchor':'end',fill:'#556275','font-size':9},money(a));add(svg,'text',{x:W-p.r+12,y:y+4,fill:'#556275','font-size':9},(maxP*i/4).toFixed(0)+'%')}rows.forEach((r,i)=>{const c=x(i);if(withHit||i===0||i===rows.length-1||i%3===0)add(svg,'text',{x:c,y:H-48,'text-anchor':'end',fill:'#556275','font-size':8,transform:'rotate(-45 '+c+' '+(H-48)+')'},labelOf(r));[['bet','#386edb'],['payout','#4fb4bd']].forEach(([k,color],j)=>{const v=Number(r[k]);if(Number.isFinite(v)){const y=yA(v);add(svg,'rect',{x:c+(j-.5)*8-3,y,width:6,height:Math.max(1,H-p.b-y),rx:2,fill:color,opacity:.9})}})});add(svg,'line',{x1:p.l,x2:W-p.r,y1:yP(97),y2:yP(97),stroke:'#64748b','stroke-width':1.5,'stroke-dasharray':'7 5'});add(svg,'text',{x:W-p.r-4,y:yP(97)-6,'text-anchor':'end',fill:'#475569','font-size':10},'Standard RTP 97%');const line=(key,color,width)=>{const pts=rows.map((r,i)=>Number.isFinite(Number(r[key]))?[x(i),yP(Number(r[key]))]:null).filter(Boolean);if(pts.length>1)add(svg,'path',{d:'M '+pts.map(q=>q.join(' ')).join(' L '),fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round'});if(key==='rtp')pts.forEach(q=>add(svg,'circle',{cx:q[0],cy:q[1],r:3,fill:color,stroke:'#fff','stroke-width':1.2}))};line('rtp','#f4a51c',3);if(withHit)line('hitRate','#1b9c4a',1.7)};
  const ensureLegend=()=>{const panel=document.querySelector('.hourly-chart-panel');if(!panel||panel.querySelector('.hourly-rtp-legend'))return;const legend=document.createElement('div');legend.className='series-legend combo-legend hourly-rtp-legend';legend.setAttribute('aria-label','Hourly RTP chart legend');legend.innerHTML='<span><i class="hourly-bet" aria-hidden="true"></i>Betting Amount</span><span><i class="hourly-pay" aria-hidden="true"></i>Payout</span><span><i class="hourly-rtp" aria-hidden="true"></i>RTP</span><span><i class="hourly-hit" aria-hidden="true"></i>Hit Rate</span><span><i class="hourly-standard" aria-hidden="true"></i>Standard RTP</span>';panel.querySelector('.chart-wrap')?.insertAdjacentElement('afterend',legend)};
  const bind=()=>document.querySelectorAll('#report-language-toggle [data-report-language]').forEach(b=>{if(b.dataset.finalUiBound)return;b.dataset.finalUiBound='1';b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();window.setReportLanguage?.(b.dataset.reportLanguage);document.querySelectorAll('#report-language-toggle [data-report-language]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)))},{capture:true})});const repair=()=>{ensureLegend();bind();draw(document.getElementById('hourly-rtp-trend-chart'),(data.hourly||[]).filter(r=>Number(r.players)>0),r=>r.hour,true);draw(document.getElementById('daily-performance-30-chart'),(data.daily||[]).filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r.date)).sort((a,b)=>a.date.localeCompare(b.date)),r=>r.date.slice(5).replace('-','/'),false)};window.finalUiRepair=repair;repair();[100,500,1500,3000,6000,9000].forEach(t=>setTimeout(repair,t));const select=document.getElementById('report-date');if(select)select.addEventListener('change',()=>setTimeout(repair,0));let cycles=0;const timer=setInterval(()=>{repair();if(++cycles>=8)clearInterval(timer)},2000)})();
+</script>
+<style id="platform-performance-style">
+.platform-performance-panel{width:auto!important;min-width:0!important;overflow:hidden!important;background:#fff!important;border:1px solid #dce4ef!important;border-radius:8px!important;padding:10px 12px!important;margin:0!important}
+.platform-performance-panel .section-title{margin-bottom:4px}
+.platform-performance-scope{margin:0 0 12px;color:#556275;font-size:10px;line-height:1.45}
+.platform-performance-table-wrap{width:100%;overflow-x:auto;overscroll-behavior-inline:contain}
+.platform-performance-table{width:100%;min-width:1180px;border-collapse:collapse;table-layout:fixed;font-size:10px}
+.platform-performance-table th,.platform-performance-table td{padding:8px 6px;border-bottom:1px solid #dce4ef;text-align:right;white-space:nowrap;vertical-align:middle}
+.platform-performance-table th{background:#102d61;color:#fff;font-size:9px;line-height:1.2;white-space:normal}
+.platform-performance-table th:first-child,.platform-performance-table td:first-child{text-align:left;width:150px}
+.platform-performance-table tr:last-child td{border-bottom:0}
+.platform-performance-table .platform-name{font-weight:800;color:#102d61}
+.platform-performance-table .muted{color:#708097}
+.summary-panel .summary-secondary.platform-allocation-row{grid-template-columns:minmax(0,5fr) minmax(0,3fr) minmax(0,1fr) minmax(0,1fr)!important;gap:10px!important;align-items:stretch!important}
+.platform-allocation-row>.platform-performance-panel{order:1!important}.platform-allocation-row>.summary-change-log-card{order:2!important}.platform-allocation-row>.summary-dynamic-rtp-card{order:3!important}.platform-allocation-row>.summary-alert-card{order:4!important}
+.platform-allocation-row>.platform-performance-panel,.platform-allocation-row>.summary-change-log-card,.platform-allocation-row>.summary-dynamic-rtp-card,.platform-allocation-row>.summary-alert-card{grid-column:auto!important;grid-row:auto!important;width:auto!important;min-width:0!important;height:100%!important;align-self:stretch!important}
+.platform-allocation-row>.summary-change-log-card .change-log-table-wrap{overflow-x:auto!important}.platform-allocation-row>.summary-change-log-card .change-log-table{min-width:660px!important}
+.platform-allocation-row>.summary-dynamic-rtp-card,.platform-allocation-row>.summary-alert-card{padding:9px!important;overflow:hidden!important}.platform-allocation-row>.summary-dynamic-rtp-card .dynamic-rtp-table{min-width:430px}.platform-allocation-row>.summary-dynamic-rtp-card{overflow-x:auto!important}.platform-allocation-row>.summary-alert-card .summary-alert-list{min-width:210px}.platform-allocation-row>.summary-alert-card{overflow-x:auto!important}
+@media(max-width:1180px){.summary-panel .summary-secondary.platform-allocation-row{grid-template-columns:minmax(620px,5fr) minmax(420px,3fr) minmax(250px,1fr) minmax(220px,1fr)!important;overflow-x:auto!important}.platform-performance-table{min-width:1120px}}
+</style>
+<script id="platform-performance-section">
+(()=>{
+  const grid=document.querySelector('.section-grid'),secondary=document.querySelector('.summary-panel .summary-secondary');
+  if(!grid||!secondary||document.querySelector('.platform-performance-panel'))return;
+  const panel=document.createElement('article');
+  panel.className='panel platform-performance-panel';
+  panel.setAttribute('aria-labelledby','platform-performance-title');
+  panel.innerHTML='<h2 class="section-title" id="platform-performance-title">Platform Performance</h2>'+
+    '<p class="platform-performance-scope">Source: Back Office Orders, Product Line <b>BP1</b>, SETTLED, 2026-09-17 00:00:00–23:59:59. Platform split uses the row-level <b>betSite</b> field: BP1 = BingoPlus, GP = GameZone.</p>'+
+    '<div class="platform-performance-table-wrap"><table class="platform-performance-table"><thead><tr><th>Platform</th><th>Bet Amount</th><th>Payout</th><th>GGR</th><th>RTP</th><th>Players</th><th>New Players</th><th>Winning Tickets</th><th>Max Winning</th><th>Max Multiplier</th><th>D1 Retention</th></tr></thead><tbody>'+
+    '<tr><td class="platform-name">BingoPlus (BP1)</td><td>₱132,600.00</td><td>₱128,171.25</td><td>₱4,428.75</td><td>96.6601%</td><td>358</td><td class="muted">N/A*</td><td>2,659</td><td>₱2,000.00</td><td>250x</td><td>11.0512%</td></tr>'+
+    '<tr><td class="platform-name">GameZone (GP)</td><td>₱624,445.50</td><td>₱591,130.75</td><td>₱33,314.75</td><td>94.6649%</td><td>1,978</td><td class="muted">N/A*</td><td>20,444</td><td>₱3,750.00</td><td>250x</td><td>0.5391%</td></tr>'+
+    '</tbody></table></div><p class="platform-performance-scope">*The back-office daily New Players field is available at Product Line BP1 level (2,166 total), not as a betSite-level field; it is not allocated between platforms.</p>';
+  const changeLog=document.querySelector('.change-log-panel'),dynamicCard=secondary.querySelector('.summary-dynamic-rtp-card'),alertCard=secondary.querySelector('.summary-alert-card');
+  secondary.classList.add('platform-allocation-row');
+  secondary.append(panel);
+  if(changeLog){changeLog.classList.add('summary-change-log-card');secondary.append(changeLog)}
+  if(dynamicCard)secondary.append(dynamicCard);
+  if(alertCard)secondary.append(alertCard);
+})();
 </script>
 </body></html>

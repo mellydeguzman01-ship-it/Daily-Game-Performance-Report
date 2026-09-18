@@ -5900,4 +5900,44 @@
  const ensureLegend=()=>{const panel=document.querySelector('.hourly-chart-panel');if(!panel||panel.querySelector('.hourly-rtp-legend'))return;const legend=document.createElement('div');legend.className='series-legend combo-legend hourly-rtp-legend';legend.setAttribute('aria-label','Hourly RTP chart legend');legend.innerHTML='<span><i class="hourly-bet" aria-hidden="true"></i>Betting Amount</span><span><i class="hourly-pay" aria-hidden="true"></i>Payout</span><span><i class="hourly-rtp" aria-hidden="true"></i>RTP</span><span><i class="hourly-hit" aria-hidden="true"></i>Hit Rate</span><span><i class="hourly-standard" aria-hidden="true"></i>Standard RTP</span>';panel.querySelector('.chart-wrap')?.insertAdjacentElement('afterend',legend)};
  const bind=()=>document.querySelectorAll('#report-language-toggle [data-report-language]').forEach(b=>{if(b.dataset.finalUiBound)return;b.dataset.finalUiBound='1';b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();window.setReportLanguage?.(b.dataset.reportLanguage);document.querySelectorAll('#report-language-toggle [data-report-language]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)))},{capture:true})});const repair=()=>{ensureLegend();bind();draw(document.getElementById('hourly-rtp-trend-chart'),(data.hourly||[]).filter(r=>Number(r.players)>0),r=>r.hour,true);draw(document.getElementById('daily-performance-30-chart'),(data.daily||[]).filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r.date)).sort((a,b)=>a.date.localeCompare(b.date)),r=>r.date.slice(5).replace('-','/'),false)};window.finalUiRepair=repair;repair();[100,500,1500,3000,6000,9000].forEach(t=>setTimeout(repair,t));const select=document.getElementById('report-date');if(select)select.addEventListener('change',()=>setTimeout(repair,0));let cycles=0;const timer=setInterval(()=>{repair();if(++cycles>=8)clearInterval(timer)},2000)})();
 </script>
+<style id="platform-performance-style">
+.platform-performance-panel{width:auto!important;min-width:0!important;overflow:hidden!important;background:#fff!important;border:1px solid #dce4ef!important;border-radius:8px!important;padding:10px 12px!important;margin:0!important}
+.platform-performance-panel .section-title{margin-bottom:4px}
+.platform-performance-scope{margin:0 0 12px;color:#556275;font-size:10px;line-height:1.45}
+.platform-performance-table-wrap{width:100%;overflow-x:auto;overscroll-behavior-inline:contain}
+.platform-performance-table{width:100%;min-width:1180px;border-collapse:collapse;table-layout:fixed;font-size:10px}
+.platform-performance-table th,.platform-performance-table td{padding:8px 6px;border-bottom:1px solid #dce4ef;text-align:right;white-space:nowrap;vertical-align:middle}
+.platform-performance-table th{background:#102d61;color:#fff;font-size:9px;line-height:1.2;white-space:normal}
+.platform-performance-table th:first-child,.platform-performance-table td:first-child{text-align:left;width:150px}
+.platform-performance-table tr:last-child td{border-bottom:0}
+.platform-performance-table .platform-name{font-weight:800;color:#102d61}
+.platform-performance-table .muted{color:#708097}
+.summary-panel .summary-secondary.platform-allocation-row{grid-template-columns:minmax(0,5fr) minmax(0,3fr) minmax(0,1fr) minmax(0,1fr)!important;gap:10px!important;align-items:stretch!important}
+.platform-allocation-row>.platform-performance-panel{order:1!important}.platform-allocation-row>.summary-change-log-card{order:2!important}.platform-allocation-row>.summary-dynamic-rtp-card{order:3!important}.platform-allocation-row>.summary-alert-card{order:4!important}
+.platform-allocation-row>.platform-performance-panel,.platform-allocation-row>.summary-change-log-card,.platform-allocation-row>.summary-dynamic-rtp-card,.platform-allocation-row>.summary-alert-card{grid-column:auto!important;grid-row:auto!important;width:auto!important;min-width:0!important;height:100%!important;align-self:stretch!important}
+.platform-allocation-row>.summary-change-log-card .change-log-table-wrap{overflow-x:auto!important}.platform-allocation-row>.summary-change-log-card .change-log-table{min-width:660px!important}
+.platform-allocation-row>.summary-dynamic-rtp-card,.platform-allocation-row>.summary-alert-card{padding:9px!important;overflow:hidden!important}.platform-allocation-row>.summary-dynamic-rtp-card .dynamic-rtp-table{min-width:430px}.platform-allocation-row>.summary-dynamic-rtp-card{overflow-x:auto!important}.platform-allocation-row>.summary-alert-card .summary-alert-list{min-width:210px}.platform-allocation-row>.summary-alert-card{overflow-x:auto!important}
+@media(max-width:1180px){.summary-panel .summary-secondary.platform-allocation-row{grid-template-columns:minmax(620px,5fr) minmax(420px,3fr) minmax(250px,1fr) minmax(220px,1fr)!important;overflow-x:auto!important}.platform-performance-table{min-width:1120px}}
+</style>
+<script id="platform-performance-section">
+(()=>{
+  const grid=document.querySelector('.section-grid'),secondary=document.querySelector('.summary-panel .summary-secondary');
+  if(!grid||!secondary||document.querySelector('.platform-performance-panel'))return;
+  const panel=document.createElement('article');
+  panel.className='panel platform-performance-panel';
+  panel.setAttribute('aria-labelledby','platform-performance-title');
+  panel.innerHTML='<h2 class="section-title" id="platform-performance-title">Platform Performance</h2>'+
+    '<p class="platform-performance-scope">Source: Back Office Orders, Product Line <b>BP1</b>, SETTLED, 2026-09-17 00:00:00–23:59:59. Platform split uses the row-level <b>betSite</b> field: BP1 = BingoPlus, GP = GameZone.</p>'+
+    '<div class="platform-performance-table-wrap"><table class="platform-performance-table"><thead><tr><th>Platform</th><th>Bet Amount</th><th>Payout</th><th>GGR</th><th>RTP</th><th>Players</th><th>New Players</th><th>Winning Tickets</th><th>Max Winning</th><th>Max Multiplier</th><th>D1 Retention</th></tr></thead><tbody>'+
+    '<tr><td class="platform-name">BingoPlus (BP1)</td><td>₱132,600.00</td><td>₱128,171.25</td><td>₱4,428.75</td><td>96.6601%</td><td>358</td><td class="muted">N/A*</td><td>2,659</td><td>₱2,000.00</td><td>250x</td><td>11.0512%</td></tr>'+
+    '<tr><td class="platform-name">GameZone (GP)</td><td>₱624,445.50</td><td>₱591,130.75</td><td>₱33,314.75</td><td>94.6649%</td><td>1,978</td><td class="muted">N/A*</td><td>20,444</td><td>₱3,750.00</td><td>250x</td><td>0.5391%</td></tr>'+
+    '</tbody></table></div><p class="platform-performance-scope">*The back-office daily New Players field is available at Product Line BP1 level (2,166 total), not as a betSite-level field; it is not allocated between platforms.</p>';
+  const changeLog=document.querySelector('.change-log-panel'),dynamicCard=secondary.querySelector('.summary-dynamic-rtp-card'),alertCard=secondary.querySelector('.summary-alert-card');
+  secondary.classList.add('platform-allocation-row');
+  secondary.append(panel);
+  if(changeLog){changeLog.classList.add('summary-change-log-card');secondary.append(changeLog)}
+  if(dynamicCard)secondary.append(dynamicCard);
+  if(alertCard)secondary.append(alertCard);
+})();
+</script>
 </body></html>
