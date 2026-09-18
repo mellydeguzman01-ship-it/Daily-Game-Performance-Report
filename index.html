@@ -4877,15 +4877,17 @@
     const rankedBetRows=[...betRows].map(row=>({...row,share:totalBet?row.bet/totalBet*100:0})).sort((a,b)=>b.share-a.share||b.bet-a.bet||a.label.localeCompare(b.label));
     const maxShare=Math.max(...rankedBetRows.map(row=>row.share),0.01);
     const colors=['#386edb','#3aa6cc','#43a6a5','#2d9f38','#78b915','#e6bd00','#efb4a5'];
-    const left=10,center=230,right=445,top=13,rowHeight=39,segmentHeight=31,maxWidth=260;
+    const compact=rankedBetRows.length>8;
+    const left=10,center=230,right=445,top=compact?8:13,rowHeight=compact?25:39,segmentHeight=compact?19:31,maxWidth=260;
+    const labelSize=compact?8:10,valueSize=compact?9:11,baseline=compact?13:20;
     const widths=rankedBetRows.map(row=>row.bet>0?Math.max(12,maxWidth*row.share/maxShare):12);
     rankedBetRows.forEach((row,index)=>{
       const y=top+index*rowHeight,topWidth=widths[index],bottomWidth=index<widths.length-1?widths[index+1]:Math.max(10,topWidth*.68),share=row.share;
       const polygon=add(svg,'polygon',{points:[center-topWidth/2,y,center+topWidth/2,y,center+bottomWidth/2,y+segmentHeight,center-bottomWidth/2,y+segmentHeight].join(' '),fill:colors[index%colors.length],stroke:'#fff','stroke-width':1.2});
       tooltip(polygon,row.label+' | '+money(row.bet)+' total bet | '+pct(share)+' of total bet | '+count(row.rounds)+' rounds');
-      add(svg,'text',{x:left,y:y+20,fill:'#334155','font-size':10,'font-weight':700},row.label);
-      add(svg,'text',{x:center,y:y+20,'text-anchor':'middle',fill:'#101a2f','font-size':11,'font-weight':900},money(row.bet));
-      add(svg,'text',{x:right,y:y+20,'text-anchor':'end',fill:'#102d61','font-size':10,'font-weight':900},pct(share));
+      add(svg,'text',{x:left,y:y+baseline,fill:'#334155','font-size':labelSize,'font-weight':700},row.label);
+      add(svg,'text',{x:center,y:y+baseline,'text-anchor':'middle',fill:'#101a2f','font-size':valueSize,'font-weight':900},money(row.bet));
+      add(svg,'text',{x:right,y:y+baseline,'text-anchor':'end',fill:'#102d61','font-size':labelSize,'font-weight':900},pct(share));
     });
     const foot=document.createElement('p');foot.className='reference-distribution-foot';foot.textContent='Total Bet: '+money(totalBet)+' • '+count(Number(D.current?.rounds)||betRows.reduce((sum,row)=>sum+row.rounds,0))+' settled records • Hover a funnel segment for details.';wrap.appendChild(foot);
   }
