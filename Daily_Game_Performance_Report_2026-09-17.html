@@ -5972,9 +5972,19 @@
   ['2026-07-06','July 6, 2026','v2.12','Bonus Optimization','Visual/UX only, not core bonus math or Dynamic RTP: slow-motion reveal, two-scatter fill logic, Total Win display, interaction effects, and Buy Feature front end.'],
   ['2026-05-12','May 12, 2026','v2.9','Dynamic RTP','Activated for Banana Craze only.']
  ];
- const markup='<thead><tr><th>Date</th><th>Version</th><th>Change</th><th>Details</th></tr></thead><tbody>'+rows.map(r=>'<tr><td><time datetime="'+r[0]+'">'+r[1]+'</time></td><td><strong>'+r[2]+'</strong></td><td><strong>'+r[3]+'</strong></td><td>'+r[4]+'</td></tr>').join('')+'</tbody>';
- const apply=()=>{const table=document.querySelector('.release-log-table');if(table&&table.innerHTML!==markup)table.innerHTML=markup};
- apply();[0,100,500,1200,2500].forEach(t=>setTimeout(apply,t));window.addEventListener('load',apply,{once:true});document.querySelectorAll('[data-report-language]').forEach(b=>b.addEventListener('click',()=>setTimeout(apply,20)));
+ const rowsZh=[
+  ['2026-09-17','2026年9月17日','N/A','在 GameZone 正式上线','上午10点左右，Banana Craze 在 GameZone 正式上线；下午2点，最低投注额更新为 ₱0.50。'],
+  ['2026-09-10','2026年9月10日','N/A','优化入口','BP 支持改善了游戏入口，有助于吸引更多玩家并提升整体玩家活跃度。'],
+  ['2026-09-01','2026年9月1日','V2.16','Banana Craze 产品升级','改进奖励功能，支持 Turbo，提供更清晰的逐回合详情，优化动画，并实时同步活动状态。'],
+  ['2026-08-24','2026年8月24日','N/A','Banana Craze 在 Loteria 上线','BingoPlus 将 Banana Craze 添加到 Loteria 专区，以提高游戏的可见度和玩家曝光度。'],
+  ['2026-08-03','2026年8月3日','v2.14','Banana Craze 视觉重制','未说明数学逻辑变更。'],
+  ['2026-07-20','2026年7月20日','v2.13','Banana Craze 奖励优化','任务 1903。已由 v2.14 取代。'],
+  ['2026-07-06','2026年7月6日','v2.12','奖励优化','仅涉及视觉/用户体验，不涉及核心奖励数学或动态 RTP：包括慢动作揭示、双 Scatter 填充逻辑、Total Win 显示、交互效果和 Buy Feature 前端。'],
+  ['2026-05-12','2026年5月12日','v2.9','动态 RTP','仅为 Banana Craze 启用。']
+ ];
+ const buildMarkup=()=>{const zh=document.documentElement.lang==='zh-CN',source=zh?rowsZh:rows,head=zh?['日期','版本','变更','详情']:['Date','Version','Change','Details'];return '<thead><tr>'+head.map(x=>'<th>'+x+'</th>').join('')+'</tr></thead><tbody>'+source.map(r=>'<tr><td><time datetime="'+r[0]+'">'+r[1]+'</time></td><td><strong>'+r[2]+'</strong></td><td><strong>'+r[3]+'</strong></td><td>'+r[4]+'</td></tr>').join('')+'</tbody>'};
+ const apply=()=>{const table=document.querySelector('.release-log-table'),markup=buildMarkup();if(table&&table.innerHTML!==markup)table.innerHTML=markup};
+ apply();[0,100,500,1200,2500].forEach(t=>setTimeout(apply,t));window.addEventListener('load',apply,{once:true});new MutationObserver(apply).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});document.querySelectorAll('[data-report-language]').forEach(b=>b.addEventListener('click',()=>setTimeout(apply,30)));
 })();
 </script>
 </body></html>
