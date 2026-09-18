@@ -5941,4 +5941,27 @@
   if(alertCard)secondary.append(alertCard);
 })();
 </script>
+<style id="authoritative-change-log-style">
+.platform-allocation-row .summary-change-log-card .change-log-table{width:100%!important;min-width:0!important;table-layout:fixed!important}
+.platform-allocation-row .summary-change-log-card .change-log-table th:nth-child(1){width:20%!important}.platform-allocation-row .summary-change-log-card .change-log-table th:nth-child(2){width:10%!important}.platform-allocation-row .summary-change-log-card .change-log-table th:nth-child(3){width:25%!important}.platform-allocation-row .summary-change-log-card .change-log-table th:nth-child(4){width:45%!important}
+.platform-allocation-row .summary-change-log-card .change-log-table th,.platform-allocation-row .summary-change-log-card .change-log-table td{font-family:Inter,ui-sans-serif,system-ui,sans-serif!important;text-align:left!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important;vertical-align:top!important}
+.platform-allocation-row .summary-change-log-card .change-log-table td:nth-child(2){text-align:center!important;font-weight:800!important;color:#1358b5!important}
+</style>
+<script id="authoritative-change-log-content">
+(()=>{
+ const rows=[
+  ['2026-09-17','September 17, 2026','N/A','Official launch in Gamezone','At around 10:00 AM, Banana Craze officially entered GameZone, followed by an update of the minimum bet amount to ₱0.50 at 2:00 PM.'],
+  ['2026-09-10','September 10, 2026','N/A','Better Entry','BP support helps provide better entry, attracting more players and increasing overall player activity.'],
+  ['2026-09-01','September 1, 2026','V2.16','Banana Craze Product Upgrade','Improved the Bonus Feature with Turbo support, clearer round-by-round details, optimized animations, and real-time activity status syncing.'],
+  ['2026-08-24','August 24, 2026','N/A','Banana Craze Entry in Loteria','BingoPlus added Banana Craze to the Loteria section to increase the game’s visibility and player exposure.'],
+  ['2026-08-03','August 3, 2026','v2.14','Banana Craze Reskin','No math change stated.'],
+  ['2026-07-20','July 20, 2026','v2.13','Banana Craze Bonus Optimization','Task 1903. Superseded by v2.14.'],
+  ['2026-07-06','July 6, 2026','v2.12','Bonus Optimization','Visual/UX only, not core bonus math or Dynamic RTP: slow-motion reveal, two-scatter fill logic, Total Win display, interaction effects, and Buy Feature front end.'],
+  ['2026-05-12','May 12, 2026','v2.9','Dynamic RTP','Activated for Banana Craze only.']
+ ];
+ const markup='<thead><tr><th>Date</th><th>Version</th><th>Change</th><th>Details</th></tr></thead><tbody>'+rows.map(r=>'<tr><td><time datetime="'+r[0]+'">'+r[1]+'</time></td><td><strong>'+r[2]+'</strong></td><td><strong>'+r[3]+'</strong></td><td>'+r[4]+'</td></tr>').join('')+'</tbody>';
+ const apply=()=>{const table=document.querySelector('.release-log-table');if(table&&table.innerHTML!==markup)table.innerHTML=markup};
+ apply();[0,100,500,1200,2500].forEach(t=>setTimeout(apply,t));window.addEventListener('load',apply,{once:true});document.querySelectorAll('[data-report-language]').forEach(b=>b.addEventListener('click',()=>setTimeout(apply,20)));
+})();
+</script>
 </body></html>
