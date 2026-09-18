@@ -5904,20 +5904,21 @@
 .platform-performance-panel{width:auto!important;min-width:0!important;overflow:hidden!important;background:#fff!important;border:1px solid #dce4ef!important;border-radius:8px!important;padding:10px 12px!important;margin:0!important}
 .platform-performance-panel .section-title{margin-bottom:4px}
 .platform-performance-scope{margin:0 0 12px;color:#556275;font-size:10px;line-height:1.45}
-.platform-performance-table-wrap{width:100%;overflow-x:auto;overscroll-behavior-inline:contain}
-.platform-performance-table{width:100%;min-width:1180px;border-collapse:collapse;table-layout:fixed;font-size:10px}
-.platform-performance-table th,.platform-performance-table td{padding:8px 6px;border-bottom:1px solid #dce4ef;text-align:right;white-space:nowrap;vertical-align:middle}
-.platform-performance-table th{background:#102d61;color:#fff;font-size:9px;line-height:1.2;white-space:normal}
-.platform-performance-table th:first-child,.platform-performance-table td:first-child{text-align:left;width:150px}
+.platform-performance-table-wrap{width:100%;overflow:visible}
+.platform-performance-table{width:100%;min-width:0;border-collapse:collapse;table-layout:fixed;font-size:8px}
+.platform-performance-table th,.platform-performance-table td{padding:7px 3px;border-bottom:1px solid #dce4ef;text-align:right;white-space:normal;overflow-wrap:anywhere;word-break:normal;vertical-align:middle;line-height:1.25}
+.platform-performance-table th{background:#102d61;color:#fff;font-size:7px;line-height:1.2;white-space:normal}
+.platform-performance-table th:first-child,.platform-performance-table td:first-child{text-align:left;width:14%}
 .platform-performance-table tr:last-child td{border-bottom:0}
 .platform-performance-table .platform-name{font-weight:800;color:#102d61}
 .platform-performance-table .muted{color:#708097}
-.summary-panel .summary-secondary.platform-allocation-row{grid-template-columns:minmax(0,5fr) minmax(0,3fr) minmax(0,1fr) minmax(0,1fr)!important;gap:10px!important;align-items:stretch!important}
+.summary-panel .summary-secondary.platform-allocation-row{grid-template-columns:minmax(0,4fr) minmax(0,3fr) minmax(0,1.5fr) minmax(0,1.5fr)!important;gap:10px!important;align-items:stretch!important}
 .platform-allocation-row>.platform-performance-panel{order:1!important}.platform-allocation-row>.summary-change-log-card{order:2!important}.platform-allocation-row>.summary-dynamic-rtp-card{order:3!important}.platform-allocation-row>.summary-alert-card{order:4!important}
 .platform-allocation-row>.platform-performance-panel,.platform-allocation-row>.summary-change-log-card,.platform-allocation-row>.summary-dynamic-rtp-card,.platform-allocation-row>.summary-alert-card{grid-column:auto!important;grid-row:auto!important;width:auto!important;min-width:0!important;height:100%!important;align-self:stretch!important}
-.platform-allocation-row>.summary-change-log-card .change-log-table-wrap{overflow-x:auto!important}.platform-allocation-row>.summary-change-log-card .change-log-table{min-width:660px!important}
-.platform-allocation-row>.summary-dynamic-rtp-card,.platform-allocation-row>.summary-alert-card{padding:9px!important;overflow:hidden!important}.platform-allocation-row>.summary-dynamic-rtp-card .dynamic-rtp-table{min-width:430px}.platform-allocation-row>.summary-dynamic-rtp-card{overflow-x:auto!important}.platform-allocation-row>.summary-alert-card .summary-alert-list{min-width:210px}.platform-allocation-row>.summary-alert-card{overflow-x:auto!important}
-@media(max-width:1180px){.summary-panel .summary-secondary.platform-allocation-row{grid-template-columns:minmax(620px,5fr) minmax(420px,3fr) minmax(250px,1fr) minmax(220px,1fr)!important;overflow-x:auto!important}.platform-performance-table{min-width:1120px}}
+.platform-allocation-row>.summary-change-log-card .change-log-table-wrap{overflow:visible!important}.platform-allocation-row>.summary-change-log-card .change-log-table{min-width:0!important;table-layout:fixed!important}.platform-allocation-row>.summary-change-log-card .change-log-table th,.platform-allocation-row>.summary-change-log-card .change-log-table td{white-space:normal!important;overflow-wrap:anywhere!important;font-size:7px!important;padding:5px 3px!important}
+.platform-allocation-row>.summary-dynamic-rtp-card,.platform-allocation-row>.summary-alert-card{padding:9px!important;overflow:hidden!important}.platform-allocation-row>.summary-dynamic-rtp-card .dynamic-rtp-table{min-width:0!important;table-layout:fixed!important}.platform-allocation-row>.summary-dynamic-rtp-card .dynamic-rtp-table th,.platform-allocation-row>.summary-dynamic-rtp-card .dynamic-rtp-table td{font-size:7px!important;padding:4px 2px!important;white-space:normal!important;overflow-wrap:anywhere!important}.platform-allocation-row>.summary-alert-card .summary-alert-list{min-width:0!important}.platform-allocation-row>.summary-alert-card .summary-alert-list li{overflow-wrap:anywhere!important}.platform-allocation-row>.summary-alert-card strong{white-space:normal!important;overflow:visible!important;text-overflow:clip!important}
+@media(max-width:1100px){.summary-panel .summary-secondary.platform-allocation-row{grid-template-columns:1fr 1fr!important}.platform-allocation-row>.platform-performance-panel,.platform-allocation-row>.summary-change-log-card{grid-column:1/-1!important}.platform-performance-table{font-size:9px}.platform-performance-table th{font-size:8px}}
+@media(max-width:650px){.summary-panel .summary-secondary.platform-allocation-row{grid-template-columns:1fr!important}.platform-allocation-row>.platform-performance-panel,.platform-allocation-row>.summary-change-log-card,.platform-allocation-row>.summary-dynamic-rtp-card,.platform-allocation-row>.summary-alert-card{grid-column:1!important}}
 </style>
 <script id="platform-performance-section">
 (()=>{
