@@ -4856,8 +4856,8 @@
   ];
   const rawBetRows=(Array.isArray(D.betRanges)&&D.betRanges.length?D.betRanges:fallbackBet).map(row=>({label:row.label,bet:Number(row.bet)||0,rounds:Number(row.rounds)||0,payout:Number(row.payout)||0,ggr:Number(row.ggr)||0}));
   /* Match the requested funnel reading order while retaining each range's verified values. */
-  const funnelOrder=['₱5–₱10','₱11–₱20','₱21–₱50','₱51–₱100','₱501–₱1,000','₱101–₱200','₱201–₱500'];
-  const betRows=funnelOrder.map(label=>rawBetRows.find(row=>row.label===label)).filter(Boolean);
+  const funnelOrder=['₱0.50','₱1','₱2','₱3','₱5–₱10','₱11–₱20','₱21–₱50','₱51–₱100','₱501–₱1,000','₱101–₱200','₱201–₱500'];
+  const betRows=funnelOrder.map(label=>rawBetRows.find(row=>row.label===label)||({label,bet:0,rounds:0,payout:0,ggr:0}));
   const multiplierRows=(Array.isArray(D.multiplierRanges)&&D.multiplierRanges.length?D.multiplierRanges:fallbackMultiplier).map(row=>({label:row.label,rounds:Number(row.rounds)||0,bet:Number(row.bet)||0,payout:Number(row.payout)||0,ggr:Number(row.ggr)||0}));
   const money=value=>(value<0?'-':'')+peso+Math.abs(Number(value)||0).toLocaleString('en-US',{maximumFractionDigits:2});
   const count=value=>Number(value||0).toLocaleString('en-US');
