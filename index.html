@@ -5934,15 +5934,16 @@
   panel.className='panel platform-performance-panel';
   panel.setAttribute('aria-labelledby','platform-performance-title');
   panel.innerHTML='<h2 class="section-title" id="platform-performance-title">Platform Performance</h2>'+
-    '<p class="platform-performance-scope">Source: Back Office Orders, Product Line <b>BP1</b>, SETTLED, 2026-09-17 00:00:00–23:59:59. Platform split uses the row-level <b>betSite</b> field: BP1 = BingoPlus, GP = GameZone.</p>'+
+    '<p class="platform-performance-scope">Source: Back Office Orders, Product Line <b>BP1</b>, SETTLED, 2026-09-17 00:00:00–23:59:59. Platform split uses the row-level <b>betSite</b> field: BP1 = BingoPlus, GP = GameZone, AP = ArenaPlus.</p>'+
     '<div class="platform-performance-table-wrap"><table class="platform-performance-table"><thead><tr><th>Platform</th><th>Bet Amount</th><th>Payout</th><th>GGR</th><th>RTP</th><th>Players</th><th>New Players</th><th>Winning Tickets</th><th>Max Winning</th><th>Max Multiplier</th><th>D1 Retention</th></tr></thead><tbody>'+
     '<tr><td class="platform-name">BingoPlus (BP1)</td><td>₱132,600.00</td><td>₱128,171.25</td><td>₱4,428.75</td><td>96.6601%</td><td>358</td><td class="muted">N/A*</td><td>2,659</td><td>₱2,000.00</td><td>250x</td><td>11.0512%</td></tr>'+
     '<tr><td class="platform-name">GameZone (GP)</td><td>₱624,445.50</td><td>₱591,130.75</td><td>₱33,314.75</td><td>94.6649%</td><td>1,978</td><td class="muted">N/A*</td><td>20,444</td><td>₱3,750.00</td><td>250x</td><td>0.5391%</td></tr>'+
+    '<tr><td class="platform-name">ArenaPlus (AP)</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td></tr>'+
     '</tbody></table></div>'+
     '<div class="platform-pie-grid" aria-label="Platform comparison pie charts">'+
       '<section class="platform-pie-card"><div class="platform-pie platform-pie-ggr" role="img" aria-label="GGR share: BingoPlus 11.73 percent; GameZone 88.27 percent"></div><div class="platform-pie-copy"><h3>GGR — BP1 vs GP</h3><ul class="platform-pie-legend"><li><i class="bp"></i><span>BingoPlus <b>₱4,428.75 · 11.73%</b></span></li><li><i class="gp"></i><span>GameZone <b>₱33,314.75 · 88.27%</b></span></li></ul></div></section>'+
       '<section class="platform-pie-card"><div class="platform-pie platform-pie-players" role="img" aria-label="Player share: BingoPlus 15.33 percent; GameZone 84.67 percent"></div><div class="platform-pie-copy"><h3>Players — BP1 vs GP</h3><ul class="platform-pie-legend"><li><i class="bp"></i><span>BingoPlus <b>358 · 15.33%</b></span></li><li><i class="gp"></i><span>GameZone <b>1,978 · 84.67%</b></span></li></ul></div></section>'+
-    '</div><p class="platform-performance-scope">*The back-office daily New Players field is available at Product Line BP1 level (2,166 total), not as a betSite-level field; it is not allocated between platforms.</p>';
+    '</div><p class="platform-performance-scope">*The back-office daily New Players field is available at Product Line BP1 level (2,166 total), not as a betSite-level field; it is not allocated between platforms. ArenaPlus (AP) remains N/A until verified AP data is available.</p>';
   const changeLog=document.querySelector('.change-log-panel'),dynamicCard=secondary.querySelector('.summary-dynamic-rtp-card'),alertCard=secondary.querySelector('.summary-alert-card');
   secondary.classList.add('platform-allocation-row');
   secondary.append(panel);
@@ -6084,5 +6085,24 @@
  const draw=(svg,rows,labelOf,withHit)=>{if(!svg||!rows.length)return;const W=1100,H=360,p={l:128,r:128,t:34,b:78},plotH=H-p.t-p.b,slot=(W-p.l-p.r)/rows.length,x=i=>p.l+slot*(i+.5),maxA=Math.max(10000,Math.ceil(Math.max(...rows.flatMap(r=>[Number(r.bet),Number(r.payout)]).filter(Number.isFinite),0)/10000)*10000),maxP=Math.max(160,Math.ceil(Math.max(...rows.map(r=>Number(r.rtp)||0),97)/20)*20),yA=v=>H-p.b-v/maxA*plotH,yP=v=>H-p.b-v/maxP*plotH;svg.setAttribute('viewBox','0 0 '+W+' '+H);svg.replaceChildren();for(let i=0;i<=4;i++){const a=maxA*i/4,y=yA(a);add(svg,'line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});add(svg,'text',{x:p.l-12,y:y+4,'text-anchor':'end',fill:'#556275','font-size':9},money(a));add(svg,'text',{x:W-p.r+12,y:y+4,fill:'#556275','font-size':9},(maxP*i/4).toFixed(0)+'%')}rows.forEach((r,i)=>{const c=x(i);if(withHit||i===0||i===rows.length-1||i%3===0)add(svg,'text',{x:c,y:H-48,'text-anchor':'end',fill:'#556275','font-size':8,transform:'rotate(-45 '+c+' '+(H-48)+')'},labelOf(r));[['bet','#386edb'],['payout','#4fb4bd']].forEach(([k,color],j)=>{const v=Number(r[k]);if(Number.isFinite(v)){const y=yA(v);add(svg,'rect',{x:c+(j-.5)*8-3,y,width:6,height:Math.max(1,H-p.b-y),rx:2,fill:color,opacity:.9})}})});add(svg,'line',{x1:p.l,x2:W-p.r,y1:yP(97),y2:yP(97),stroke:'#64748b','stroke-width':1.5,'stroke-dasharray':'7 5'});add(svg,'text',{x:W-p.r-4,y:yP(97)-6,'text-anchor':'end',fill:'#475569','font-size':10},'Standard RTP 97%');const line=(key,color,width)=>{const pts=rows.map((r,i)=>Number.isFinite(Number(r[key]))?[x(i),yP(Number(r[key]))]:null).filter(Boolean);if(pts.length>1)add(svg,'path',{d:'M '+pts.map(q=>q.join(' ')).join(' L '),fill:'none',stroke:color,'stroke-width':width,'stroke-linecap':'round','stroke-linejoin':'round'});if(key==='rtp')pts.forEach(q=>add(svg,'circle',{cx:q[0],cy:q[1],r:3,fill:color,stroke:'#fff','stroke-width':1.2}))};line('rtp','#f4a51c',3);if(withHit)line('hitRate','#1b9c4a',1.7)};
  const ensureLegend=()=>{const panel=document.querySelector('.hourly-chart-panel');if(!panel||panel.querySelector('.hourly-rtp-legend'))return;const legend=document.createElement('div');legend.className='series-legend combo-legend hourly-rtp-legend';legend.setAttribute('aria-label','Hourly RTP chart legend');legend.innerHTML='<span><i class="hourly-bet" aria-hidden="true"></i>Betting Amount</span><span><i class="hourly-pay" aria-hidden="true"></i>Payout</span><span><i class="hourly-rtp" aria-hidden="true"></i>RTP</span><span><i class="hourly-hit" aria-hidden="true"></i>Hit Rate</span><span><i class="hourly-standard" aria-hidden="true"></i>Standard RTP</span>';panel.querySelector('.chart-wrap')?.insertAdjacentElement('afterend',legend)};
  const bind=()=>document.querySelectorAll('#report-language-toggle [data-report-language]').forEach(b=>{if(b.dataset.finalUiBound)return;b.dataset.finalUiBound='1';b.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();window.setReportLanguage?.(b.dataset.reportLanguage);document.querySelectorAll('#report-language-toggle [data-report-language]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)))},{capture:true})});const repair=()=>{ensureLegend();bind();draw(document.getElementById('hourly-rtp-trend-chart'),(data.hourly||[]).filter(r=>Number(r.players)>0),r=>r.hour,true);draw(document.getElementById('daily-performance-30-chart'),(data.daily||[]).filter(r=>/^\d{4}-\d{2}-\d{2}$/.test(r.date)).sort((a,b)=>a.date.localeCompare(b.date)),r=>r.date.slice(5).replace('-','/'),false)};window.finalUiRepair=repair;repair();[100,500,1500,3000,6000,9000].forEach(t=>setTimeout(repair,t));const select=document.getElementById('report-date');if(select)select.addEventListener('change',()=>setTimeout(repair,0));let cycles=0;const timer=setInterval(()=>{repair();if(++cycles>=8)clearInterval(timer)},2000)})();
+</script>
+<script id="arena-plus-platform-row">
+(()=>{
+  const apply=()=>{
+    const panel=document.querySelector('.platform-performance-panel');
+    const body=panel?.querySelector('tbody');
+    if(!panel||!body)return;
+    if(![...body.querySelectorAll('tr')].some(row=>/ArenaPlus\s*\(AP\)/i.test(row.textContent||''))){
+      const row=document.createElement('tr');
+      row.innerHTML='<td class="platform-name">ArenaPlus (AP)</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td><td class="muted">N/A</td>';
+      body.append(row);
+    }
+    const scopes=panel.querySelectorAll('.platform-performance-scope');
+    if(scopes[0]&&!/AP\s*=\s*ArenaPlus/i.test(scopes[0].textContent||''))scopes[0].innerHTML=scopes[0].innerHTML.replace('GP = GameZone.','GP = GameZone, AP = ArenaPlus.');
+    if(scopes[1]&&!/ArenaPlus \(AP\)/i.test(scopes[1].textContent||''))scopes[1].textContent+=' ArenaPlus (AP) remains N/A until verified AP data is available.';
+  };
+  apply();
+  [100,500,1200,2500,5000].forEach(delay=>setTimeout(apply,delay));
+})();
 </script>
 </body></html>
