@@ -173,6 +173,10 @@
     .legend span { display: inline-flex; gap: 6px; align-items: center; }
     .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; background: var(--blue); }
     .legend i.line { height: 3px; border-radius: 2px; }
+    .chart-tooltip { position: fixed; z-index: 10000; max-width: 230px; padding: 8px 10px; border: 1px solid #477fca; border-radius: 8px; color: #f3f7fb; background: rgba(10, 25, 42, .96); box-shadow: 0 10px 26px rgba(18, 43, 70, .24); font-size: 11px; line-height: 1.45; pointer-events: none; opacity: 0; transform: translateY(4px); transition: opacity .12s ease, transform .12s ease; }
+    .chart-tooltip.visible { opacity: 1; transform: translateY(0); }
+    .chart-tooltip b { color: #fff; }
+    [data-tooltip-en] { cursor: crosshair; }
     .keynote { clear: both; margin-top: 12px; padding: 9px 10px; border: 1px solid rgba(110,168,255,.24); border-left: 3px solid var(--cyan); border-radius: 8px; background: rgba(12,29,48,.72); color: var(--muted); font-size: 11px; line-height: 1.4; }
     .keynote b { color: var(--text); margin-right: 4px; }
     .chart-note { color: var(--muted); font-size: 11px; margin-top: 4px; }
@@ -480,6 +484,51 @@
         return node;
       };
       const drawLabel = (svg, x, y, text, attrs = {}) => svg.appendChild(make('text', { x, y, fill: '#8ea4bd', 'font-size': 10, ...attrs }, text));
+      const tooltip = document.createElement('div');
+      tooltip.className = 'chart-tooltip';
+      document.body.appendChild(tooltip);
+      let tooltipLanguage = 'en';
+      let activeTooltipTarget = null;
+      const positionTooltip = event => {
+        const gap = 14;
+        const bounds = tooltip.getBoundingClientRect();
+        const left = Math.max(10, Math.min(event.clientX + gap, window.innerWidth - bounds.width - 10));
+        const top = Math.max(10, Math.min(event.clientY + gap, window.innerHeight - bounds.height - 10));
+        tooltip.style.left = `${left}px`;
+        tooltip.style.top = `${top}px`;
+      };
+      const showTooltip = (target, event) => {
+        activeTooltipTarget = target;
+        tooltip.innerHTML = target.dataset[tooltipLanguage === 'cn' ? 'tooltipCn' : 'tooltipEn'] || target.dataset.tooltipEn || '';
+        tooltip.classList.add('visible');
+        positionTooltip(event);
+      };
+      const hideTooltip = target => {
+        if (activeTooltipTarget === target) {
+          activeTooltipTarget = null;
+          tooltip.classList.remove('visible');
+        }
+      };
+      const bindTooltip = target => {
+        if (!target || target.dataset.tooltipBound === 'true') return;
+        target.dataset.tooltipBound = 'true';
+        target.addEventListener('mouseenter', event => showTooltip(target, event));
+        target.addEventListener('mousemove', event => {
+          if (activeTooltipTarget === target) positionTooltip(event);
+        });
+        target.addEventListener('mouseleave', () => hideTooltip(target));
+        target.addEventListener('focus', event => showTooltip(target, event));
+        target.addEventListener('blur', () => hideTooltip(target));
+      };
+      const setTip = (target, english, chinese) => {
+        target.setAttribute('data-tooltip-en', english);
+        target.setAttribute('data-tooltip-cn', chinese || english);
+        bindTooltip(target);
+      };
+      document.addEventListener('dashboard-language-change', event => {
+        tooltipLanguage = event.detail === 'cn' ? 'cn' : 'en';
+        if (activeTooltipTarget) tooltip.innerHTML = activeTooltipTarget.dataset[tooltipLanguage === 'cn' ? 'tooltipCn' : 'tooltipEn'] || activeTooltipTarget.dataset.tooltipEn || '';
+      });
 
       const hourly = document.getElementById('hourlyRtpChart');
       if (hourly) {
@@ -502,11 +551,23 @@
         [94, 98.3, 102].forEach(value => drawLabel(hourly, W - 30, yRtp(value) + 4, `${value}%`, { 'font-size': 9 }));
         hours.forEach((label, i) => drawLabel(hourly, x(i), base + 30, label, { 'text-anchor': 'end', transform: `rotate(-55 ${x(i)} ${base + 30})`, 'font-size': 8 }));
         const barWidth = Math.min(13, plotW / hours.length * .24);
-        bet.forEach((value, i) => hourly.appendChild(make('rect', { x: x(i) - barWidth - 2, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 4, fill: '#6ea8ff' })));
-        payout.forEach((value, i) => hourly.appendChild(make('rect', { x: x(i) + 2, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 4, fill: '#b78cff' })));
+        bet.forEach((value, i) => {
+          const bar = make('rect', { x: x(i) - barWidth - 2, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 4, fill: '#6ea8ff' });
+          setTip(bar, `<b>${hours[i]}</b><br>Bet Amount: ${value}`, `<b>${hours[i]}</b><br>投注金额：${value}`);
+          hourly.appendChild(bar);
+        });
+        payout.forEach((value, i) => {
+          const bar = make('rect', { x: x(i) + 2, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 4, fill: '#b78cff' });
+          setTip(bar, `<b>${hours[i]}</b><br>Payout: ${value}`, `<b>${hours[i]}</b><br>派彩：${value}`);
+          hourly.appendChild(bar);
+        });
         const points = rtp.map((value, i) => `${x(i)},${yRtp(value)}`).join(' ');
         hourly.appendChild(make('polyline', { points, fill: 'none', stroke: '#55d68b', 'stroke-width': 2.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
-        rtp.forEach((value, i) => hourly.appendChild(make('circle', { cx: x(i), cy: yRtp(value), r: 3.5, fill: '#55d68b' })));
+        rtp.forEach((value, i) => {
+          const point = make('circle', { cx: x(i), cy: yRtp(value), r: 3.5, fill: '#55d68b' });
+          setTip(point, `<b>${hours[i]}</b><br>RTP: ${value.toFixed(1)}%`, `<b>${hours[i]}</b><br>RTP：${value.toFixed(1)}%`);
+          hourly.appendChild(point);
+        });
         const thresholdY = yRtp(98.3);
         hourly.appendChild(make('line', { x1: pad.l, y1: thresholdY, x2: W - pad.r, y2: thresholdY, stroke: '#f2a65a', 'stroke-width': 2, 'stroke-dasharray': '7 6' }));
         drawLabel(hourly, W - 90, thresholdY - 7, '98.3% target', { fill: '#f2a65a', 'font-size': 9 });
@@ -536,12 +597,80 @@
         dates.forEach((date, i) => drawLabel(thirtyDay, x(i), base + 38, date, { 'text-anchor': 'end', transform: `rotate(-65 ${x(i)} ${base + 38})`, 'font-size': 8 }));
         [90, 95, 100, 105].forEach(value => drawLabel(thirtyDay, W - 26, yRtp(value) + 4, `${value}%`, { 'font-size': 9 }));
         const barWidth = Math.max(4, Math.min(8, plotW / dates.length * .22));
-        bet.forEach((value, i) => thirtyDay.appendChild(make('rect', { x: x(i) - barWidth - 1, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 2, fill: '#6ea8ff' })));
-        payout.forEach((value, i) => thirtyDay.appendChild(make('rect', { x: x(i) + 1, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 2, fill: '#b78cff' })));
+        bet.forEach((value, i) => {
+          const bar = make('rect', { x: x(i) - barWidth - 1, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 2, fill: '#6ea8ff' });
+          setTip(bar, `<b>${dates[i]}</b><br>Bet Amount: ${value}`, `<b>${dates[i]}</b><br>投注金额：${value}`);
+          thirtyDay.appendChild(bar);
+        });
+        payout.forEach((value, i) => {
+          const bar = make('rect', { x: x(i) + 1, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 2, fill: '#b78cff' });
+          setTip(bar, `<b>${dates[i]}</b><br>Payout: ${value}`, `<b>${dates[i]}</b><br>派彩：${value}`);
+          thirtyDay.appendChild(bar);
+        });
         thirtyDay.appendChild(make('polyline', { points: rtp.map((value, i) => `${x(i)},${yRtp(value)}`).join(' '), fill: 'none', stroke: '#55d68b', 'stroke-width': 2.3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
         thirtyDay.appendChild(make('polyline', { points: players.map((value, i) => `${x(i)},${yPlayers(value)}`).join(' '), fill: 'none', stroke: '#f2a65a', 'stroke-width': 2.3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
-        [rtp, players].forEach((series, seriesIndex) => series.forEach((value, i) => thirtyDay.appendChild(make('circle', { cx: x(i), cy: seriesIndex ? yPlayers(value) : yRtp(value), r: 2.4, fill: seriesIndex ? '#f2a65a' : '#55d68b' }))));
+        [rtp, players].forEach((series, seriesIndex) => series.forEach((value, i) => {
+          const point = make('circle', { cx: x(i), cy: seriesIndex ? yPlayers(value) : yRtp(value), r: 2.4, fill: seriesIndex ? '#f2a65a' : '#55d68b' });
+          const english = seriesIndex ? `<b>${dates[i]}</b><br>Players: ${value}` : `<b>${dates[i]}</b><br>RTP: ${value.toFixed(2)}%`;
+          const chinese = seriesIndex ? `<b>${dates[i]}</b><br>玩家数：${value}` : `<b>${dates[i]}</b><br>RTP：${value.toFixed(2)}%`;
+          setTip(point, english, chinese);
+          thirtyDay.appendChild(point);
+        }));
       }
+
+      const bindStaticRects = (selector, tips) => {
+        document.querySelectorAll(`${selector} rect`).forEach((rect, index) => {
+          if (tips[index]) setTip(rect, tips[index][0], tips[index][1]);
+        });
+      };
+      bindStaticRects('.total-tickets svg', [
+        ['<b>Normal Bet</b><br>Tickets: 12,860', '<b>普通投注</b><br>票数：12,860'],
+        ['<b>Buy Feature</b><br>Tickets: 2,420', '<b>购买功能</b><br>票数：2,420'],
+        ['<b>Bonus Round</b><br>Tickets: 3,362', '<b>奖励回合</b><br>票数：3,362']
+      ]);
+      bindStaticRects('.player-distribution svg', [
+        ['<b>1–10 Rounds</b><br>Unique Players: 162', '<b>1–10回合</b><br>唯一玩家：162'],
+        ['<b>11–20 Rounds</b><br>Unique Players: 96', '<b>11–20回合</b><br>唯一玩家：96'],
+        ['<b>21–50 Rounds</b><br>Unique Players: 78', '<b>21–50回合</b><br>唯一玩家：78'],
+        ['<b>51–100 Rounds</b><br>Unique Players: 55', '<b>51–100回合</b><br>唯一玩家：55'],
+        ['<b>100+ Rounds</b><br>Unique Players: 35', '<b>100+回合</b><br>唯一玩家：35']
+      ]);
+      bindStaticRects('.player-grid > .chart-grid-3 > .panel:nth-child(2) svg', [
+        ['<b>BP · New Players</b><br>Rounds: 62', '<b>BP · 新玩家</b><br>回合数：62'],
+        ['<b>BP · Returning Players</b><br>Rounds: 112', '<b>BP · 回访玩家</b><br>回合数：112'],
+        ['<b>GP · New Players</b><br>Rounds: 77', '<b>GP · 新玩家</b><br>回合数：77'],
+        ['<b>GP · Returning Players</b><br>Rounds: 127', '<b>GP · 回访玩家</b><br>回合数：127'],
+        ['<b>AP · New Players</b><br>Rounds: 47', '<b>AP · 新玩家</b><br>回合数：47'],
+        ['<b>AP · Returning Players</b><br>Rounds: 91', '<b>AP · 回访玩家</b><br>回合数：91']
+      ]);
+      bindStaticRects('.player-grid > .chart-grid-3 > .panel:nth-child(3) svg', [
+        ['<b>₱1</b><br>Unique Players: 118', '<b>₱1</b><br>唯一玩家：118'],
+        ['<b>₱5</b><br>Unique Players: 84', '<b>₱5</b><br>唯一玩家：84'],
+        ['<b>₱10</b><br>Unique Players: 59', '<b>₱10</b><br>唯一玩家：59'],
+        ['<b>₱20</b><br>Unique Players: 46', '<b>₱20</b><br>唯一玩家：46'],
+        ['<b>₱50</b><br>Unique Players: 32', '<b>₱50</b><br>唯一玩家：32'],
+        ['<b>₱100+</b><br>Unique Players: 22', '<b>₱100+</b><br>唯一玩家：22']
+      ]);
+      document.querySelectorAll('.platform-charts .mini-donut').forEach(svg => {
+        const label = svg.getAttribute('aria-label') || '';
+        const values = label.startsWith('GGR') ? [['BingoPlus (BP): 73.57%', 'BingoPlus (BP)：73.57%'], ['GameZone (GP): 10.08%', 'GameZone (GP)：10.08%'], ['ArenaPlus (AP): 16.35%', 'ArenaPlus (AP)：16.35%']] : label.startsWith('Player') ? [['BingoPlus (BP): 67.14%', 'BingoPlus (BP)：67.14%'], ['GameZone (GP): 21.60%', 'GameZone (GP)：21.60%'], ['ArenaPlus (AP): 11.26%', 'ArenaPlus (AP)：11.26%']] : [['BingoPlus (BP): 64.81%', 'BingoPlus (BP)：64.81%'], ['GameZone (GP): 22.27%', 'GameZone (GP)：22.27%'], ['ArenaPlus (AP): 12.92%', 'ArenaPlus (AP)：12.92%']];
+        svg.querySelectorAll('circle').forEach((circle, index) => { if (index > 0 && values[index - 1]) setTip(circle, values[index - 1][0], values[index - 1][1]); });
+      });
+      const lossCircles = document.querySelectorAll('.game-loss svg circle');
+      if (lossCircles[1]) setTip(lossCircles[1], '<b>Winning Tickets</b><br>10,260 · 55.0%', '<b>中奖票数</b><br>10,260 · 55.0%');
+      if (lossCircles[2]) setTip(lossCircles[2], '<b>Losing Tickets</b><br>8,382 · 45.0%', '<b>未中奖票数</b><br>8,382 · 45.0%');
+      const playerDonutCircles = document.querySelectorAll('.player-grid > .panel:first-child svg circle');
+      if (playerDonutCircles[1]) setTip(playerDonutCircles[1], '<b>New Players</b><br>118 · 27.7%', '<b>新玩家</b><br>118 · 27.7%');
+      if (playerDonutCircles[2]) setTip(playerDonutCircles[2], '<b>Returning Players</b><br>308 · 72.3%', '<b>回访玩家</b><br>308 · 72.3%');
+      document.querySelectorAll('.dynamic-item').forEach(item => {
+        const head = item.querySelector('.dynamic-head')?.textContent.trim() || '';
+        const foot = item.querySelector('.dynamic-foot')?.textContent.trim() || '';
+        const round = item.querySelector('.dynamic-head span')?.textContent.trim() || '';
+        const mode = item.querySelector('.dynamic-head b')?.textContent.trim() || '';
+        const rtpValue = item.querySelector('.dynamic-foot span')?.textContent.trim() || '';
+        const ggr = item.querySelector('.dynamic-foot b')?.textContent.trim() || '';
+        setTip(item, `<b>${mode}</b><br>${round}<br>${rtpValue}<br>${ggr}`, `<b>${mode}</b><br>${round}<br>${rtpValue}<br>${ggr}`);
+      });
 
       const notes = [
         ['.platform-matrix', 'BingoPlus contributes the largest share of daily activity in this sample.'],
@@ -718,6 +847,7 @@
       const applyLanguage = lang => {
         currentLang = lang;
         document.documentElement.lang = lang === 'cn' ? 'zh-CN' : 'en';
+        document.dispatchEvent(new CustomEvent('dashboard-language-change', { detail: lang }));
         const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
         let node;
         while (node = walker.nextNode()) {
