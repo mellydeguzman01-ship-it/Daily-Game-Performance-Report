@@ -32,7 +32,7 @@
     }
 
     .wrap { width: min(1900px, calc(100% - 28px)); margin: 0 auto; padding: 18px 0 28px; }
-    .topbar { display: grid; grid-template-columns: minmax(330px, .9fr) minmax(0, 2.2fr); gap: 20px; align-items: stretch; margin-bottom: 26px; }
+    .topbar { display: grid; grid-template-columns: minmax(330px, .9fr) minmax(0, 2.2fr); gap: 20px; align-items: start; margin-bottom: 26px; }
     .eyebrow { color: var(--cyan); font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
     h1, h2, h3, p { margin: 0; }
     h1 { margin-top: 5px; font-size: clamp(26px, 3vw, 42px); letter-spacing: -.04em; }
@@ -41,8 +41,8 @@
     .report-date { display: flex; gap: 8px; align-items: baseline; margin-top: 10px; color: var(--text); font-size: 13px; font-weight: 700; }
     .report-date span { color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
     .header-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 13px; }
-    .header-metrics { align-self: stretch; gap: 10px; }
-    .header-metrics .card { min-height: 128px; }
+    .header-metrics { align-self: start; gap: 10px; }
+    .header-metrics .card { min-height: 128px; height: 128px; }
     .header-metrics .metric-value { font-size: clamp(20px, 2vw, 30px); }
     .language-toggle { display: inline-flex; align-items: center; padding: 3px; border: 1px solid #3f6b9c; border-radius: 999px; background: #10243a; }
     .language-toggle button, .header-button { border: 0; border-radius: 999px; padding: 7px 12px; color: var(--muted); background: transparent; font: inherit; font-size: 11px; font-weight: 800; cursor: pointer; }
@@ -82,6 +82,8 @@
     .big-grid .accent-red { background: #ffe2e7; border-color: #ffc1ca; }
     .big-grid .accent-violet { background: #eee4ff; border-color: #d9c2ff; }
     .big-grid .accent-cyan { background: #d9f7f6; border-color: #b5e9e5; }
+    .big-grid .metric-label { color: #536a84; font-weight: 700; }
+    .big-grid .metric-foot { color: #536a84; }
     .small-grid .card { background: #14263c; border-top: 3px solid #385776; border-color: #29445f; }
     .small-grid .card::after { background: rgba(110,168,255,.12); }
     .metric-label { color: var(--muted); font-size: 12px; }
@@ -141,16 +143,20 @@
 
     .chart-grid-2, .chart-grid-3 { display: contents; }
     .game-performance-grid { display: grid; grid-template-columns: repeat(20, minmax(0, 1fr)); gap: 10px; align-items: stretch; }
-    .game-summary { grid-column: 1 / span 6; grid-row: 1; margin-bottom: 0; }
-    .dynamic-rtp { grid-column: 7 / span 3; grid-row: 1; }
-    .game-loss { grid-column: 10 / span 3; grid-row: 1; }
-    .total-tickets { grid-column: 1 / span 20; grid-row: 3; min-height: 230px; }
-    .hourly-rtp { grid-column: 1 / span 10; grid-row: 2; }
-    .bet-distribution { grid-column: 11 / span 5; grid-row: 2; }
-    .multiplier-distribution { grid-column: 16 / span 5; grid-row: 2; }
+    .game-summary { grid-column: 1 / span 4; grid-row: 1; margin-bottom: 0; }
+    .dynamic-rtp { grid-column: 5 / span 4; grid-row: 1; }
+    .game-loss { grid-column: 9 / span 4; grid-row: 1; }
+    .total-tickets { grid-column: 13 / span 4; grid-row: 1; min-height: 230px; }
+    .player-distribution { grid-column: 17 / span 4; grid-row: 1; }
+    .hourly-rtp { grid-column: 1 / span 12; grid-row: 2; }
+    .bet-distribution { grid-column: 13 / span 4; grid-row: 2; }
+    .multiplier-distribution { grid-column: 17 / span 4; grid-row: 2; }
     .game-summary table { min-width: 0; table-layout: fixed; font-size: 10px; }
     .game-summary th, .game-summary td { padding: 8px 6px; white-space: normal; }
+    .game-summary thead th { text-align: center; }
+    .game-summary thead th:first-child { text-align: left; }
     .game-summary tbody th { color: var(--text); text-align: left; }
+    .game-summary tfoot th, .game-summary tfoot td { color: var(--text); border-top: 1px solid rgba(110,168,255,.35); font-weight: 800; }
     .chart-box { min-height: 305px; }
     .chart-box.tall { min-height: 360px; }
     .chart { width: 100%; height: 235px; display: block; }
@@ -211,7 +217,7 @@
     .monthly-head { display: flex; gap: 8px; flex-wrap: wrap; } .filter { padding: 6px 9px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; font-size: 11px; } .filter.active { color: var(--text); background: rgba(110,168,255,.15); border-color: rgba(110,168,255,.38); }
     .footer { padding: 20px 0 0; color: var(--muted); font-size: 11px; text-align: center; }
 
-    @media (max-width: 1180px) { .big-grid { grid-template-columns: repeat(3, 1fr); } .header-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); } .small-grid { grid-template-columns: repeat(4, 1fr); } .platform-layout, .game-performance-grid, .player-grid, .monthly-row { grid-template-columns: 1fr; } .game-summary, .dynamic-rtp, .game-loss, .total-tickets, .hourly-rtp, .bet-distribution, .multiplier-distribution { grid-column: 1; grid-row: auto; } .side-stack { display: grid; gap: 10px; } }
+    @media (max-width: 1180px) { .big-grid { grid-template-columns: repeat(3, 1fr); } .header-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); } .small-grid { grid-template-columns: repeat(4, 1fr); } .platform-layout, .game-performance-grid, .player-grid, .monthly-row { grid-template-columns: 1fr; } .game-summary, .dynamic-rtp, .game-loss, .total-tickets, .player-distribution, .hourly-rtp, .bet-distribution, .multiplier-distribution { grid-column: 1; grid-row: auto; } .side-stack { display: grid; gap: 10px; } }
     @media (max-width: 700px) { .wrap { width: min(100% - 24px, 1540px); padding-top: 20px; } .topbar { display: block; } .big-grid, .small-grid, .chart-grid-3, .distribution { grid-template-columns: 1fr; } .header-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 18px; } .compact-pie { grid-template-columns: 1fr; } h1 { font-size: 30px; } .panel { border-radius: 14px; } .platform-charts .platform-chart { grid-template-columns: 96px 1fr; } .platform-charts .mini-donut { width: 96px; height: 96px; } .monthly-row .chart.tall-svg { height: 300px; } }
   </style>
 </head>
@@ -321,8 +327,7 @@
   <div class="panel table-scroll game-summary">
     <table>
       <thead>
-        <tr><th rowspan="3">Metric</th><th colspan="3">Game</th></tr>
-        <tr><th>Loteria</th><th colspan="2">Slot</th></tr>
+        <tr><th rowspan="2">Metric</th><th>Loteria</th><th colspan="2">Slot</th></tr>
         <tr><th>BingoPlus (BP)</th><th>GameZone (GP)</th><th>ArenaPlus (AP)</th></tr>
       </thead>
       <tbody>
@@ -334,6 +339,9 @@
         <tr><th scope="row">Players</th><td>286</td><td>92</td><td>48</td></tr>
         <tr><th scope="row">Winning Tickets</th><td>2,604</td><td>4,408</td><td>3,248</td></tr>
       </tbody>
+      <tfoot>
+        <tr><th scope="row">Total</th><td colspan="3">₱128,450 Bet · ₱124,780 Payout · ₱3,670 GGR · 97.14% RTP · 426 Players · 18,642 Rounds · 10,260 Winning Tickets</td></tr>
+      </tfoot>
     </table>
   </div>
       <div class="chart-grid-2">
@@ -365,6 +373,10 @@
         <div class="panel pad chart-box total-tickets"><div class="side-title"><h3>Total Tickets</h3><span>By feature behavior</span></div>
           <svg class="chart" viewBox="0 0 390 235"><line x1="42" y1="194" x2="370" y2="194" stroke="#2c4660"/><rect x="75" y="67" width="56" height="127" rx="8" fill="#6ea8ff"/><rect x="167" y="142" width="56" height="52" rx="8" fill="#b78cff"/><rect x="259" y="114" width="56" height="80" rx="8" fill="#40d9d0"/><text x="67" y="217" fill="#8ea4bd" font-size="11">Normal Bet</text><text x="162" y="217" fill="#8ea4bd" font-size="11">Buy Feature</text><text x="259" y="217" fill="#8ea4bd" font-size="11">Bonus Round</text><text x="85" y="58" fill="#f3f7fb" font-size="12" font-weight="700">12,860</text><text x="177" y="133" fill="#f3f7fb" font-size="12" font-weight="700">2,420</text><text x="270" y="105" fill="#f3f7fb" font-size="12" font-weight="700">3,362</text></svg>
           <div class="chart-note">Normal Bet accounts for the majority of total tickets.</div>
+        </div>
+        <div class="panel pad chart-box player-distribution"><div class="side-title"><h3>Player Distribution by Rounds Played</h3><span>Number of Unique Players</span></div>
+          <svg class="chart" viewBox="0 0 390 235" role="img" aria-label="Player distribution by rounds played bar chart"><line x1="42" y1="194" x2="370" y2="194" stroke="#2c4660"/><line x1="42" y1="132" x2="370" y2="132" stroke="#1d344c"/><line x1="42" y1="70" x2="370" y2="70" stroke="#1d344c"/><rect x="58" y="74" width="42" height="120" rx="7" fill="#40d9d0"/><rect x="122" y="123" width="42" height="71" rx="7" fill="#40d9d0"/><rect x="186" y="140" width="42" height="54" rx="7" fill="#40d9d0"/><rect x="250" y="153" width="42" height="41" rx="7" fill="#40d9d0"/><rect x="314" y="168" width="42" height="26" rx="7" fill="#40d9d0"/><text x="65" y="65" fill="#f3f7fb" font-size="11" font-weight="700">162</text><text x="129" y="114" fill="#f3f7fb" font-size="11" font-weight="700">96</text><text x="193" y="131" fill="#f3f7fb" font-size="11" font-weight="700">78</text><text x="257" y="144" fill="#f3f7fb" font-size="11" font-weight="700">55</text><text x="321" y="159" fill="#f3f7fb" font-size="11" font-weight="700">35</text><text x="79" y="217" fill="#8ea4bd" font-size="8" text-anchor="middle">1–10 Rounds</text><text x="143" y="217" fill="#8ea4bd" font-size="8" text-anchor="middle">11–20 Rounds</text><text x="207" y="217" fill="#8ea4bd" font-size="8" text-anchor="middle">21–50 Rounds</text><text x="271" y="217" fill="#8ea4bd" font-size="8" text-anchor="middle">51–100 Rounds</text><text x="335" y="217" fill="#8ea4bd" font-size="8" text-anchor="middle">100+ Rounds</text></svg>
+          <div class="chart-note">Most unique players are concentrated in the 1–10 rounds range.</div>
         </div>
         <div class="panel pad chart-box bet-distribution" style="overflow:auto"><div class="side-title"><h3>Bet Amount Distribution</h3><span>Bet amount + rounds + share</span></div>
           <table class="dist-table"><thead><tr><th>Bet range</th><th>Total bet</th><th>Rounds</th><th>Share</th><th></th></tr></thead><tbody><tr><td>₱0.5–3</td><td>₱8,640</td><td>6,284</td><td>6.7%</td><td><div class="mini-bar"><i style="width:92%"></i></div></td></tr><tr><td>₱5–10</td><td>₱21,500</td><td>4,710</td><td>16.7%</td><td><div class="mini-bar"><i style="width:72%"></i></div></td></tr><tr><td>₱11–20</td><td>₱27,880</td><td>2,860</td><td>21.7%</td><td><div class="mini-bar"><i style="width:48%"></i></div></td></tr><tr><td>₱21–50</td><td>₱31,240</td><td>2,210</td><td>24.3%</td><td><div class="mini-bar"><i style="width:37%"></i></div></td></tr><tr><td>₱51–100</td><td>₱18,420</td><td>1,090</td><td>14.3%</td><td><div class="mini-bar"><i style="width:22%"></i></div></td></tr><tr><td>₱101–200</td><td>₱10,880</td><td>510</td><td>8.5%</td><td><div class="mini-bar"><i style="width:12%"></i></div></td></tr><tr><td>₱501–1,000</td><td>₱9,890</td><td>978</td><td>7.7%</td><td><div class="mini-bar"><i style="width:18%"></i></div></td></tr></tbody></table>
@@ -499,6 +511,7 @@
         ['.dynamic-rtp', 'NON drives most volume; cumulative and daily modes remain more volatile because of smaller samples.'],
         ['.game-loss', 'Winning tickets represent 55.0% of total tickets in this sample.'],
         ['.total-tickets', 'Normal Bet accounts for the majority of ticket activity.'],
+        ['.player-distribution', 'Most unique players are concentrated in the 1–10 rounds range.'],
         ['.bet-distribution', 'The ₱21–50 range has the largest share of total bet amount in this sample.'],
         ['.multiplier-distribution', '0x is the largest multiplier band by rounds.'],
         ['.player-grid > .panel:first-child', 'Returning players make up most active players in this sample.'],
