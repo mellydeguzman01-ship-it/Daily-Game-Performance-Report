@@ -118,8 +118,8 @@
     .side-stack > .panel { min-width: 0; }
     .platform-charts { display: grid; align-content: start; gap: 9px; }
     .platform-charts { border-color: #477fca; background: linear-gradient(145deg, #162e4d, #102238); }
-    .platform-charts .platform-chart { grid-template-columns: 112px 1fr; gap: 14px; padding: 12px 0; }
-    .platform-charts .mini-donut { width: 112px; height: 112px; }
+    .platform-charts .platform-chart { grid-template-columns: 96px 1fr; gap: 11px; padding: 8px 0; }
+    .platform-charts .mini-donut { width: 96px; height: 96px; }
     .platform-chart { display: grid; grid-template-columns: 78px 1fr; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); }
     .platform-chart:first-of-type { border-top: 0; padding-top: 0; }
     .mini-donut { width: 78px; height: 78px; display: block; }
@@ -207,9 +207,9 @@
     .game-loss .legend-list div { align-items: flex-start; flex-wrap: wrap; gap: 4px 8px; font-size: 10px; }
     .game-loss .legend-list div b { white-space: nowrap; }
     .game-loss .chart-note { font-size: 10px; line-height: 1.35; }
-    .player-grid { display: grid; grid-template-columns: 1.5fr 2fr 1.5fr 1.5fr 1.5fr 2fr; gap: 10px; align-items: start; }
+    .player-grid { display: grid; grid-template-columns: 1.5fr 2fr 1.5fr 1.5fr 1.5fr 2fr; gap: 10px; align-items: stretch; }
     .player-grid > .chart-grid-3 { display: contents; }
-    .player-grid > .panel, .player-grid > .chart-grid-3 > .panel { min-width: 0; align-self: start; }
+    .player-grid > .panel, .player-grid > .chart-grid-3 > .panel { min-width: 0; align-self: stretch; height: 100%; }
     .player-grid > .panel:first-child .compact-pie { grid-template-columns: 1fr; gap: 5px; min-height: 0; }
     .player-grid > .panel:first-child .donut-wrap { min-height: 160px; }
     .player-grid table { min-width: 0; table-layout: fixed; font-size: 10px; }
@@ -358,7 +358,7 @@
   </div>
       <div class="chart-grid-2">
         <div class="panel pad chart-box tall hourly-rtp"><div class="side-title"><h3>Hourly RTP</h3><span>Bars: bet amount + payout · Lines: RTP + 98.3% threshold</span></div>
-          <svg id="hourlyRtpChart" class="chart tall-svg" viewBox="0 0 760 315" role="img" aria-label="Hourly RTP combo chart">
+          <svg id="hourlyRtpChart" class="chart tall-svg" viewBox="0 0 760 315" preserveAspectRatio="none" role="img" aria-label="Hourly RTP combo chart">
             <line x1="45" y1="228" x2="735" y2="228" stroke="#2c4660"/><line x1="45" y1="168" x2="735" y2="168" stroke="#1d344c"/><line x1="45" y1="108" x2="735" y2="108" stroke="#1d344c"/><line x1="45" y1="48" x2="735" y2="48" stroke="#1d344c"/>
             <text x="8" y="232" fill="#8ea4bd" font-size="10">0</text><text x="3" y="172" fill="#8ea4bd" font-size="10">50</text><text x="0" y="112" fill="#8ea4bd" font-size="10">100</text><text x="0" y="52" fill="#8ea4bd" font-size="10">150</text>
             <rect x="58" y="186" width="22" height="42" rx="4" fill="#6ea8ff"/><rect x="110" y="161" width="22" height="67" rx="4" fill="#6ea8ff"/><rect x="162" y="173" width="22" height="55" rx="4" fill="#6ea8ff"/><rect x="214" y="135" width="22" height="93" rx="4" fill="#6ea8ff"/><rect x="266" y="115" width="22" height="113" rx="4" fill="#6ea8ff"/><rect x="318" y="98" width="22" height="130" rx="4" fill="#6ea8ff"/><rect x="370" y="121" width="22" height="107" rx="4" fill="#6ea8ff"/><rect x="422" y="80" width="22" height="148" rx="4" fill="#6ea8ff"/><rect x="474" y="105" width="22" height="123" rx="4" fill="#6ea8ff"/><rect x="526" y="146" width="22" height="82" rx="4" fill="#6ea8ff"/><rect x="578" y="126" width="22" height="102" rx="4" fill="#6ea8ff"/><rect x="630" y="155" width="22" height="73" rx="4" fill="#6ea8ff"/><rect x="682" y="177" width="22" height="51" rx="4" fill="#6ea8ff"/>
@@ -427,7 +427,7 @@
     <section class="section">
       <div class="section-head"><div><h2>Monthly Performance</h2><p>30-day trend and month-to-date platform summary</p></div><div class="monthly-head"><span class="filter active">30 days</span><span class="filter">MTD</span></div></div>
       <div class="monthly-row">
-      <div class="panel pad chart-box"><div class="side-title"><h3>30-Day Performance Trend</h3><span>Bars: bet amount + payout · Lines: RTP + players</span></div><svg id="thirtyDayChart" class="chart tall-svg" viewBox="0 0 1020 340" role="img" aria-label="30-day performance trend chart"></svg><div class="legend"><span><i style="background:var(--blue)"></i>Bet amount</span><span><i style="background:var(--violet)"></i>Payout</span><span><i class="line" style="background:var(--green)"></i>RTP trendline</span><span><i class="line" style="background:#f2a65a"></i>Players trendline</span></div></div>
+      <div class="panel pad chart-box"><div class="side-title"><h3>30-Day Performance Trend</h3><span>Bars: bet amount + payout · Lines: RTP + players</span></div><svg id="thirtyDayChart" class="chart tall-svg" viewBox="0 0 1020 340" preserveAspectRatio="none" role="img" aria-label="30-day performance trend chart"></svg><div class="legend"><span><i style="background:var(--blue)"></i>Bet amount</span><span><i style="background:var(--violet)"></i>Payout</span><span><i class="line" style="background:var(--green)"></i>RTP trendline</span><span><i class="line" style="background:#f2a65a"></i>Players trendline</span></div></div>
       <div class="panel table-scroll"><table><thead><tr><th>Platform</th><th>Bet Amount</th><th>Payout</th><th>GGR</th><th>RTP</th><th>Players</th><th>New Players</th><th>Max Payout</th><th>Max Multiplier</th><th>Overall Retention</th></tr></thead><tbody><tr><td><b>BingoPlus</b><span class="platform-sub">Loteria</span></td><td>₱1,485,220</td><td>₱1,414,880</td><td class="positive">₱70,340</td><td>95.26%</td><td>2,842</td><td>1,116</td><td>₱12,000</td><td>200x</td><td>11.08%</td></tr><tr><td><b>GameZone</b><span class="platform-sub">Slot</span></td><td>₱605,410</td><td>₱587,220</td><td class="positive">₱18,190</td><td>96.99%</td><td>1,085</td><td>348</td><td>₱10,000</td><td>100x</td><td>8.42%</td></tr><tr><td><b>ArenaPlus</b><span class="platform-sub">Slot</span></td><td>₱354,280</td><td>₱341,880</td><td class="positive">₱12,400</td><td>96.50%</td><td>624</td><td>201</td><td>₱8,000</td><td>75x</td><td>7.96%</td></tr></tbody><tfoot><tr><th>Total</th><th>₱2,444,910</th><th>₱2,343,980</th><th class="positive">₱100,930</th><th>95.87%</th><th>4,551</th><th>1,665</th><th>₱12,000</th><th>200x</th><th>10.12%</th></tr></tfoot></table></div>
       </div>
     </section>
@@ -472,7 +472,7 @@
         });
         [94, 98.3, 102].forEach(value => drawLabel(hourly, W - 30, yRtp(value) + 4, `${value}%`, { 'font-size': 9 }));
         hours.forEach((label, i) => drawLabel(hourly, x(i), base + 30, label, { 'text-anchor': 'end', transform: `rotate(-45 ${x(i)} ${base + 30})`, 'font-size': 9 }));
-        const barWidth = Math.min(18, plotW / hours.length * .34);
+        const barWidth = Math.min(13, plotW / hours.length * .24);
         bet.forEach((value, i) => hourly.appendChild(make('rect', { x: x(i) - barWidth - 2, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 4, fill: '#6ea8ff' })));
         payout.forEach((value, i) => hourly.appendChild(make('rect', { x: x(i) + 2, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 4, fill: '#b78cff' })));
         const points = rtp.map((value, i) => `${x(i)},${yRtp(value)}`).join(' ');
@@ -506,7 +506,7 @@
         });
         dates.forEach((date, i) => drawLabel(thirtyDay, x(i), base + 38, date, { 'text-anchor': 'end', transform: `rotate(-65 ${x(i)} ${base + 38})`, 'font-size': 8 }));
         [90, 95, 100, 105].forEach(value => drawLabel(thirtyDay, W - 26, yRtp(value) + 4, `${value}%`, { 'font-size': 9 }));
-        const barWidth = Math.max(6, Math.min(12, plotW / dates.length * .32));
+        const barWidth = Math.max(4, Math.min(8, plotW / dates.length * .22));
         bet.forEach((value, i) => thirtyDay.appendChild(make('rect', { x: x(i) - barWidth - 1, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 2, fill: '#6ea8ff' })));
         payout.forEach((value, i) => thirtyDay.appendChild(make('rect', { x: x(i) + 1, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 2, fill: '#b78cff' })));
         thirtyDay.appendChild(make('polyline', { points: rtp.map((value, i) => `${x(i)},${yRtp(value)}`).join(' '), fill: 'none', stroke: '#55d68b', 'stroke-width': 2.3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
