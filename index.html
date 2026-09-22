@@ -41,12 +41,15 @@
     .report-date { display: flex; gap: 8px; align-items: baseline; margin-top: 10px; color: var(--text); font-size: 13px; font-weight: 700; }
     .report-date span { color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
     .header-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 13px; }
+    .header-metrics { align-self: stretch; gap: 10px; }
+    .header-metrics .card { min-height: 128px; }
+    .header-metrics .metric-value { font-size: clamp(20px, 2vw, 30px); }
     .language-toggle { display: inline-flex; align-items: center; padding: 3px; border: 1px solid #3f6b9c; border-radius: 999px; background: #10243a; }
     .language-toggle button, .header-button { border: 0; border-radius: 999px; padding: 7px 12px; color: var(--muted); background: transparent; font: inherit; font-size: 11px; font-weight: 800; cursor: pointer; }
     .language-toggle button.active { color: #fff; background: #2e74c8; box-shadow: 0 3px 10px rgba(46,116,200,.28); }
     .header-button { border: 1px solid #3f6b9c; color: #d7e7fb; background: #132b47; }
     .header-button:hover, .language-toggle button:hover { color: #fff; border-color: #70a9eb; }
-    .date-badge { display: flex; min-height: 100%; justify-content: space-between; align-items: center; gap: 20px; padding: 18px 22px; border: 1px solid #477fca; border-radius: 16px; background: linear-gradient(145deg, #162e4d, #102238); box-shadow: var(--shadow); }
+    .date-badge { display: none; }
     .date-badge strong { display: block; color: #eaf3ff; font-size: 16px; }
     .date-badge > div > span { display: block; color: var(--muted); font-size: 12px; }
     .date-badge > .tag { display: inline-flex; color: var(--muted); }
@@ -107,6 +110,8 @@
     .side-stack > .panel { min-width: 0; }
     .platform-charts { display: grid; align-content: start; gap: 9px; }
     .platform-charts { border-color: #477fca; background: linear-gradient(145deg, #162e4d, #102238); }
+    .platform-charts .platform-chart { grid-template-columns: 112px 1fr; gap: 14px; padding: 12px 0; }
+    .platform-charts .mini-donut { width: 112px; height: 112px; }
     .platform-chart { display: grid; grid-template-columns: 78px 1fr; gap: 10px; align-items: center; padding: 9px 0; border-top: 1px solid var(--line); }
     .platform-chart:first-of-type { border-top: 0; padding-top: 0; }
     .mini-donut { width: 78px; height: 78px; display: block; }
@@ -139,7 +144,7 @@
     .game-summary { grid-column: 1 / span 6; grid-row: 1; margin-bottom: 0; }
     .dynamic-rtp { grid-column: 7 / span 3; grid-row: 1; }
     .game-loss { grid-column: 10 / span 3; grid-row: 1; }
-    .total-tickets { grid-column: 13 / span 8; grid-row: 1; }
+    .total-tickets { grid-column: 1 / span 20; grid-row: 3; min-height: 230px; }
     .hourly-rtp { grid-column: 1 / span 10; grid-row: 2; }
     .bet-distribution { grid-column: 11 / span 5; grid-row: 2; }
     .multiplier-distribution { grid-column: 16 / span 5; grid-row: 2; }
@@ -150,11 +155,14 @@
     .chart-box.tall { min-height: 360px; }
     .chart { width: 100%; height: 235px; display: block; }
     .chart.tall-svg { height: 285px; }
+    .monthly-row .chart.tall-svg { height: 340px; }
     .chart text[fill="#f3f7fb"] { fill: var(--text); }
     .legend { display: flex; flex-wrap: wrap; gap: 10px 15px; color: var(--muted); font-size: 11px; margin-top: 8px; }
     .legend span { display: inline-flex; gap: 6px; align-items: center; }
     .legend i { display: inline-block; width: 9px; height: 9px; border-radius: 3px; background: var(--blue); }
     .legend i.line { height: 3px; border-radius: 2px; }
+    .keynote { clear: both; margin-top: 12px; padding: 9px 10px; border: 1px solid rgba(110,168,255,.24); border-left: 3px solid var(--cyan); border-radius: 8px; background: rgba(12,29,48,.72); color: var(--muted); font-size: 11px; line-height: 1.4; }
+    .keynote b { color: var(--text); margin-right: 4px; }
     .chart-note { color: var(--muted); font-size: 11px; margin-top: 4px; }
     .donut-wrap { display: grid; place-items: center; min-height: 250px; position: relative; }
     .donut-center { position: absolute; text-align: center; } .donut-center strong { display: block; font-size: 28px; } .donut-center span { color: var(--muted); font-size: 11px; }
@@ -203,8 +211,8 @@
     .monthly-head { display: flex; gap: 8px; flex-wrap: wrap; } .filter { padding: 6px 9px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; font-size: 11px; } .filter.active { color: var(--text); background: rgba(110,168,255,.15); border-color: rgba(110,168,255,.38); }
     .footer { padding: 20px 0 0; color: var(--muted); font-size: 11px; text-align: center; }
 
-    @media (max-width: 1180px) { .big-grid { grid-template-columns: repeat(3, 1fr); } .small-grid { grid-template-columns: repeat(4, 1fr); } .platform-layout, .game-performance-grid, .player-grid, .monthly-row { grid-template-columns: 1fr; } .game-summary, .dynamic-rtp, .game-loss, .total-tickets, .hourly-rtp, .bet-distribution, .multiplier-distribution { grid-column: 1; grid-row: auto; } .side-stack { display: grid; gap: 10px; } }
-    @media (max-width: 700px) { .wrap { width: min(100% - 24px, 1540px); padding-top: 20px; } .topbar { display: block; } .date-badge { margin-top: 14px; text-align: left; } .big-grid, .small-grid, .chart-grid-3, .distribution { grid-template-columns: 1fr; } .compact-pie { grid-template-columns: 1fr; } h1 { font-size: 30px; } .panel { border-radius: 14px; } }
+    @media (max-width: 1180px) { .big-grid { grid-template-columns: repeat(3, 1fr); } .header-metrics { grid-template-columns: repeat(3, minmax(0, 1fr)); } .small-grid { grid-template-columns: repeat(4, 1fr); } .platform-layout, .game-performance-grid, .player-grid, .monthly-row { grid-template-columns: 1fr; } .game-summary, .dynamic-rtp, .game-loss, .total-tickets, .hourly-rtp, .bet-distribution, .multiplier-distribution { grid-column: 1; grid-row: auto; } .side-stack { display: grid; gap: 10px; } }
+    @media (max-width: 700px) { .wrap { width: min(100% - 24px, 1540px); padding-top: 20px; } .topbar { display: block; } .big-grid, .small-grid, .chart-grid-3, .distribution { grid-template-columns: 1fr; } .header-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 18px; } .compact-pie { grid-template-columns: 1fr; } h1 { font-size: 30px; } .panel { border-radius: 14px; } .platform-charts .platform-chart { grid-template-columns: 96px 1fr; } .platform-charts .mini-donut { width: 96px; height: 96px; } .monthly-row .chart.tall-svg { height: 300px; } }
   </style>
 </head>
 <body>
@@ -223,18 +231,17 @@
           <button type="button" class="header-button" id="previousReportButton">Previous Daily Report</button>
         </div>
       </div>
-      <div class="date-badge"><div><b>Reporting Period</b><strong>00:00–23:59 PHT</strong><span>All times Philippine Time</span></div><span class="tag"><i class="dot positive"></i>Report generated</span></div>
-    </header>
-
-    <section class="section">
-      <div class="section-head"><div><h2>General Operation Data</h2><p>Daily snapshot · Sample values for structure review</p></div><span class="tag"><i class="dot positive"></i>Report generated</span></div>
-      <div class="grid big-grid">
+      <div class="grid big-grid header-metrics" aria-label="Main operating metrics">
         <article class="panel pad card accent-blue"><div class="metric-label">Bet Amount</div><div class="metric-value">₱128,450.00</div><div class="metric-foot"><span class="positive">↑ 12.4% DoD</span><span>Daily</span></div></article>
         <article class="panel pad card accent-green"><div class="metric-label">Payout</div><div class="metric-value">₱124,780.00</div><div class="metric-foot"><span class="positive">↑ 8.7% DoD</span><span>Daily</span></div></article>
         <article class="panel pad card accent-orange"><div class="metric-label">GGR</div><div class="metric-value positive">₱3,670.00</div><div class="metric-foot"><span class="positive">↑ 18.1% DoD</span><span>Positive GGR</span></div></article>
         <article class="panel pad card accent-violet"><div class="metric-label">RTP</div><div class="metric-value">97.14%</div><div class="metric-foot"><span class="positive">↓ 0.22 pp DoD</span><span>Within target</span></div></article>
         <article class="panel pad card accent-cyan"><div class="metric-label">MTD GGR</div><div class="metric-value">₱72,840.00</div><div class="metric-foot"><span class="positive">↑ 5.9% DoD</span><span>Sep 1–21</span></div></article>
       </div>
+    </header>
+
+    <section class="section">
+      <div class="section-head"><div><h2>General Operation Data</h2><p>Daily snapshot · Sample values for structure review</p></div><span class="tag"><i class="dot positive"></i>Report generated</span></div>
       <div class="grid small-grid">
         <article class="panel pad card"><div class="metric-label">Total Rounds / Tickets</div><div class="metric-value">18,642</div><div class="metric-foot"><span class="positive">↑ 9.8% DoD</span></div></article>
         <article class="panel pad card"><div class="metric-label">Players</div><div class="metric-value">426</div><div class="metric-foot"><span class="positive">↑ 6.2% DoD</span></div></article>
@@ -330,8 +337,8 @@
     </table>
   </div>
       <div class="chart-grid-2">
-        <div class="panel pad chart-box tall hourly-rtp"><div class="side-title"><h3>Hourly RTP</h3><span>Bars: bet amount · Lines: payout, RTP, 98.3% threshold</span></div>
-          <svg class="chart tall-svg" viewBox="0 0 760 285" role="img" aria-label="Hourly RTP combo chart">
+        <div class="panel pad chart-box tall hourly-rtp"><div class="side-title"><h3>Hourly RTP</h3><span>Bars: bet amount + payout · Lines: RTP + 98.3% threshold</span></div>
+          <svg id="hourlyRtpChart" class="chart tall-svg" viewBox="0 0 760 315" role="img" aria-label="Hourly RTP combo chart">
             <line x1="45" y1="228" x2="735" y2="228" stroke="#2c4660"/><line x1="45" y1="168" x2="735" y2="168" stroke="#1d344c"/><line x1="45" y1="108" x2="735" y2="108" stroke="#1d344c"/><line x1="45" y1="48" x2="735" y2="48" stroke="#1d344c"/>
             <text x="8" y="232" fill="#8ea4bd" font-size="10">0</text><text x="3" y="172" fill="#8ea4bd" font-size="10">50</text><text x="0" y="112" fill="#8ea4bd" font-size="10">100</text><text x="0" y="52" fill="#8ea4bd" font-size="10">150</text>
             <rect x="58" y="186" width="22" height="42" rx="4" fill="#6ea8ff"/><rect x="110" y="161" width="22" height="67" rx="4" fill="#6ea8ff"/><rect x="162" y="173" width="22" height="55" rx="4" fill="#6ea8ff"/><rect x="214" y="135" width="22" height="93" rx="4" fill="#6ea8ff"/><rect x="266" y="115" width="22" height="113" rx="4" fill="#6ea8ff"/><rect x="318" y="98" width="22" height="130" rx="4" fill="#6ea8ff"/><rect x="370" y="121" width="22" height="107" rx="4" fill="#6ea8ff"/><rect x="422" y="80" width="22" height="148" rx="4" fill="#6ea8ff"/><rect x="474" y="105" width="22" height="123" rx="4" fill="#6ea8ff"/><rect x="526" y="146" width="22" height="82" rx="4" fill="#6ea8ff"/><rect x="578" y="126" width="22" height="102" rx="4" fill="#6ea8ff"/><rect x="630" y="155" width="22" height="73" rx="4" fill="#6ea8ff"/><rect x="682" y="177" width="22" height="51" rx="4" fill="#6ea8ff"/>
@@ -341,7 +348,7 @@
             <line x1="45" y1="110" x2="735" y2="110" stroke="#f2a65a" stroke-width="2" stroke-dasharray="7 6"/>
             <text x="60" y="249" fill="#8ea4bd" font-size="10">08</text><text x="112" y="249" fill="#8ea4bd" font-size="10">10</text><text x="164" y="249" fill="#8ea4bd" font-size="10">12</text><text x="216" y="249" fill="#8ea4bd" font-size="10">14</text><text x="268" y="249" fill="#8ea4bd" font-size="10">16</text><text x="320" y="249" fill="#8ea4bd" font-size="10">18</text><text x="372" y="249" fill="#8ea4bd" font-size="10">20</text><text x="424" y="249" fill="#8ea4bd" font-size="10">22</text><text x="476" y="249" fill="#8ea4bd" font-size="10">00</text><text x="528" y="249" fill="#8ea4bd" font-size="10">02</text><text x="580" y="249" fill="#8ea4bd" font-size="10">04</text><text x="632" y="249" fill="#8ea4bd" font-size="10">06</text><text x="684" y="249" fill="#8ea4bd" font-size="10">08</text>
           </svg>
-          <div class="legend"><span><i style="background:var(--blue)"></i>Bet amount</span><span><i class="line" style="background:var(--violet)"></i>Payout</span><span><i class="line" style="background:var(--green)"></i>RTP trendline</span><span><i class="line" style="background:#f2a65a"></i>RTP threshold 98.3%</span></div><div class="chart-note">Sample: inactive hours can be excluded from the production chart.</div>
+          <div class="legend"><span><i style="background:var(--blue)"></i>Bet amount</span><span><i style="background:var(--violet)"></i>Payout</span><span><i class="line" style="background:var(--green)"></i>RTP trendline</span><span><i class="line" style="background:#f2a65a"></i>RTP threshold 98.3%</span></div><div class="chart-note">Sample: inactive hours can be excluded from the production chart.</div>
         </div>
         <div class="panel pad chart-box dynamic-rtp"><div class="side-title"><h3>Dynamic RTP</h3><span>Mode contribution</span></div>
           <div class="dynamic-list">
@@ -396,7 +403,7 @@
     <section class="section">
       <div class="section-head"><div><h2>Monthly Performance</h2><p>30-day trend and month-to-date platform summary</p></div><div class="monthly-head"><span class="filter active">30 days</span><span class="filter">MTD</span></div></div>
       <div class="monthly-row">
-      <div class="panel pad chart-box"><div class="side-title"><h3>30-Day Performance Trend</h3><span>Bet amount · payout · RTP · players</span></div><svg class="chart tall-svg" viewBox="0 0 1020 285"><line x1="42" y1="228" x2="995" y2="228" stroke="#2c4660"/><line x1="42" y1="168" x2="995" y2="168" stroke="#1d344c"/><line x1="42" y1="108" x2="995" y2="108" stroke="#1d344c"/><line x1="42" y1="48" x2="995" y2="48" stroke="#1d344c"/><polyline points="55,190 88,177 121,206 154,154 187,168 220,142 253,158 286,133 319,115 352,144 385,102 418,128 451,92 484,122 517,103 550,79 583,91 616,62 649,84 682,72 715,52 748,78 781,58 814,88 847,66 880,91 913,73 946,57 979,69" fill="none" stroke="#6ea8ff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="55,198 88,186 121,213 154,165 187,177 220,151 253,167 286,142 319,124 352,153 385,111 418,137 451,101 484,131 517,112 550,88 583,100 616,71 649,93 682,81 715,61 748,87 781,67 814,97 847,75 880,100 913,82 946,66 979,78" fill="none" stroke="#b78cff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="55,178 88,188 121,172 154,181 187,164 220,170 253,154 286,160 319,146 352,151 385,133 418,142 451,119 484,126 517,111 550,116 583,96 616,104 649,88 682,98 715,74 748,83 781,69 814,78 847,61 880,72 913,55 946,63 979,48" fill="none" stroke="#55d68b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="55,210 88,201 121,214 154,193 187,204 220,188 253,196 286,181 319,186 352,173 385,181 418,164 451,171 484,154 517,165 550,148 583,156 616,138 649,146 682,130 715,138 748,119 781,127 814,111 847,120 880,103 913,111 946,94 979,101" fill="none" stroke="#f2a65a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><text x="45" y="249" fill="#8ea4bd" font-size="10">Sep 1</text><text x="354" y="249" fill="#8ea4bd" font-size="10">Sep 10</text><text x="675" y="249" fill="#8ea4bd" font-size="10">Sep 20</text><text x="945" y="249" fill="#8ea4bd" font-size="10">Sep 30</text></svg><div class="legend"><span><i class="line" style="background:var(--blue)"></i>Bet amount</span><span><i class="line" style="background:var(--violet)"></i>Payout</span><span><i class="line" style="background:var(--green)"></i>RTP trendline</span><span><i class="line" style="background:#f2a65a"></i>Players trendline</span></div></div>
+      <div class="panel pad chart-box"><div class="side-title"><h3>30-Day Performance Trend</h3><span>Bars: bet amount + payout · Lines: RTP + players</span></div><svg id="thirtyDayChart" class="chart tall-svg" viewBox="0 0 1020 340" role="img" aria-label="30-day performance trend chart"></svg><div class="legend"><span><i style="background:var(--blue)"></i>Bet amount</span><span><i style="background:var(--violet)"></i>Payout</span><span><i class="line" style="background:var(--green)"></i>RTP trendline</span><span><i class="line" style="background:#f2a65a"></i>Players trendline</span></div></div>
       <div class="panel table-scroll"><table><thead><tr><th>Platform</th><th>Bet Amount</th><th>Payout</th><th>GGR</th><th>RTP</th><th>Players</th><th>New Players</th><th>Max Payout</th><th>Max Multiplier</th><th>Overall Retention</th></tr></thead><tbody><tr><td><b>BingoPlus</b><span class="platform-sub">Loteria</span></td><td>₱1,485,220</td><td>₱1,414,880</td><td class="positive">₱70,340</td><td>95.26%</td><td>2,842</td><td>1,116</td><td>₱12,000</td><td>200x</td><td>11.08%</td></tr><tr><td><b>GameZone</b><span class="platform-sub">Slot</span></td><td>₱605,410</td><td>₱587,220</td><td class="positive">₱18,190</td><td>96.99%</td><td>1,085</td><td>348</td><td>₱10,000</td><td>100x</td><td>8.42%</td></tr><tr><td><b>ArenaPlus</b><span class="platform-sub">Slot</span></td><td>₱354,280</td><td>₱341,880</td><td class="positive">₱12,400</td><td>96.50%</td><td>624</td><td>201</td><td>₱8,000</td><td>75x</td><td>7.96%</td></tr></tbody><tfoot><tr><th>Total</th><th>₱2,444,910</th><th>₱2,343,980</th><th class="positive">₱100,930</th><th>95.87%</th><th>4,551</th><th>1,665</th><th>₱12,000</th><th>200x</th><th>10.12%</th></tr></tfoot></table></div>
       </div>
     </section>
@@ -410,6 +417,109 @@
       <div class="dialog-actions"><button type="button" class="header-button" id="closePreviousReport">Close</button></div>
     </div>
   </dialog>
+  <script>
+    (() => {
+      const NS = 'http://www.w3.org/2000/svg';
+      const make = (tag, attrs = {}, text = '') => {
+        const node = document.createElementNS(NS, tag);
+        Object.entries(attrs).forEach(([key, value]) => node.setAttribute(key, value));
+        if (text) node.textContent = text;
+        return node;
+      };
+      const drawLabel = (svg, x, y, text, attrs = {}) => svg.appendChild(make('text', { x, y, fill: '#8ea4bd', 'font-size': 10, ...attrs }, text));
+
+      const hourly = document.getElementById('hourlyRtpChart');
+      if (hourly) {
+        const W = 760, H = 315, pad = { l: 50, r: 48, t: 24, b: 62 }, base = H - pad.b;
+        const hours = ['08', '10', '12', '14', '16', '18', '20', '22', '00', '02', '04', '06', '08'];
+        const bet = [35, 56, 46, 78, 96, 110, 88, 126, 105, 68, 84, 60, 42];
+        const payout = [32, 50, 44, 72, 90, 106, 83, 119, 99, 65, 80, 56, 39];
+        const rtp = [96.1, 97.4, 96.5, 98.1, 97.5, 99.4, 98.7, 100.9, 99.5, 98.3, 99.1, 97.8, 97.2];
+        const plotW = W - pad.l - pad.r, plotH = H - pad.t - pad.b;
+        const x = i => pad.l + plotW * i / (hours.length - 1);
+        const yAmount = value => base - value / 150 * plotH;
+        const yRtp = value => base - (value - 94) / 8 * plotH;
+        hourly.setAttribute('viewBox', `0 0 ${W} ${H}`);
+        hourly.replaceChildren();
+        [0, 50, 100, 150].forEach(value => {
+          const y = yAmount(value);
+          hourly.appendChild(make('line', { x1: pad.l, y1: y, x2: W - pad.r, y2: y, stroke: value ? '#1d344c' : '#2c4660' }));
+          drawLabel(hourly, 8, y + 4, String(value), { 'font-size': 9 });
+        });
+        [94, 98.3, 102].forEach(value => drawLabel(hourly, W - 30, yRtp(value) + 4, `${value}%`, { 'font-size': 9 }));
+        hours.forEach((label, i) => drawLabel(hourly, x(i), base + 25, label, { 'text-anchor': 'middle' }));
+        const barWidth = Math.min(18, plotW / hours.length * .34);
+        bet.forEach((value, i) => hourly.appendChild(make('rect', { x: x(i) - barWidth - 2, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 4, fill: '#6ea8ff' })));
+        payout.forEach((value, i) => hourly.appendChild(make('rect', { x: x(i) + 2, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 4, fill: '#b78cff' })));
+        const points = rtp.map((value, i) => `${x(i)},${yRtp(value)}`).join(' ');
+        hourly.appendChild(make('polyline', { points, fill: 'none', stroke: '#55d68b', 'stroke-width': 2.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+        rtp.forEach((value, i) => hourly.appendChild(make('circle', { cx: x(i), cy: yRtp(value), r: 3.5, fill: '#55d68b' })));
+        const thresholdY = yRtp(98.3);
+        hourly.appendChild(make('line', { x1: pad.l, y1: thresholdY, x2: W - pad.r, y2: thresholdY, stroke: '#f2a65a', 'stroke-width': 2, 'stroke-dasharray': '7 6' }));
+        drawLabel(hourly, W - 90, thresholdY - 7, '98.3% target', { fill: '#f2a65a', 'font-size': 9 });
+      }
+
+      const thirtyDay = document.getElementById('thirtyDayChart');
+      if (thirtyDay) {
+        const W = 1020, H = 340, pad = { l: 48, r: 36, t: 24, b: 84 }, base = H - pad.b;
+        const start = Date.UTC(2026, 7, 23);
+        const dates = Array.from({ length: 30 }, (_, i) => new Date(start + i * 86400000).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' }));
+        const bet = [85, 92, 70, 110, 100, 118, 105, 125, 135, 110, 145, 125, 150, 130, 145, 160, 150, 170, 155, 165, 180, 160, 175, 145, 170, 150, 180, 165, 175, 160];
+        const payout = [82, 88, 67, 106, 96, 113, 101, 120, 130, 106, 139, 121, 144, 126, 139, 154, 143, 164, 149, 159, 173, 153, 168, 139, 163, 144, 173, 158, 168, 154];
+        const rtp = [95.5, 96.2, 94.8, 97.4, 96.7, 98.1, 97.6, 99.0, 98.4, 96.8, 99.4, 97.7, 100.2, 98.9, 97.6, 99.1, 98.2, 100.4, 99.3, 98.7, 100.7, 99.8, 101.1, 98.5, 99.8, 97.9, 100.3, 99.0, 98.6, 97.14];
+        const players = [32, 38, 29, 44, 41, 47, 45, 52, 56, 49, 61, 58, 64, 60, 67, 72, 70, 76, 73, 79, 84, 80, 88, 74, 82, 78, 86, 90, 93, 92];
+        const plotW = W - pad.l - pad.r, plotH = H - pad.t - pad.b;
+        const x = i => pad.l + plotW * i / (dates.length - 1);
+        const yAmount = value => base - value / 200 * plotH;
+        const yRtp = value => base - (value - 90) / 15 * plotH;
+        const yPlayers = value => base - value / 100 * plotH;
+        thirtyDay.setAttribute('viewBox', `0 0 ${W} ${H}`);
+        thirtyDay.replaceChildren();
+        [0, 50, 100, 150, 200].forEach(value => {
+          const y = yAmount(value);
+          thirtyDay.appendChild(make('line', { x1: pad.l, y1: y, x2: W - pad.r, y2: y, stroke: value ? '#1d344c' : '#2c4660' }));
+          drawLabel(thirtyDay, 7, y + 4, String(value), { 'font-size': 9 });
+        });
+        dates.forEach((date, i) => drawLabel(thirtyDay, x(i), base + 38, date, { 'text-anchor': 'end', transform: `rotate(-65 ${x(i)} ${base + 38})`, 'font-size': 8 }));
+        [90, 95, 100, 105].forEach(value => drawLabel(thirtyDay, W - 26, yRtp(value) + 4, `${value}%`, { 'font-size': 9 }));
+        const barWidth = Math.max(6, Math.min(12, plotW / dates.length * .32));
+        bet.forEach((value, i) => thirtyDay.appendChild(make('rect', { x: x(i) - barWidth - 1, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 2, fill: '#6ea8ff' })));
+        payout.forEach((value, i) => thirtyDay.appendChild(make('rect', { x: x(i) + 1, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 2, fill: '#b78cff' })));
+        thirtyDay.appendChild(make('polyline', { points: rtp.map((value, i) => `${x(i)},${yRtp(value)}`).join(' '), fill: 'none', stroke: '#55d68b', 'stroke-width': 2.3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+        thirtyDay.appendChild(make('polyline', { points: players.map((value, i) => `${x(i)},${yPlayers(value)}`).join(' '), fill: 'none', stroke: '#f2a65a', 'stroke-width': 2.3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+        [rtp, players].forEach((series, seriesIndex) => series.forEach((value, i) => thirtyDay.appendChild(make('circle', { cx: x(i), cy: seriesIndex ? yPlayers(value) : yRtp(value), r: 2.4, fill: seriesIndex ? '#f2a65a' : '#55d68b' }))));
+      }
+
+      const notes = [
+        ['.platform-matrix', 'BingoPlus contributes the largest share of daily activity in this sample.'],
+        ['.platform-charts', 'Platform Share compares revenue, audience, and betting-volume contribution.'],
+        ['.changelog-table', 'Recent launches and the minimum-bet update expanded platform access during the reporting period.'],
+        ['.game-summary', 'GameZone carries the highest sample rounds, while BingoPlus leads the sample GGR.'],
+        ['.hourly-rtp', 'Hourly RTP is evaluated against the 98.3% threshold while bet amount and payout intensity are shown by hour.'],
+        ['.dynamic-rtp', 'NON drives most volume; cumulative and daily modes remain more volatile because of smaller samples.'],
+        ['.game-loss', 'Winning tickets represent 55.0% of total tickets in this sample.'],
+        ['.total-tickets', 'Normal Bet accounts for the majority of ticket activity.'],
+        ['.bet-distribution', 'The ₱21–50 range has the largest share of total bet amount in this sample.'],
+        ['.multiplier-distribution', '0x is the largest multiplier band by rounds.'],
+        ['.player-grid > .panel:first-child', 'Returning players make up most active players in this sample.'],
+        ['.player-grid > .panel:nth-child(2)', 'BingoPlus has the largest active-player base among the three platforms.'],
+        ['.player-grid > .chart-grid-3 > .panel:nth-child(1)', 'D1 retention is the main player-engagement metric to monitor.'],
+        ['.player-grid > .chart-grid-3 > .panel:nth-child(2)', 'Returning players record more rounds than new players across platforms in this sample.'],
+        ['.player-grid > .chart-grid-3 > .panel:nth-child(3)', 'Unique-player counts are highest at the lower bet denominations.'],
+        ['.player-feature-panel', 'Normal Rounds are the primary feature behavior, while Buy Feature and Bonus Round are smaller segments.'],
+        ['.monthly-row > .panel:first-child', 'The 30-day view compares daily bet and payout bars with RTP and player trendlines.'],
+        ['.monthly-row > .panel:nth-child(2)', 'MTD platform totals show BingoPlus as the largest contributor in the sample.']
+      ];
+      notes.forEach(([selector, text]) => {
+        const panel = document.querySelector(selector);
+        if (!panel || panel.querySelector('.keynote')) return;
+        const note = document.createElement('div');
+        note.className = 'keynote';
+        note.innerHTML = `<b>Key Insight:</b> ${text}`;
+        panel.appendChild(note);
+      });
+    })();
+  </script>
   <script>
     (() => {
       const previousButton = document.getElementById('previousReportButton');
