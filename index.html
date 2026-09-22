@@ -31,13 +31,18 @@
       font: 14px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    .wrap { width: min(1900px, calc(100% - 28px)); margin: 0 auto; padding: 18px 0 28px; }
-    .topbar { display: grid; grid-template-columns: minmax(330px, .9fr) minmax(0, 2.2fr); gap: 20px; align-items: start; margin-bottom: 26px; }
+    .wrap { width: min(1900px, calc(100% - 28px)); margin: 0 auto; padding: 16px 0 24px; }
+    .topbar { display: grid; grid-template-columns: minmax(280px, .8fr) minmax(0, 2.2fr); gap: 16px; align-items: start; margin-bottom: 18px; }
+    .header-right { min-width: 0; }
+    .header-section-head { display: flex; justify-content: space-between; gap: 10px; align-items: end; margin-bottom: 8px; }
+    .header-section-head h2 { font-size: 16px; letter-spacing: -.02em; }
+    .header-section-head p { color: var(--muted); font-size: 10px; }
+    .header-right .small-grid { margin-top: 8px; }
     .eyebrow { color: var(--cyan); font-size: 11px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
     h1, h2, h3, p { margin: 0; }
-    h1 { margin-top: 5px; font-size: clamp(26px, 3vw, 42px); letter-spacing: -.04em; }
+    h1 { margin-top: 4px; font-size: clamp(24px, 2.4vw, 34px); letter-spacing: -.04em; }
     .subtitle { color: var(--muted); margin-top: 8px; }
-    .brand-logo { display: block; width: min(250px, 38vw); height: auto; margin-bottom: 10px; }
+    .brand-logo { display: block; width: min(190px, 30vw); height: auto; margin-bottom: 7px; }
     .report-date { display: flex; gap: 8px; align-items: baseline; margin-top: 10px; color: var(--text); font-size: 13px; font-weight: 700; }
     .report-date span { color: var(--muted); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
     .header-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 13px; }
@@ -194,11 +199,15 @@
     .game-loss .compact-pie > div:last-child { width: 100%; min-width: 0; }
     .game-loss .side-title { align-items: flex-start; margin-bottom: 9px; }
     .game-loss .side-title h3 { line-height: 1.25; }
+    .game-loss > .side-title { display: block; }
+    .game-loss > .side-title span { display: block; margin-top: 3px; }
+    .game-loss .loss-content { display: grid; grid-template-columns: 1fr; gap: 8px; min-width: 0; }
+    .game-loss .loss-content > div:last-child { width: 100%; min-width: 0; }
     .game-loss .legend-list { gap: 8px; }
     .game-loss .legend-list div { align-items: flex-start; flex-wrap: wrap; gap: 4px 8px; font-size: 10px; }
     .game-loss .legend-list div b { white-space: nowrap; }
     .game-loss .chart-note { font-size: 10px; line-height: 1.35; }
-    .player-grid { display: grid; grid-template-columns: 1.5fr 2fr 1fr 1.5fr 1.5fr 2.5fr; gap: 10px; align-items: start; }
+    .player-grid { display: grid; grid-template-columns: 1.5fr 2fr 1.5fr 1.5fr 1.5fr 2fr; gap: 10px; align-items: start; }
     .player-grid > .chart-grid-3 { display: contents; }
     .player-grid > .panel, .player-grid > .chart-grid-3 > .panel { min-width: 0; align-self: start; }
     .player-grid > .panel:first-child .compact-pie { grid-template-columns: 1fr; gap: 5px; min-height: 0; }
@@ -209,7 +218,7 @@
     .player-feature-panel table { min-width: 0; table-layout: fixed; font-size: 11px; }
     .player-feature-panel th, .player-feature-panel td { padding: 8px 9px; white-space: normal; }
     .player-feature-panel tbody th { color: var(--text); text-align: left; }
-    .monthly-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: stretch; }
+    .monthly-row { display: grid; grid-template-columns: 3fr 2fr; gap: 10px; align-items: stretch; }
     .monthly-row > .panel { min-width: 0; }
     .monthly-row table { min-width: 0; font-size: 10px; }
     .monthly-row th, .monthly-row td { padding: 8px 6px; white-space: normal; }
@@ -241,28 +250,27 @@
           <button type="button" class="header-button" id="previousReportButton">Previous Daily Report</button>
         </div>
       </div>
-      <div class="grid big-grid header-metrics" aria-label="Main operating metrics">
-        <article class="panel pad card accent-blue"><div class="metric-label">Bet Amount</div><div class="metric-value">₱128,450.00</div><div class="metric-foot"><span class="positive">↑ 12.4% DoD</span><span>Daily</span></div></article>
-        <article class="panel pad card accent-green"><div class="metric-label">Payout</div><div class="metric-value">₱124,780.00</div><div class="metric-foot"><span class="positive">↑ 8.7% DoD</span><span>Daily</span></div></article>
-        <article class="panel pad card accent-orange"><div class="metric-label">GGR</div><div class="metric-value positive">₱3,670.00</div><div class="metric-foot"><span class="positive">↑ 18.1% DoD</span><span>Positive GGR</span></div></article>
-        <article class="panel pad card accent-violet"><div class="metric-label">RTP</div><div class="metric-value">97.14%</div><div class="metric-foot"><span class="positive">↓ 0.22 pp DoD</span><span>Within target</span></div></article>
-        <article class="panel pad card accent-cyan"><div class="metric-label">MTD GGR</div><div class="metric-value">₱72,840.00</div><div class="metric-foot"><span class="positive">↑ 5.9% DoD</span><span>Sep 1–21</span></div></article>
+      <div class="header-right">
+        <div class="header-section-head"><div><h2>General Operation Data</h2><p>Daily snapshot · Sample values for structure review</p></div><span class="tag"><i class="dot positive"></i>Report generated</span></div>
+        <div class="grid big-grid header-metrics" aria-label="Main operating metrics">
+          <article class="panel pad card accent-blue"><div class="metric-label">Bet Amount</div><div class="metric-value">₱128,450.00</div><div class="metric-foot"><span class="positive">↑ 12.4% DoD</span><span>Daily</span></div></article>
+          <article class="panel pad card accent-green"><div class="metric-label">Payout</div><div class="metric-value">₱124,780.00</div><div class="metric-foot"><span class="positive">↑ 8.7% DoD</span><span>Daily</span></div></article>
+          <article class="panel pad card accent-orange"><div class="metric-label">GGR</div><div class="metric-value positive">₱3,670.00</div><div class="metric-foot"><span class="positive">↑ 18.1% DoD</span><span>Positive GGR</span></div></article>
+          <article class="panel pad card accent-violet"><div class="metric-label">RTP</div><div class="metric-value">97.14%</div><div class="metric-foot"><span class="positive">↓ 0.22 pp DoD</span><span>Within target</span></div></article>
+          <article class="panel pad card accent-cyan"><div class="metric-label">MTD GGR</div><div class="metric-value">₱72,840.00</div><div class="metric-foot"><span class="positive">↑ 5.9% DoD</span><span>Sep 1–21</span></div></article>
+        </div>
+        <div class="grid small-grid">
+          <article class="panel pad card"><div class="metric-label">Total Rounds / Tickets</div><div class="metric-value">18,642</div><div class="metric-foot"><span class="positive">↑ 9.8% DoD</span></div></article>
+          <article class="panel pad card"><div class="metric-label">Players</div><div class="metric-value">426</div><div class="metric-foot"><span class="positive">↑ 6.2% DoD</span></div></article>
+          <article class="panel pad card"><div class="metric-label">New Players</div><div class="metric-value">118</div><div class="metric-foot"><span class="positive">↑ 14.6% DoD</span></div></article>
+          <article class="panel pad card"><div class="metric-label">ABPU</div><div class="metric-value">₱301.52</div><div class="metric-foot"><span class="warning">↓ 2.4% DoD</span></div></article>
+          <article class="panel pad card"><div class="metric-label">Max Payout</div><div class="metric-value">₱8,000</div><div class="metric-foot"><span class="positive">↑ 33.3% DoD</span></div></article>
+          <article class="panel pad card"><div class="metric-label">Max Multiplier</div><div class="metric-value">200x</div><div class="metric-foot"><span class="warning">→ 0.0% DoD</span></div></article>
+          <article class="panel pad card"><div class="metric-label">Max Bet</div><div class="metric-value">₱1,000</div><div class="metric-foot"><span class="warning">→ 0.0% DoD</span></div></article>
+          <article class="panel pad card"><div class="metric-label">D1 Retention Rate</div><div class="metric-value">10.84%</div><div class="metric-foot"><span class="warning">↑ 1.81 pp DoD</span></div></article>
+        </div>
       </div>
     </header>
-
-    <section class="section">
-      <div class="section-head"><div><h2>General Operation Data</h2><p>Daily snapshot · Sample values for structure review</p></div><span class="tag"><i class="dot positive"></i>Report generated</span></div>
-      <div class="grid small-grid">
-        <article class="panel pad card"><div class="metric-label">Total Rounds / Tickets</div><div class="metric-value">18,642</div><div class="metric-foot"><span class="positive">↑ 9.8% DoD</span></div></article>
-        <article class="panel pad card"><div class="metric-label">Players</div><div class="metric-value">426</div><div class="metric-foot"><span class="positive">↑ 6.2% DoD</span></div></article>
-        <article class="panel pad card"><div class="metric-label">New Players</div><div class="metric-value">118</div><div class="metric-foot"><span class="positive">↑ 14.6% DoD</span></div></article>
-        <article class="panel pad card"><div class="metric-label">ABPU</div><div class="metric-value">₱301.52</div><div class="metric-foot"><span class="warning">↓ 2.4% DoD</span></div></article>
-        <article class="panel pad card"><div class="metric-label">Max Payout</div><div class="metric-value">₱8,000</div><div class="metric-foot"><span class="positive">↑ 33.3% DoD</span></div></article>
-        <article class="panel pad card"><div class="metric-label">Max Multiplier</div><div class="metric-value">200x</div><div class="metric-foot"><span class="warning">→ 0.0% DoD</span></div></article>
-        <article class="panel pad card"><div class="metric-label">Max Bet</div><div class="metric-value">₱1,000</div><div class="metric-foot"><span class="warning">→ 0.0% DoD</span></div></article>
-        <article class="panel pad card"><div class="metric-label">D1 Retention Rate</div><div class="metric-value">10.84%</div><div class="metric-foot"><span class="warning">↑ 1.81 pp DoD</span></div></article>
-      </div>
-    </section>
 
     <section class="section">
       <div class="section-head"><div><h2>Platform Performance</h2><p>Platform-level contribution, status, and operational notes</p></div><div class="monthly-head"><span class="filter active">Daily</span><span class="filter">PHT</span></div></div>
@@ -370,7 +378,7 @@
           </div>
           <div class="chart-note" style="margin-top:18px">Interpretation: NON drives most volume; cumulative and daily modes remain more volatile because of smaller samples.</div>
         </div>
-        <div class="panel pad compact-pie game-loss"><div class="donut-wrap"><svg width="210" height="210" viewBox="0 0 210 210"><circle cx="105" cy="105" r="72" fill="none" stroke="#243c55" stroke-width="27"/><circle cx="105" cy="105" r="72" fill="none" stroke="#55d68b" stroke-width="27" stroke-dasharray="249 452" stroke-linecap="round" transform="rotate(-90 105 105)"/><circle cx="105" cy="105" r="72" fill="none" stroke="#ff7388" stroke-width="27" stroke-dasharray="203 452" stroke-dashoffset="-261" stroke-linecap="round" transform="rotate(-90 105 105)"/></svg><div class="donut-center"><strong>18,642</strong><span>Total tickets</span></div></div><div><div class="side-title"><h3>Winning Tickets vs Losing Tickets</h3><span>Outcome split</span></div><div class="legend-list"><div><span><i class="dot positive" style="display:inline-block;margin-right:7px"></i>Winning tickets</span><b class="positive">10,260 · 55.0%</b></div><div><span><i class="dot negative" style="display:inline-block;margin-right:7px"></i>Losing tickets</span><b class="negative">8,382 · 45.0%</b></div></div><div class="chart-note" style="margin-top:20px">Sample placeholder: final values should be connected to the daily back-office export.</div></div></div>
+        <div class="panel pad game-loss"><div class="side-title"><h3>Winning Tickets vs Losing Tickets</h3><span>Outcome split</span></div><div class="loss-content"><div class="donut-wrap"><svg width="210" height="210" viewBox="0 0 210 210"><circle cx="105" cy="105" r="72" fill="none" stroke="#243c55" stroke-width="27"/><circle cx="105" cy="105" r="72" fill="none" stroke="#55d68b" stroke-width="27" stroke-dasharray="249 452" stroke-linecap="round" transform="rotate(-90 105 105)"/><circle cx="105" cy="105" r="72" fill="none" stroke="#ff7388" stroke-width="27" stroke-dasharray="203 452" stroke-dashoffset="-261" stroke-linecap="round" transform="rotate(-90 105 105)"/></svg><div class="donut-center"><strong>18,642</strong><span>Total tickets</span></div></div><div><div class="legend-list"><div><span><i class="dot positive" style="display:inline-block;margin-right:7px"></i>Winning tickets</span><b class="positive">10,260 · 55.0%</b></div><div><span><i class="dot negative" style="display:inline-block;margin-right:7px"></i>Losing tickets</span><b class="negative">8,382 · 45.0%</b></div></div><div class="chart-note" style="margin-top:12px">Sample placeholder: final values should be connected to the daily back-office export.</div></div></div></div>
       </div>
 
       <div class="chart-grid-3" style="margin-top:14px">
@@ -405,11 +413,11 @@
       <div class="panel pad table-scroll player-feature-panel">
         <div class="side-title"><h3>Players by Game Feature Behavior</h3><span>Players may appear in more than one category</span></div>
         <table>
-          <thead><tr><th>Feature Behavior</th><th>Players</th><th>Share of Active Players</th><th>Average Rounds / Player</th><th>Risk / Operations Note</th></tr></thead>
+          <thead><tr><th>Feature Behavior</th><th>Players</th><th>Share of Active Players</th><th>Average Rounds / Player</th></tr></thead>
           <tbody>
-            <tr><th scope="row">Normal Rounds</th><td>392</td><td>92.0%</td><td>43.6</td><td>Primary activity driver</td></tr>
-            <tr><th scope="row">Bonus Round</th><td>144</td><td>33.8%</td><td>8.2</td><td>Monitor bonus-trigger concentration</td></tr>
-            <tr><th scope="row">Buy Feature</th><td>58</td><td>13.6%</td><td>3.7</td><td>Review feature purchase behavior</td></tr>
+            <tr><th scope="row">Normal Rounds</th><td>392</td><td>92.0%</td><td>43.6</td></tr>
+            <tr><th scope="row">Bonus Round</th><td>144</td><td>33.8%</td><td>8.2</td></tr>
+            <tr><th scope="row">Buy Feature</th><td>58</td><td>13.6%</td><td>3.7</td></tr>
           </tbody>
         </table>
       </div>
