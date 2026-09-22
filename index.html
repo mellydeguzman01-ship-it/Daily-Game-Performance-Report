@@ -385,7 +385,7 @@
     </table>
   </div>
       <div class="chart-grid-2">
-        <div class="panel pad chart-box tall hourly-rtp"><div class="side-title"><h3>Hourly RTP</h3><span>Bars: bet amount + payout · Lines: RTP + 98.3% threshold</span></div>
+        <div class="panel pad chart-box tall hourly-rtp"><div class="side-title"><h3>Hourly RTP (00:00–23:59)</h3><span>Bars: bet amount + payout · Lines: RTP + 98.3% threshold</span></div>
           <svg id="hourlyRtpChart" class="chart tall-svg" viewBox="0 0 760 315" preserveAspectRatio="none" role="img" aria-label="Hourly RTP combo chart">
             <line x1="45" y1="228" x2="735" y2="228" stroke="#2c4660"/><line x1="45" y1="168" x2="735" y2="168" stroke="#1d344c"/><line x1="45" y1="108" x2="735" y2="108" stroke="#1d344c"/><line x1="45" y1="48" x2="735" y2="48" stroke="#1d344c"/>
             <text x="8" y="232" fill="#8ea4bd" font-size="10">0</text><text x="3" y="172" fill="#8ea4bd" font-size="10">50</text><text x="0" y="112" fill="#8ea4bd" font-size="10">100</text><text x="0" y="52" fill="#8ea4bd" font-size="10">150</text>
@@ -484,10 +484,10 @@
       const hourly = document.getElementById('hourlyRtpChart');
       if (hourly) {
         const W = 900, H = 315, pad = { l: 32, r: 30, t: 24, b: 62 }, base = H - pad.b;
-        const hours = ['08', '10', '12', '14', '16', '18', '20', '22', '00', '02', '04', '06', '08'];
-        const bet = [35, 56, 46, 78, 96, 110, 88, 126, 105, 68, 84, 60, 42];
-        const payout = [32, 50, 44, 72, 90, 106, 83, 119, 99, 65, 80, 56, 39];
-        const rtp = [96.1, 97.4, 96.5, 98.1, 97.5, 99.4, 98.7, 100.9, 99.5, 98.3, 99.1, 97.8, 97.2];
+        const hours = Array.from({ length: 24 }, (_, hour) => `${String(hour).padStart(2, '0')}:00`);
+        const bet = [30, 28, 26, 25, 27, 32, 38, 44, 35, 46, 55, 62, 70, 82, 78, 88, 96, 110, 102, 118, 126, 112, 86, 58];
+        const payout = [29, 27, 24, 24, 26, 30, 36, 42, 34, 44, 52, 60, 68, 77, 74, 84, 91, 104, 96, 111, 119, 106, 82, 55];
+        const rtp = [96.8, 96.4, 95.9, 96.2, 96.9, 97.1, 97.4, 97.8, 96.7, 97.2, 98.0, 98.4, 97.9, 98.2, 97.5, 98.9, 99.4, 98.7, 99.1, 100.2, 100.9, 99.5, 98.3, 97.2];
         const plotW = W - pad.l - pad.r, plotH = H - pad.t - pad.b;
         const x = i => pad.l + plotW * i / (hours.length - 1);
         const yAmount = value => base - value / 150 * plotH;
@@ -500,7 +500,7 @@
           drawLabel(hourly, 8, y + 4, String(value), { 'font-size': 9 });
         });
         [94, 98.3, 102].forEach(value => drawLabel(hourly, W - 30, yRtp(value) + 4, `${value}%`, { 'font-size': 9 }));
-        hours.forEach((label, i) => drawLabel(hourly, x(i), base + 30, label, { 'text-anchor': 'end', transform: `rotate(-45 ${x(i)} ${base + 30})`, 'font-size': 9 }));
+        hours.forEach((label, i) => drawLabel(hourly, x(i), base + 30, label, { 'text-anchor': 'end', transform: `rotate(-55 ${x(i)} ${base + 30})`, 'font-size': 8 }));
         const barWidth = Math.min(13, plotW / hours.length * .24);
         bet.forEach((value, i) => hourly.appendChild(make('rect', { x: x(i) - barWidth - 2, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 4, fill: '#6ea8ff' })));
         payout.forEach((value, i) => hourly.appendChild(make('rect', { x: x(i) + 2, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 4, fill: '#b78cff' })));
@@ -613,7 +613,7 @@
         'Fusebreak / Alarm': 'Fusebreak / 警报', 'Review player-level volatility': '检查玩家层级波动', 'Monitor': '监控中',
         'Notes': '备注', 'No incident report or important operational note recorded for this date.': '此日期暂无事件报告或重要运营备注。',
         'Game Performance': '游戏表现', 'Banana Craze operating behavior and outcome distribution': 'Banana Craze运营行为与结果分布',
-        'Rounds': '回合数', 'Total': '总计', 'Hourly RTP': '每小时RTP',
+        'Rounds': '回合数', 'Total': '总计', 'Hourly RTP (00:00–23:59)': '每小时RTP（00:00–23:59）', 'Hourly RTP': '每小时RTP',
         'Bars: bet amount + payout · Lines: RTP + 98.3% threshold': '柱状图：投注金额 + 派彩 · 折线：RTP + 98.3%阈值',
         'Bet amount': '投注金额', 'RTP trendline': 'RTP趋势线', 'RTP threshold 98.3%': 'RTP阈值 98.3%',
         'Sample: inactive hours can be excluded from the production chart.': '示例：生产图表可排除无活跃玩家的时段。',
