@@ -5420,4 +5420,24 @@
   render();window.addEventListener('load',render,{once:true});setTimeout(render,350);setTimeout(render,1800);document.getElementById('report-date')?.addEventListener('change',render);
 })();
 </script>
+<!-- archive-back-to-latest -->
+<script>
+(() => {
+  const addBackButton = () => {
+    const utility = document.querySelector('.brand-utility-row');
+    if (!utility || document.getElementById('back-to-latest-report')) return;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.id = 'back-to-latest-report';
+    button.textContent = 'Back to Latest Report';
+    button.setAttribute('aria-label', 'Back to latest report');
+    button.addEventListener('click', () => {
+      window.location.href = 'https://mellydeguzman01-ship-it.github.io/V2-Daily-Game-Performance-Report/';
+    });
+    utility.appendChild(button);
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addBackButton, { once: true });
+  else addBackButton();
+})();
+</script>
 </body></html>

@@ -5359,4 +5359,24 @@
 .monthly-performance-detail .data-table th:first-child,.monthly-performance-detail .data-table td:first-child{width:20%!important;min-width:125px!important;text-align:left!important;overflow:visible!important;font-size:7.5px!important;letter-spacing:-.2px!important}
 .monthly-performance-detail .data-table th:nth-child(2),.monthly-performance-detail .data-table td:nth-child(2),.monthly-performance-detail .data-table th:nth-child(3),.monthly-performance-detail .data-table td:nth-child(3),.monthly-performance-detail .data-table th:nth-child(4),.monthly-performance-detail .data-table td:nth-child(4){width:11%!important}
 </style>
+<!-- archive-back-to-latest -->
+<script>
+(() => {
+  const addBackButton = () => {
+    const utility = document.querySelector('.brand-utility-row');
+    if (!utility || document.getElementById('back-to-latest-report')) return;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.id = 'back-to-latest-report';
+    button.textContent = 'Back to Latest Report';
+    button.setAttribute('aria-label', 'Back to latest report');
+    button.addEventListener('click', () => {
+      window.location.href = 'https://mellydeguzman01-ship-it.github.io/V2-Daily-Game-Performance-Report/';
+    });
+    utility.appendChild(button);
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addBackButton, { once: true });
+  else addBackButton();
+})();
+</script>
 </body></html>

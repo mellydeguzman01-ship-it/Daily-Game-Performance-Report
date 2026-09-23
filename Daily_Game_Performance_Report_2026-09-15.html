@@ -5775,4 +5775,24 @@
 };let busy=false;const apply=()=>{if(busy)return;const body=document.querySelector('.release-log-table tbody');if(!body)return;const zh=document.documentElement.lang==='zh-CN';busy=true;body.querySelectorAll('tr').forEach(row=>{const key=(row.cells[0]?.textContent||'').trim();const item=rows[key];if(!item)return;const cells=row.cells;if(cells[0])cells[0].textContent=item[0][zh?1:0];if(cells[1])cells[1].textContent=item[1][zh?1:0];if(cells[3])cells[3].textContent=item[2][zh?1:0];if(cells[4])cells[4].textContent=item[3][zh?1:0]});busy=false};const later=()=>[0,50,250,800].forEach(t=>setTimeout(apply,t));apply();later();new MutationObserver(m=>{if(m.some(x=>x.type==='attributes'&&x.attributeName==='lang'))later()}).observe(document.documentElement,{attributes:true});document.querySelectorAll('[data-report-language]').forEach(b=>b.addEventListener('click',later,{capture:true}));
 })();
 </script>
+<!-- archive-back-to-latest -->
+<script>
+(() => {
+  const addBackButton = () => {
+    const utility = document.querySelector('.brand-utility-row');
+    if (!utility || document.getElementById('back-to-latest-report')) return;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.id = 'back-to-latest-report';
+    button.textContent = 'Back to Latest Report';
+    button.setAttribute('aria-label', 'Back to latest report');
+    button.addEventListener('click', () => {
+      window.location.href = 'https://mellydeguzman01-ship-it.github.io/V2-Daily-Game-Performance-Report/';
+    });
+    utility.appendChild(button);
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addBackButton, { once: true });
+  else addBackButton();
+})();
+</script>
 </body></html>
