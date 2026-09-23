@@ -4038,7 +4038,22 @@
 </style>
 <style id="change-log-beside-dynamic-rtp">
 /* The Change Log now shares the support row with Dynamic RTP. */
-.summary-panel .summary-secondary>.summary-dynamic-rtp-card,.summary-panel .summary-secondary>.summary-change-log-card{grid-column:auto!important;grid-row:auto!important;min-width:0!important;align-self:stretch!important}.summary-panel .summary-secondary>.summary-change-log-card{width:auto!important;margin:0!important;padding:0!important;overflow:hidden!important;background:#fff!important}.summary-panel .summary-secondary>.summary-change-log-card .change-log-head{padding:12px 13px 10px!important}.summary-panel .summary-secondary>.summary-change-log-card .change-log-title h2{font-size:13px!important}.summary-panel .summary-secondary>.summary-change-log-card .change-log-range{display:none!important}.summary-panel .summary-secondary>.summary-change-log-card .change-log-table-wrap{padding:0 13px 13px!important}.summary-panel .summary-secondary>.summary-change-log-card .change-log-table{min-width:0!important}.summary-panel .summary-secondary>.summary-change-log-card .monthly-under-change-log{margin:0 13px 13px!important}.performance-comparison-row{grid-template-columns:1fr!important}.performance-left-stack{grid-column:1/-1!important}@media(max-width:900px){.summary-panel .summary-secondary>.summary-dynamic-rtp-card,.summary-panel .summary-secondary>.summary-change-log-card{grid-column:1/-1!important}}
+@media(max-width:900px){.summary-panel .summary-secondary{grid-template-columns:1fr!important}.summary-panel .summary-secondary>.summary-change-log-card,.summary-panel .summary-secondary>.summary-dynamic-rtp-card,.summary-panel .summary-secondary>.summary-alert-card{grid-column:1/-1!important;order:initial;height:auto!important}}
+
+/* Monthly Performance: light table, fit all columns without an inner scrollbar. */
+.monthly-under-change-log{overflow:visible!important;max-width:none!important}
+.monthly-under-change-log .monthly-performance-detail{overflow:visible!important;max-width:none!important}
+.monthly-under-change-log .data-table,.monthly-performance-detail .data-table{width:100%!important;min-width:0!important;table-layout:fixed!important}
+.monthly-under-change-log .data-table th,.monthly-performance-detail .data-table th{background:#f3f6fa!important;color:#1c2940!important;border-bottom:1px solid #cbd5e1!important;font-size:8px!important;font-weight:800!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important}
+.monthly-under-change-log .data-table td,.monthly-performance-detail .data-table td{color:#1c2940!important;font-size:9px!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:break-word!important;vertical-align:middle!important}
+.monthly-under-change-log .data-table th:nth-child(1),.monthly-performance-detail .data-table th:nth-child(1){width:13%!important}
+.monthly-under-change-log .data-table th:nth-child(2),.monthly-performance-detail .data-table th:nth-child(2),.monthly-under-change-log .data-table th:nth-child(3),.monthly-performance-detail .data-table th:nth-child(3),.monthly-under-change-log .data-table th:nth-child(4),.monthly-performance-detail .data-table th:nth-child(4){width:12%!important}
+.monthly-under-change-log .data-table th:nth-child(5),.monthly-performance-detail .data-table th:nth-child(5){width:8%!important}
+.monthly-under-change-log .data-table th:nth-child(6),.monthly-performance-detail .data-table th:nth-child(6),.monthly-under-change-log .data-table th:nth-child(7),.monthly-performance-detail .data-table th:nth-child(7){width:10%!important}
+.monthly-under-change-log .data-table th:nth-child(8),.monthly-performance-detail .data-table th:nth-child(8){width:13%!important}
+.monthly-under-change-log .data-table th:nth-child(9),.monthly-performance-detail .data-table th:nth-child(9){width:10%!important}
+@media(max-width:600px){.monthly-under-change-log .data-table th,.monthly-under-change-log .data-table td,.monthly-performance-detail .data-table th,.monthly-performance-detail .data-table td{padding:6px 2px!important;font-size:7px!important;line-height:1.2!important}.monthly-under-change-log .data-table th{font-size:7px!important}}
+
 </style>
 <script id="move-change-log-beside-dynamic-rtp">
 (function(){
