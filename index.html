@@ -83,7 +83,7 @@
     let d;try{d=JSON.parse(chart.dataset.series)}catch(_){return;} const dates=d.dates, series=d.series, rtp=series.find(s=>s.unit==='percent');
     const currency=series.filter(s=>s.unit==='currency'), amountValues=currency.flatMap(s=>s.values.filter(Number.isFinite));
     const hasAmounts=amountValues.length>0, amountLo=hasAmounts?Math.min(0,...amountValues):0, amountHi=hasAmounts?Math.max(...amountValues):1;
-    const rtpValues=rtp?rtp.values.filter(Number.isFinite):[], rtpLo=rtpValues.length?Math.min(0,...rtpValues):0, rtpHi=rtpValues.length?Math.max(100,...rtpValues):100;
+    const rtpValues=rtp?rtp.values.filter(Number.isFinite):[], rtpLo=rtpValues.length?Math.min(70,...rtpValues):70, rtpHi=rtpValues.length?Math.max(100,...rtpValues):100;
     const x=i=>p.l+(W-p.l-p.r)*(dates.length===1?0.5:i/(dates.length-1));
     const yA=v=>p.t+(H-p.t-p.b)*(amountHi-v)/(amountHi-amountLo||1), yR=v=>p.t+(H-p.t-p.b)*(rtpHi-v)/(rtpHi-rtpLo||1);
     const ticks=hasAmounts?[amountLo,(amountLo+amountHi)/2,amountHi]:[0];
