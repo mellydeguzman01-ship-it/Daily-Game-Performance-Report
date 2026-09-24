@@ -59,7 +59,7 @@
 @media(max-width:1100px){.section-grid{grid-template-columns:1fr!important}.section-grid>.panel{grid-column:1/-1!important;grid-row:auto!important}.player-behavior-section{grid-row:auto!important}.ticket-outcome-card .behavior-split{grid-template-columns:1fr}}
 </style>
 <div class="dashboard-stage"><main class="report">
-<header class="topbar"><section class="brand"><div class="brand-identity"><div><img class="ge-logo ge-logo-full" src="assets/ge-logo-full.png" alt="GE Game Engine"><div class="brand-sub">DAILY GAME PERFORMANCE</div></div></div><div class="brand-utility-row"><div class="brand-reporting-date"><label for="report-date">Reporting date:</label><select id="report-date" aria-label="Reporting date"><option value="2026-08-17">August 17, 2026</option></select></div><div id="report-language-toggle" class="report-language-toggle" role="group" aria-label="Report language"><button type="button" data-report-language="en" aria-pressed="true" title="English">EN</button><button type="button" data-report-language="zh" aria-pressed="false" title="中文">CN</button></div></div></section></header>
+<header class="topbar"><section class="brand"><div class="brand-identity"><div><img class="ge-logo ge-logo-full" src="assets/ge-logo-full.png" alt="GE Game Engine"><div class="brand-sub">DAILY GAME PERFORMANCE</div></div></div><div class="brand-utility-row"><div class="brand-reporting-date"><label for="report-date">Reporting date:</label><select id="report-date" aria-label="Reporting date"><option value="2026-08-17">August 17, 2026</option></select></div><!-- btpr:start --><a id="back-to-present-report" href="https://mellydeguzman01-ship-it.github.io/V2-Daily-Game-Performance-Report/" title="Back to Present Report"><span aria-hidden="true">&#8592;</span>&nbsp;<span class="btpr-label">Back to Present Report</span></a><!-- btpr:end --><div id="report-language-toggle" class="report-language-toggle" role="group" aria-label="Report language"><button type="button" data-report-language="en" aria-pressed="true" title="English">EN</button><button type="button" data-report-language="zh" aria-pressed="false" title="中文">CN</button></div></div></section></header>
 <section class="section-grid"><article class="panel summary-panel"><h2 class="section-title">Daily Performance Summary</h2><div class="summary-grid">
 <div class="summary-item"><div class="kpi-icon">&#8369;</div><div class="kpi-label">Total Bet</div><div class="kpi-value">&#8369;1,105,885</div><div class="kpi-delta">CP1 / Banana Craze</div><div class="kpi-vs">June 1, 2026</div></div>
 <div class="summary-item"><div class="kpi-icon">&#8369;</div><div class="kpi-label">Total Payout</div><div class="kpi-value">&#8369;1,211,515</div><div class="kpi-delta negative">Above bet</div><div class="kpi-vs">June 1, 2026</div></div>
@@ -5775,24 +5775,4 @@
 };let busy=false;const apply=()=>{if(busy)return;const body=document.querySelector('.release-log-table tbody');if(!body)return;const zh=document.documentElement.lang==='zh-CN';busy=true;body.querySelectorAll('tr').forEach(row=>{const key=(row.cells[0]?.textContent||'').trim();const item=rows[key];if(!item)return;const cells=row.cells;if(cells[0])cells[0].textContent=item[0][zh?1:0];if(cells[1])cells[1].textContent=item[1][zh?1:0];if(cells[3])cells[3].textContent=item[2][zh?1:0];if(cells[4])cells[4].textContent=item[3][zh?1:0]});busy=false};const later=()=>[0,50,250,800].forEach(t=>setTimeout(apply,t));apply();later();new MutationObserver(m=>{if(m.some(x=>x.type==='attributes'&&x.attributeName==='lang'))later()}).observe(document.documentElement,{attributes:true});document.querySelectorAll('[data-report-language]').forEach(b=>b.addEventListener('click',later,{capture:true}));
 })();
 </script>
-<!-- archive-back-to-latest -->
-<script>
-(() => {
-  const addBackButton = () => {
-    const utility = document.querySelector('.brand-utility-row');
-    if (!utility || document.getElementById('back-to-latest-report')) return;
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.id = 'back-to-latest-report';
-    button.textContent = 'Back to Latest Report';
-    button.setAttribute('aria-label', 'Back to latest report');
-    button.addEventListener('click', () => {
-      window.location.href = 'https://mellydeguzman01-ship-it.github.io/V2-Daily-Game-Performance-Report/';
-    });
-    utility.appendChild(button);
-  };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addBackButton, { once: true });
-  else addBackButton();
-})();
-</script>
-</body></html>
+<!-- btpr:start --><style id="btpr-style">#back-to-present-report{display:inline-flex;align-items:center;padding:6px 12px;margin:0 8px 0 0;border-radius:6px;background:#2563c7;color:#fff;font:600 12px/1 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;vertical-align:middle;box-shadow:0 1px 2px rgba(0,0,0,.18)}#back-to-present-report:hover{background:#1d4fa3}</style><!-- btpr:end --><!-- btpr:start --><script id="btpr-script">(function(){var link=document.getElementById("back-to-present-report");if(!link)return;var label=link.querySelector(".btpr-label");if(!label)return;var apply=function(zh){label.textContent=zh?"\u8fd4\u56de\u5f53\u524d\u62a5\u544a":"Back to Present Report";link.setAttribute("title",label.textContent);};var toggle=document.getElementById("report-language-toggle");if(toggle){toggle.addEventListener("click",function(e){var b=e.target&&e.target.closest?e.target.closest("[data-report-language]"):null;if(!b)return;apply(b.getAttribute("data-report-language")==="zh");},true);}var orig=window.setReportLanguage;if(typeof orig==="function"){window.setReportLanguage=function(l){var r=orig.apply(this,arguments);apply(l==="zh");return r;};}if(toggle&&window.MutationObserver){new MutationObserver(function(){var b=toggle.querySelector("[data-report-language][aria-pressed=\"true\"]");if(b)apply(b.getAttribute("data-report-language")==="zh");}).observe(toggle,{subtree:true,attributes:true,attributeFilter:["aria-pressed"]});}})();</script><!-- btpr:end --></body></html>

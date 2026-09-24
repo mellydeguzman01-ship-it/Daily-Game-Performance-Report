@@ -59,7 +59,7 @@
 @media(max-width:1100px){.section-grid{grid-template-columns:1fr!important}.section-grid>.panel{grid-column:1/-1!important;grid-row:auto!important}.player-behavior-section{grid-row:auto!important}.ticket-outcome-card .behavior-split{grid-template-columns:1fr}}
 </style>
 <div class="dashboard-stage"><main class="report">
-<header class="topbar"><section class="brand"><div class="brand-identity"><div><img class="ge-logo ge-logo-full" src="assets/ge-logo-full.png" alt="GE Game Engine"><div class="brand-sub">DAILY GAME PERFORMANCE</div></div></div><div class="brand-reporting-date"><label for="report-date">Reporting date:</label><select id="report-date" aria-label="Reporting date"><option value="2026-08-17">August 17, 2026</option></select></div></section></header>
+<header class="topbar"><section class="brand"><div class="brand-identity"><div><img class="ge-logo ge-logo-full" src="assets/ge-logo-full.png" alt="GE Game Engine"><div class="brand-sub">DAILY GAME PERFORMANCE</div></div></div><!-- btpr:start --><a id="back-to-present-report" href="https://mellydeguzman01-ship-it.github.io/V2-Daily-Game-Performance-Report/" title="Back to Present Report"><span aria-hidden="true">&#8592;</span>&nbsp;<span class="btpr-label">Back to Present Report</span></a><!-- btpr:end --><div class="brand-reporting-date"><label for="report-date">Reporting date:</label><select id="report-date" aria-label="Reporting date"><option value="2026-08-17">August 17, 2026</option></select></div></section></header>
 <section class="section-grid"><article class="panel summary-panel"><h2 class="section-title">Daily Performance Summary</h2><div class="summary-grid">
 <div class="summary-item"><div class="kpi-icon">&#8369;</div><div class="kpi-label">Total Bet</div><div class="kpi-value">&#8369;1,105,885</div><div class="kpi-delta">CP1 / Banana Craze</div><div class="kpi-vs">June 1, 2026</div></div>
 <div class="summary-item"><div class="kpi-icon">&#8369;</div><div class="kpi-label">Total Payout</div><div class="kpi-value">&#8369;1,211,515</div><div class="kpi-delta negative">Above bet</div><div class="kpi-vs">June 1, 2026</div></div>
@@ -5359,24 +5359,4 @@
 .monthly-performance-detail .data-table th:first-child,.monthly-performance-detail .data-table td:first-child{width:20%!important;min-width:125px!important;text-align:left!important;overflow:visible!important;font-size:7.5px!important;letter-spacing:-.2px!important}
 .monthly-performance-detail .data-table th:nth-child(2),.monthly-performance-detail .data-table td:nth-child(2),.monthly-performance-detail .data-table th:nth-child(3),.monthly-performance-detail .data-table td:nth-child(3),.monthly-performance-detail .data-table th:nth-child(4),.monthly-performance-detail .data-table td:nth-child(4){width:11%!important}
 </style>
-<!-- archive-back-to-latest -->
-<script>
-(() => {
-  const addBackButton = () => {
-    const utility = document.querySelector('.brand-utility-row');
-    if (!utility || document.getElementById('back-to-latest-report')) return;
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.id = 'back-to-latest-report';
-    button.textContent = 'Back to Latest Report';
-    button.setAttribute('aria-label', 'Back to latest report');
-    button.addEventListener('click', () => {
-      window.location.href = 'https://mellydeguzman01-ship-it.github.io/V2-Daily-Game-Performance-Report/';
-    });
-    utility.appendChild(button);
-  };
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', addBackButton, { once: true });
-  else addBackButton();
-})();
-</script>
-</body></html>
+<!-- btpr:start --><style id="btpr-style">#back-to-present-report{display:inline-flex;align-items:center;padding:6px 12px;margin:0 8px 0 0;border-radius:6px;background:#2563c7;color:#fff;font:600 12px/1 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;vertical-align:middle;box-shadow:0 1px 2px rgba(0,0,0,.18)}#back-to-present-report:hover{background:#1d4fa3}</style><!-- btpr:end --><!-- btpr:start --><script id="btpr-script">(function(){var link=document.getElementById("back-to-present-report");if(!link)return;var label=link.querySelector(".btpr-label");if(!label)return;var apply=function(zh){label.textContent=zh?"\u8fd4\u56de\u5f53\u524d\u62a5\u544a":"Back to Present Report";link.setAttribute("title",label.textContent);};var toggle=document.getElementById("report-language-toggle");if(toggle){toggle.addEventListener("click",function(e){var b=e.target&&e.target.closest?e.target.closest("[data-report-language]"):null;if(!b)return;apply(b.getAttribute("data-report-language")==="zh");},true);}var orig=window.setReportLanguage;if(typeof orig==="function"){window.setReportLanguage=function(l){var r=orig.apply(this,arguments);apply(l==="zh");return r;};}if(toggle&&window.MutationObserver){new MutationObserver(function(){var b=toggle.querySelector("[data-report-language][aria-pressed=\"true\"]");if(b)apply(b.getAttribute("data-report-language")==="zh");}).observe(toggle,{subtree:true,attributes:true,attributeFilter:["aria-pressed"]});}})();</script><!-- btpr:end --></body></html>
