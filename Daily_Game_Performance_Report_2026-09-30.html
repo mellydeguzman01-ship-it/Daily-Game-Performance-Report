@@ -152,6 +152,8 @@
        .side-stack is display:contents, so .platform-charts and
        .changelog-table are the band's own grid items at full width; below
        1180px the stack re-forms a 1-column grid and these same two orders
+       Columns 3 and 4 swap position and take their widths with them:
+       Top 5 / 100 Rounds 25fr moves to slot 3, Changelog 20fr to slot 4.
        keep charts-then-changelog inside it. */
     .platform-layout > .platform-matrix { order: 1; }
     .platform-layout .platform-charts { order: 2; }
@@ -159,6 +161,32 @@
     .platform-layout .changelog-table { order: 4; }
     .platform-layout > .hl-stack { order: 3; }
     .platform-layout > .status-stack { order: 5; }
+    /* User spec 2026-10-01: "tanggalin yung space ... wag masyado lagyan ng blank
+       space". Every band column stretches to the tallest one, so cards sat half
+       empty at the foot. Nothing is added or removed here - each card's own
+       content is simply allowed to fill the card: tables spread their rows over
+       the full height, the 100-rounds ladder and the alert list spread too, and
+       the three share donuts grow into the column they already occupied. */
+    .platform-matrix table { height: 100%; }
+    .platform-charts { align-content: space-between; }
+    .platform-charts .platform-chart { grid-template-columns: 128px 1fr; }
+    .platform-charts .mini-donut { width: 128px; height: 128px; }
+    .hl-stack > .panel table, .status-stack > .panel table { height: 100%; }
+    .gp-passline .dynamic-list { height: 100%; display: flex; flex-direction: column;
+                                justify-content: space-between; }
+    .incident-panel { display: flex; flex-direction: column; }
+    .incident-panel .alert-row { padding: 14px 0; }
+    .incident-panel .incident-notes { margin-top: auto; }
+    /* Repeat-Round Rate pie (user spec 2026-10-01) */
+    .pp-mixed .mix-pie { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+                         gap: 12px; align-items: center; min-width: 0; }
+    .pp-mixed .mix-donut { width: min(116px, 100%); aspect-ratio: 1 / 1; border-radius: 50%;
+                           justify-self: center; }
+    .pp-mixed .mix-legend { display: grid; gap: 5px; font-size: 9.5px; }
+    .pp-mixed .mix-legend div { display: flex; align-items: center; justify-content: space-between;
+                                gap: 8px; color: var(--muted); }
+    .pp-mixed .mix-legend b { color: var(--text); white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .pp-mixed .mix-legend i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 6px; }
     /* Compact cards: the spec asks for two small cards per column, and these two
        panels arrive with full-size typography plus a 305px chart-box min-height
        that made the whole band 1301px tall. */
@@ -214,9 +242,11 @@
     .status.ok { color: #167a45; background: #e9f8ef; } .status.warn { color: #8a5c00; background: #fff4d8; } .status.danger { color: #b4233a; background: #ffebee; }
 
     .chart-grid-2, .chart-grid-3 { display: contents; }
-    /* User spec 2026-10-01: two rows. Row 1 20/15/30/20/15, row 2 60/20/20. */
+    /* User spec 2026-10-01: two rows, row 2 60/20/20.
+       Row 1 is 20/15/30/35: the two Feature Trigger Rate cards were merged back
+       into one card, so it takes the 20 + 15 tracks they used to hold. */
     .game-performance-grid { display: grid; grid-template-columns: 1fr; gap: 10px; align-items: stretch; }
-    .gp-row-1 { display: grid; grid-template-columns: 20fr 15fr 30fr 20fr 15fr; gap: 10px; align-items: stretch; }
+    .gp-row-1 { display: grid; grid-template-columns: 20fr 15fr 30fr 35fr; gap: 10px; align-items: stretch; }
     .gp-row-2 { display: grid; grid-template-columns: 60fr 20fr 20fr; gap: 10px; align-items: stretch; }
     /* every child carried explicit row/column placement from the old 20-track grid */
     .gp-row-1 > .panel, .gp-row-2 > .panel { grid-column: auto !important; grid-row: auto !important; min-width: 0; }
@@ -331,6 +361,24 @@
     .player-grid > .pg-chart { padding: 14px; }
     .player-grid > .pg-chart .chart { height: 285px; }
     .player-grid > .pg-chart .side-title { margin-bottom: 8px; }
+    /* 2026-10-01 (user: "decrease the height of Unique Players by Bet
+       Denomination, pati yung text and chart dyan bawasan mo din"). The card was
+       561px tall and set the height of the whole row: a 292-unit-wide viewBox was
+       being scaled 2.03x to fill a 593px card, so `height: auto` gave it 396px and
+       17px type. build_v2_dashboard.DENOM_W is now 576 units, which is the same
+       drawing spread across the card's real width - it renders ~200px tall at
+       ~1.03x, i.e. normal-sized type. max-height is only a guard for very wide
+       viewports, where the aspect ratio alone would grow it again; at 1600px the
+       chart is nowhere near it, so it never letterboxes. */
+    .player-grid > .pg-denom .chart.denom-svg { max-height: 215px; margin-inline: auto; }
+    /* And the card's own type steps down one notch, so it reads as a compact card
+       rather than a full-size one. Scoped to .pg-denom only - the other row-2
+       cards keep the panel default. */
+    .player-grid > .pg-denom .side-title h3 { font-size: 12.5px; }
+    .player-grid > .pg-denom .side-title span { font-size: 10px; }
+    .player-grid > .pg-denom .legend { font-size: 10px; margin-top: 6px; gap: 8px 12px; }
+    .player-grid > .pg-denom .chart-note { font-size: 10px; margin-top: 3px; }
+    .player-grid > .pg-denom > .keynote { font-size: 10px; margin-top: 8px; padding: 7px 9px; }
     /* The engagement chart takes its height from its own viewBox (height:auto), so it
        can never letterbox or squash its labels at any panel width. */
     .chart.eng-svg { width: 100% !important; height: auto !important;
@@ -701,21 +749,13 @@
         </div>
           <div class="panel pad chart-box gp-feature">
           <div class="side-title"><h3>Feature Trigger Rate</h3><span>Per settled round</span></div>
-          <!--GP:FEATURE_A:START-->
+          <!--GP:FEATURE:START-->
           <div class="dynamic-list">
             <div class="dynamic-item"><div class="dynamic-head"><b>Bonus Round</b><span>2,430 rounds · 2.30%</span></div><div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--yellow)"></div></div><div class="dynamic-foot"><span>2.30% of rounds</span><b>811 player entries</b></div></div>
-          </div>
-          <div class="chart-note" style="margin-top:12px">Per settled round: a round that paid an extra win (`otherWinAmount` > 0) counts as a Bonus Round (2,430 rounds, 2.30%). Player entries count a player once per product: 811 saw a bonus.</div>
-          <!--GP:FEATURE_A:END-->
-        </div>
-          <div class="panel pad chart-box gp-feature">
-          <div class="side-title"><h3>Feature Trigger Rate</h3><span>Per settled round</span></div>
-          <!--GP:FEATURE_B:START-->
-          <div class="dynamic-list">
             <div class="dynamic-item"><div class="dynamic-head"><b>Buy Feature</b><span>356 rounds · 0.34%</span></div><div class="bar-track"><div class="bar-fill" style="width:15%;background:var(--green)"></div></div><div class="dynamic-foot"><span>0.34% of rounds</span><b>228 player entries</b></div></div>
           </div>
-          <div class="chart-note" style="margin-top:12px">Per settled round: `betType` BUY_FEATURE counts as a Buy Feature (356 rounds, 0.34%). Player entries count a player once per product: 228 bought a feature.</div>
-          <!--GP:FEATURE_B:END-->
+          <div class="chart-note" style="margin-top:12px">Per settled round: a round that paid an extra win (`otherWinAmount` > 0) counts as a Bonus Round (2,430 rounds, 2.30%); `betType` BUY_FEATURE counts as a Buy Feature (356 rounds, 0.34%). Player entries count a player once per product: 811 saw a bonus and 228 bought a feature.</div>
+          <!--GP:FEATURE:END-->
         </div>
         </div>
         <div class="gp-row-2">
@@ -731,7 +771,13 @@
             <div class="panel pad pp-mixed">
           <div class="side-title"><h3>Repeat-Round Rate (%)</h3><span>≥2 rounds</span></div>
           <!--PP:MIXED_A:START-->
-          <div style="display:flex;gap:18px;flex-wrap:wrap"><div><div class="metric-label">Repeat-round players (≥2 rounds)</div><div class="metric-value positive">1,637</div><div class="metric-subtext">90.1% of 1,816 players</div></div><div><div class="metric-label">One round only</div><div class="metric-value negative">179</div><div class="metric-subtext">9.9% of players</div></div></div>
+          <div class="mix-pie">
+            <div class="mix-donut" role="img" aria-label="Repeat-round rate: share of the day&#8217;s players who settled 2 or more rounds" style="background:conic-gradient(var(--blue) 0% 90.1%, var(--yellow) 90.1% 100%)"></div>
+            <div class="mix-legend">
+              <div><span><i style="background:var(--blue)"></i>Repeat-round players (≥2 rounds)</span><b>1,637 · 90.1%</b></div>
+              <div><span><i style="background:var(--yellow)"></i>One round only</span><b>179 · 9.9%</b></div>
+            </div>
+          </div>
           <div class="chart-note" style="margin-top:12px">Repeat-round rate = players with 2 or more settled rounds that day ÷ every player the ledger settled (1,816); 179 players (9.9%) settled exactly one round.</div>
           <!--PP:MIXED_A:END-->
         </div>
@@ -774,7 +820,7 @@
           <!--PP:ENGAGE:END-->
         </div>
         <!-- Row 2: 40fr / 20fr / 40fr - denomination, average per player, spend tier -->
-        <div class="panel pad chart-box pg-8 pg-denom pg-chart"><div class="side-title"><h3>Unique Players by Bet Denomination</h3><span>Daily · unique players per bet amount</span></div><svg class="chart denom-svg" viewBox="0 0 292 195" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Daily unique players by bet denomination, separated by Loteria and Slot"><defs><linearGradient id="denloteria" x1="0" x2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#38bdf8"/></linearGradient><linearGradient id="denslot" x1="0" x2="1"><stop offset="0" stop-color="#b78cff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><text x="0" y="11" style="fill:var(--text)" font-size="10" font-weight="800">Loteria (BP)</text><text x="0" y="21.5" style="fill:var(--muted)" font-size="8.5">Starting bet ₱5 · 425 players</text><line x1="46" y1="25.0" x2="46" y2="195.0" style="stroke:var(--line)"/><rect x="52" y="28.0" width="54.0" height="14.0" rx="4" fill="url(#denloteria)"/><text x="112.0" y="38.2" style="fill:var(--text)" font-size="9" font-weight="700">331</text><text x="46" y="38.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">₱5–10</text><rect x="52" y="58.0" width="4.1" height="14.0" rx="4" fill="url(#denloteria)"/><text x="62.1" y="68.2" style="fill:var(--text)" font-size="9" font-weight="700">25</text><text x="46" y="68.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱10–20</text><rect x="52" y="88.0" width="2.6" height="14.0" rx="4" fill="url(#denloteria)"/><text x="60.6" y="98.2" style="fill:var(--text)" font-size="9" font-weight="700">16</text><text x="46" y="98.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱20–50</text><rect x="52" y="118.0" width="19.9" height="14.0" rx="4" fill="url(#denloteria)"/><text x="77.9" y="128.2" style="fill:var(--text)" font-size="9" font-weight="700">122</text><text x="46" y="128.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱50–100</text><rect x="52" y="148.0" width="1.6" height="14.0" rx="4" fill="url(#denloteria)"/><text x="59.6" y="158.2" style="fill:var(--text)" font-size="9" font-weight="700">10</text><text x="46" y="158.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱100–1000</text><rect x="52" y="178.0" width="1.6" height="14.0" rx="2" style="fill:var(--line)"/><text x="60.0" y="188.2" style="fill:var(--muted)" font-size="9" font-weight="700">0</text><text x="46" y="188.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱1000</text><text x="156" y="11" style="fill:var(--text)" font-size="10" font-weight="800">Slot (GP + AP)</text><text x="156" y="21.5" style="fill:var(--muted)" font-size="8.5">Starting bet ₱0.50 · 1,393 players</text><line x1="202" y1="25.0" x2="202" y2="195.0" style="stroke:var(--line)"/><rect x="208" y="28.0" width="54.0" height="14.0" rx="4" fill="url(#denslot)"/><text x="268.0" y="38.2" style="fill:var(--text)" font-size="9" font-weight="700">1,247</text><text x="202" y="38.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">₱0.5–3</text><rect x="208" y="58.0" width="15.4" height="14.0" rx="4" fill="url(#denslot)"/><text x="229.4" y="68.2" style="fill:var(--text)" font-size="9" font-weight="700">355</text><text x="202" y="68.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱3–10</text><rect x="208" y="88.0" width="5.7" height="14.0" rx="4" fill="url(#denslot)"/><text x="219.7" y="98.2" style="fill:var(--text)" font-size="9" font-weight="700">132</text><text x="202" y="98.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱10–50</text><rect x="208" y="118.0" width="2.4" height="14.0" rx="4" fill="url(#denslot)"/><text x="216.4" y="128.2" style="fill:var(--text)" font-size="9" font-weight="700">56</text><text x="202" y="128.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱50–100</text><rect x="208" y="148.0" width="1.6" height="14.0" rx="4" fill="url(#denslot)"/><text x="215.6" y="158.2" style="fill:var(--text)" font-size="9" font-weight="700">11</text><text x="202" y="158.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱100–400</text><rect x="208" y="178.0" width="1.6" height="14.0" rx="4" fill="url(#denslot)"/><text x="215.6" y="188.2" style="fill:var(--text)" font-size="9" font-weight="700">4</text><text x="202" y="188.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱400</text></svg><div class="legend"><span><i style="background:var(--blue)"></i>Loteria</span><span><i style="background:var(--violet)"></i>Slot</span></div><div class="chart-note">Unique players per bet amount, Loteria vs Slot.</div></div>
+        <div class="panel pad chart-box pg-8 pg-denom pg-chart"><div class="side-title"><h3>Unique Players by Bet Denomination</h3><span>Daily · unique players per bet amount</span></div><svg class="chart denom-svg" viewBox="0 0 576 195" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Daily unique players by bet denomination, separated by Loteria and Slot"><defs><linearGradient id="denloteria" x1="0" x2="1"><stop offset="0" stop-color="#22d3ee"/><stop offset="1" stop-color="#38bdf8"/></linearGradient><linearGradient id="denslot" x1="0" x2="1"><stop offset="0" stop-color="#b78cff"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs><text x="0" y="11" style="fill:var(--text)" font-size="10" font-weight="800">Loteria (BP)</text><text x="0" y="21.5" style="fill:var(--muted)" font-size="8.5">Starting bet ₱5 · 425 players</text><line x1="46" y1="25.0" x2="46" y2="195.0" style="stroke:var(--line)"/><rect x="52" y="28.0" width="190.0" height="14.0" rx="4" fill="url(#denloteria)"/><text x="248.0" y="38.2" style="fill:var(--text)" font-size="9" font-weight="700">331</text><text x="46" y="38.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">₱5–10</text><rect x="52" y="58.0" width="14.4" height="14.0" rx="4" fill="url(#denloteria)"/><text x="72.4" y="68.2" style="fill:var(--text)" font-size="9" font-weight="700">25</text><text x="46" y="68.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱10–20</text><rect x="52" y="88.0" width="9.2" height="14.0" rx="4" fill="url(#denloteria)"/><text x="67.2" y="98.2" style="fill:var(--text)" font-size="9" font-weight="700">16</text><text x="46" y="98.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱20–50</text><rect x="52" y="118.0" width="70.0" height="14.0" rx="4" fill="url(#denloteria)"/><text x="128.0" y="128.2" style="fill:var(--text)" font-size="9" font-weight="700">122</text><text x="46" y="128.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱50–100</text><rect x="52" y="148.0" width="5.7" height="14.0" rx="4" fill="url(#denloteria)"/><text x="63.7" y="158.2" style="fill:var(--text)" font-size="9" font-weight="700">10</text><text x="46" y="158.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱100–1000</text><rect x="52" y="178.0" width="1.6" height="14.0" rx="2" style="fill:var(--line)"/><text x="60.0" y="188.2" style="fill:var(--muted)" font-size="9" font-weight="700">0</text><text x="46" y="188.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱1000</text><text x="300" y="11" style="fill:var(--text)" font-size="10" font-weight="800">Slot (GP + AP)</text><text x="300" y="21.5" style="fill:var(--muted)" font-size="8.5">Starting bet ₱0.50 · 1,393 players</text><line x1="346" y1="25.0" x2="346" y2="195.0" style="stroke:var(--line)"/><rect x="352" y="28.0" width="190.0" height="14.0" rx="4" fill="url(#denslot)"/><text x="548.0" y="38.2" style="fill:var(--text)" font-size="9" font-weight="700">1,247</text><text x="346" y="38.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">₱0.5–3</text><rect x="352" y="58.0" width="54.1" height="14.0" rx="4" fill="url(#denslot)"/><text x="412.1" y="68.2" style="fill:var(--text)" font-size="9" font-weight="700">355</text><text x="346" y="68.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱3–10</text><rect x="352" y="88.0" width="20.1" height="14.0" rx="4" fill="url(#denslot)"/><text x="378.1" y="98.2" style="fill:var(--text)" font-size="9" font-weight="700">132</text><text x="346" y="98.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱10–50</text><rect x="352" y="118.0" width="8.5" height="14.0" rx="4" fill="url(#denslot)"/><text x="366.5" y="128.2" style="fill:var(--text)" font-size="9" font-weight="700">56</text><text x="346" y="128.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱50–100</text><rect x="352" y="148.0" width="1.7" height="14.0" rx="4" fill="url(#denslot)"/><text x="359.7" y="158.2" style="fill:var(--text)" font-size="9" font-weight="700">11</text><text x="346" y="158.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱100–400</text><rect x="352" y="178.0" width="1.6" height="14.0" rx="4" fill="url(#denslot)"/><text x="359.6" y="188.2" style="fill:var(--text)" font-size="9" font-weight="700">4</text><text x="346" y="188.2" style="fill:var(--muted)" font-size="8.5" text-anchor="end" font-weight="600">>₱400</text></svg><div class="legend"><span><i style="background:var(--blue)"></i>Loteria</span><span><i style="background:var(--violet)"></i>Slot</span></div><div class="chart-note">Unique players per bet amount, Loteria vs Slot.</div></div>
         <div class="panel pad pg-4 pp-avg">
           <div class="side-title"><h3>Average Bet &amp; Rounds per Player</h3><span>Loteria vs Slot</span></div>
           <!--PP:AVG:START-->
@@ -876,6 +922,16 @@
         if (activeTooltipTarget) tooltip.innerHTML = activeTooltipTarget.dataset[tooltipLanguage === 'cn' ? 'tooltipCn' : 'tooltipEn'] || activeTooltipTarget.dataset.tooltipEn || '';
       });
 
+      // User spec 2026-10-01: the Hourly RTP bars must be as thin as the 30-Day
+      // Performance Trend bars. Both charts now take their bar width from this one
+      // shared fraction of their own plot width instead of each deriving its own,
+      // which is what let them drift apart. .22 / 30 is the trend's own weight:
+      //   30-Day  935 * BAR_FRAC = 6.86 units -> 6.0px rendered
+      //   Hourly  798 * BAR_FRAC = 5.85 units -> 5.8px rendered
+      // i.e. the hour bars come down from 14.35 units (14.2px), where they filled
+      // the hour slot, to the trend's weight. Change this one number only.
+      const BAR_FRAC = .22 / 30;
+
       const hourly = document.getElementById('hourlyRtpChart');
       if (hourly) {
         const W = 900, H = 315, pad = { l: 40, r: 62, t: 24, b: 62 }, base = H - pad.b;
@@ -952,22 +1008,17 @@
         });
         rtpLabels.forEach(label => drawLabel(hourly, W - 44, label.y + 4, `${label.value}%`, { 'font-size': 9 }));
         hours.forEach((label, i) => drawLabel(hourly, x(i), base + 19, label, { 'text-anchor': 'end', transform: `rotate(-55 ${x(i)} ${base + 19})`, 'font-size': 8 }));
-        // The bar pair is sized against its own hour SLOT, not the hour count.
-        // The old divisor (plotW / hours.length * .20 = 6.65 units here) drew
-        // 4.3px bars and left the pair 17 units short of its slot, so the chart
-        // read as a thin comb (user report, 2026-10-01: "nipisan yung bar").
-        // Two bars plus the 4-unit inner gap must still leave a visible gap
-        // before the next hour, or the pairs touch into one ribbed slab.
-        const slot = plotW / (hours.length - 1);
-        // 3-unit gap inside the pair, 3 units before the next hour.
-        const barWidth = Math.max(3, Math.min(16, (slot - 6) / 2));
+        // The trend's own bar weight, shared via BAR_FRAC - see the constant for the
+        // arithmetic. The pair stays centred on the hour tick.
+        const slot = plotW / (hours.length - 1);   // hour pitch, kept for the x axis
+        const barWidth = Math.max(3, Math.min(8, plotW * BAR_FRAC));
         bet.forEach((value, i) => {
-          const bar = make('rect', { x: x(i) - barWidth - 1.5, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 4, fill: '#6ea8ff' });
+          const bar = make('rect', { x: x(i) - barWidth - 1.5, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 2, fill: '#6ea8ff' });
           setTip(bar, `<b>${hours[i]}</b><br>Bet Amount: ${pesoFmt(betPhp[i])}<br>Rounds: ${intFmt(hourRounds[i])}`, `<b>${hours[i]}</b><br>投注金额：${pesoFmt(betPhp[i])}<br>回合数：${intFmt(hourRounds[i])}`);
           hourly.appendChild(bar);
         });
         payout.forEach((value, i) => {
-          const bar = make('rect', { x: x(i) + 1.5, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 4, fill: '#b78cff' });
+          const bar = make('rect', { x: x(i) + 1.5, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 2, fill: '#b78cff' });
           setTip(bar, `<b>${hours[i]}</b><br>Payout: ${pesoFmt(payoutPhp[i])}`, `<b>${hours[i]}</b><br>派彩：${pesoFmt(payoutPhp[i])}`);
           hourly.appendChild(bar);
         });
@@ -1025,7 +1076,7 @@
         dates.forEach((date, i) => drawLabel(thirtyDay, x(i), base + 24, date, { 'text-anchor': 'end', transform: `rotate(-65 ${x(i)} ${base + 24})`, 'font-size': 8 }));
         [90, 95, 100, 105].forEach(value => drawLabel(thirtyDay, W - 26, yRtp(value) + 4, `${value}%`, { 'font-size': 9 }));
         [0, 10, 20].forEach(value => drawLabel(thirtyDay, W - 26, yRetention(value) + 4, `${value}%`, { fill: '#f2a65a', 'font-size': 9 }));
-        const barWidth = Math.max(4, Math.min(8, plotW / dates.length * .22));
+        const barWidth = Math.max(4, Math.min(8, plotW * BAR_FRAC));   // 6.86 units, unchanged
         bet.forEach((value, i) => {
           const bar = make('rect', { x: x(i) - barWidth - 1, y: yAmount(value), width: barWidth, height: base - yAmount(value), rx: 2, fill: '#6ea8ff' });
           setTip(bar, `<b>${dates[i]}</b><br>Bet Amount: ${pesoFmt(betPhp30[i])}`, `<b>${dates[i]}</b><br>投注金额：${pesoFmt(betPhp30[i])}`);
