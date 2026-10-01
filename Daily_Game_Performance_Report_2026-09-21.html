@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en"><head>
 <meta charset="utf-8">
+<script id="hangfix-no-mutation-observer">/* 2026-10-01 hangfix: legacy pages 2026-08-25..09-21 registered 13-21 MutationObservers over document.body/subtree that rewrote the DOM from a requestAnimationFrame callback (one of them body.insertAdjacentHTML on every pass). The write re-fired the observer, which scheduled another frame - an endless cycle that saturated the main thread and hung the page. Observers are neutralised here. Each script does its work once with an explicit call before it observes, so first paint is unchanged. */window.MutationObserver=function(){return{observe:function(){},disconnect:function(){},takeRecords:function(){return[]}}};</script>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Daily Game Performance Report V2</title>
 <style>
