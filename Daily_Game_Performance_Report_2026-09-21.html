@@ -5297,90 +5297,10 @@
   const svg=document.getElementById('daily-performance-30-chart');if(svg)new MutationObserver(apply).observe(svg,{childList:true});
 })();
 </script>
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
+
+
+
+
 
 <style id="report-language-toggle-style">
 .brand-utility-row{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:6px;width:100%;min-width:0;margin-top:8px;position:relative;z-index:1000}.brand-utility-row .brand-reporting-date{width:100%;max-width:100%;margin-top:0!important}.report-language-toggle{display:inline-flex;align-items:center;flex:0 0 auto;gap:2px;margin-left:0;padding:3px;border:1px solid #526b9a;border-radius:999px;background:#294779;box-shadow:inset 0 1px 0 #ffffff20;white-space:nowrap;visibility:visible!important;opacity:1!important;position:relative;z-index:1001;isolation:isolate;pointer-events:auto}.report-language-toggle button{display:inline-flex;align-items:center;justify-content:center;min-width:34px;min-height:28px;border:0;border-radius:999px;padding:4px 8px;background:transparent;color:#dbe7ff;font:800 11px/1 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;letter-spacing:.02em;cursor:pointer;transition:background .16s ease,color .16s ease,box-shadow .16s ease;visibility:visible!important;opacity:1!important;position:relative;z-index:1002;pointer-events:auto;user-select:none;touch-action:manipulation}.report-language-toggle button[aria-pressed="true"]{background:#168df0;color:#fff;box-shadow:0 1px 3px #0d2f5a99}.report-language-toggle button:focus-visible{outline:2px solid #8bc7ff;outline-offset:2px}@media(max-width:650px){.brand-utility-row{align-items:flex-start;flex-wrap:wrap}.report-language-toggle{margin-left:0}}
@@ -5467,342 +5387,22 @@
   new MutationObserver(()=>{if(!applying)applyLanguage()}).observe(document.body,{childList:true,subtree:true,characterData:true});
 })();
 </script>
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 <style id="final-ui-repair-style">
 .report-language-toggle,.report-language-toggle *{pointer-events:auto!important}.report-language-toggle{position:relative!important;z-index:99999!important}.report-language-toggle button{position:relative!important;z-index:100000!important;cursor:pointer!important}.hourly-chart-panel .combo-chart{height:auto!important;aspect-ratio:1100/360!important}.hourly-rtp-legend .hourly-standard{display:block;flex:0 0 15px;width:15px;height:0;border-top:2px dashed #64748b}
@@ -5827,95 +5427,15 @@
 };let busy=false;const apply=()=>{if(busy)return;const body=document.querySelector('.release-log-table tbody');if(!body)return;const zh=document.documentElement.lang==='zh-CN';busy=true;body.querySelectorAll('tr').forEach(row=>{const key=(row.cells[0]?.textContent||'').trim();const item=rows[key];if(!item)return;const cells=row.cells;if(cells[0])cells[0].textContent=item[0][zh?1:0];if(cells[1])cells[1].textContent=item[1][zh?1:0];if(cells[3])cells[3].textContent=item[2][zh?1:0];if(cells[4])cells[4].textContent=item[3][zh?1:0]});busy=false};const later=()=>[0,50,250,800].forEach(t=>setTimeout(apply,t));apply();later();new MutationObserver(m=>{if(m.some(x=>x.type==='attributes'&&x.attributeName==='lang'))later()}).observe(document.documentElement,{attributes:true});document.querySelectorAll('[data-report-language]').forEach(b=>b.addEventListener('click',later,{capture:true}));
 })();
 </script>
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
+
+
 
 <style id="final-ui-repair-style">
 .report-language-toggle,.report-language-toggle *{pointer-events:auto!important}.report-language-toggle{position:relative!important;z-index:99999!important}.report-language-toggle button{position:relative!important;z-index:100000!important;cursor:pointer!important}.hourly-chart-panel .combo-chart{height:auto!important;aspect-ratio:1100/360!important}.hourly-rtp-legend .hourly-standard{display:block;flex:0 0 15px;width:15px;height:0;border-top:2px dashed #64748b}
 </style>
 
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
+
+
 
 <style id="final-ui-repair-style">
 .report-language-toggle,.report-language-toggle *{pointer-events:auto!important}.report-language-toggle{position:relative!important;z-index:99999!important}.report-language-toggle button{position:relative!important;z-index:100000!important;cursor:pointer!important}.hourly-chart-panel .combo-chart{height:auto!important;aspect-ratio:1100/360!important}.hourly-rtp-legend .hourly-standard{display:block;flex:0 0 15px;width:15px;height:0;border-top:2px dashed #64748b}
@@ -6008,236 +5528,36 @@
  apply();[0,100,500,1200,2500].forEach(t=>setTimeout(apply,t));window.addEventListener('load',apply,{once:true});new MutationObserver(apply).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});document.querySelectorAll('[data-report-language]').forEach(b=>b.addEventListener('click',()=>setTimeout(apply,30)));
 })();
 </script>
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
+
+
 
 <style id="final-ui-repair-style">
 .report-language-toggle,.report-language-toggle *{pointer-events:auto!important}.report-language-toggle{position:relative!important;z-index:99999!important}.report-language-toggle button{position:relative!important;z-index:100000!important;cursor:pointer!important}.hourly-chart-panel .combo-chart{height:auto!important;aspect-ratio:1100/360!important}.hourly-rtp-legend .hourly-standard{display:block;flex:0 0 15px;width:15px;height:0;border-top:2px dashed #64748b}
 </style>
 
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
+
+
 
 <style id="final-ui-repair-style">
 .report-language-toggle,.report-language-toggle *{pointer-events:auto!important}.report-language-toggle{position:relative!important;z-index:99999!important}.report-language-toggle button{position:relative!important;z-index:100000!important;cursor:pointer!important}.hourly-chart-panel .combo-chart{height:auto!important;aspect-ratio:1100/360!important}.hourly-rtp-legend .hourly-standard{display:block;flex:0 0 15px;width:15px;height:0;border-top:2px dashed #64748b}
 </style>
 
-<script id="arenaplus-placeholder-preview">(function(){function apply(){var panel=document.querySelector('.platform-performance-panel');if(!panel)return;var table=panel.querySelector('tbody');if(!table||/ArenaPlus\s*\(AP\)/.test(table.textContent))return;table.insertAdjacentHTML('beforeend','<tr class="arenaplus-placeholder"><td class="platform-name">ArenaPlus (AP)</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">N/A</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">N/A</td></tr>');var scopes=panel.querySelectorAll('.platform-performance-scope');if(scopes[0])scopes[0].insertAdjacentHTML('beforeend',' <b>ArenaPlus (AP)</b> is pre-wired; no backend data is available yet.');if(scopes[1])scopes[1].insertAdjacentHTML('beforeend',' ArenaPlus metrics will populate automatically when AP records appear.');var grid=panel.querySelector('.platform-engagement-retention-grid');if(grid&&!grid.querySelector('.arenaplus-placeholder-card'))grid.insertAdjacentHTML('beforeend','<section class="platform-game-card arenaplus-placeholder-card" aria-label="ArenaPlus game level engagement and retention"><h3>ArenaPlus</h3><dl><div><dt>Active Players</dt><dd>—</dd></div><div><dt>Total Rounds/Tickets</dt><dd>—</dd></div><div><dt>Avg Rounds/Tickets per Player</dt><dd>—</dd></div><div><dt>D1 Retention</dt><dd>N/A</dd></div></dl><small style="color:#708097">Waiting for backend AP data</small></section>')}}apply();window.setTimeout(apply,3500)})();</script><script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
+<script id="arenaplus-placeholder-preview">(function(){function apply(){var panel=document.querySelector('.platform-performance-panel');if(!panel)return;var table=panel.querySelector('tbody');if(!table||/ArenaPlus\s*\(AP\)/.test(table.textContent))return;table.insertAdjacentHTML('beforeend','<tr class="arenaplus-placeholder"><td class="platform-name">ArenaPlus (AP)</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">N/A</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">—</td><td class="muted">N/A</td></tr>');var scopes=panel.querySelectorAll('.platform-performance-scope');if(scopes[0])scopes[0].insertAdjacentHTML('beforeend',' <b>ArenaPlus (AP)</b> is pre-wired; no backend data is available yet.');if(scopes[1])scopes[1].insertAdjacentHTML('beforeend',' ArenaPlus metrics will populate automatically when AP records appear.');var grid=panel.querySelector('.platform-engagement-retention-grid');if(grid&&!grid.querySelector('.arenaplus-placeholder-card'))grid.insertAdjacentHTML('beforeend','<section class="platform-game-card arenaplus-placeholder-card" aria-label="ArenaPlus game level engagement and retention"><h3>ArenaPlus</h3><dl><div><dt>Active Players</dt><dd>—</dd></div><div><dt>Total Rounds/Tickets</dt><dd>—</dd></div><div><dt>Avg Rounds/Tickets per Player</dt><dd>—</dd></div><div><dt>D1 Retention</dt><dd>N/A</dd></div></dl><small style="color:#708097">Waiting for backend AP data</small></section>')}}apply();window.setTimeout(apply,3500)})();</script>
+
 
 <style id="final-ui-repair-style">
 .report-language-toggle,.report-language-toggle *{pointer-events:auto!important}.report-language-toggle{position:relative!important;z-index:99999!important}.report-language-toggle button{position:relative!important;z-index:100000!important;cursor:pointer!important}.hourly-chart-panel .combo-chart{height:auto!important;aspect-ratio:1100/360!important}.hourly-rtp-legend .hourly-standard{display:block;flex:0 0 15px;width:15px;height:0;border-top:2px dashed #64748b}
 </style>
 
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
+
+
 
 <style id="final-ui-repair-style">
 .report-language-toggle,.report-language-toggle *{pointer-events:auto!important}.report-language-toggle{position:relative!important;z-index:99999!important}.report-language-toggle button{position:relative!important;z-index:100000!important;cursor:pointer!important}.hourly-chart-panel .combo-chart{height:auto!important;aspect-ratio:1100/360!important}.hourly-rtp-legend .hourly-standard{display:block;flex:0 0 15px;width:15px;height:0;border-top:2px dashed #64748b}
 </style>
 
-<script>(function(){
-  const svg=document.getElementById('hourly-rtp-trend-chart');
-  const node=document.getElementById('hourly-data');
-  if(!svg||!node)return;
-  const source=JSON.parse(node.textContent), ns='http://www.w3.org/2000/svg', W=760,H=300,p={l:58,r:58,t:42,b:58};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c',hit:'#1b9c4a'};
-  const tip=document.createElement('div'); tip.className='chart-tooltip'; document.body.appendChild(tip);
-  const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(d){
-    svg.replaceChildren(); const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e};
-    const map=Object.fromEntries(d.series.map(s=>[s.name,s])), labels=d.labels;
-    const left=[...(map['Betting Amount']?.values||[]),...(map.Payout?.values||[])].filter(Number.isFinite), pct=[...(map.RTP?.values||[]),...(map['Hit Rate']?.values||[])].filter(Number.isFinite);
-    const leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/5000)*5000), pctMax=Math.max(200,Math.ceil(Math.max(...pct,0)/50)*50), x=i=>p.l+(W-p.l-p.r)*(i/Math.max(1,labels.length-1)), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    const addText=(x,y,t,attrs={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},attrs),t);
-    for(let i=0;i<=4;i++){const v=leftMax*i/4,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(p.l-8,y+4,money(v),{'text-anchor':'end'});}
-    for(let i=0;i<=pctMax/50;i++){const v=i*50,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef','stroke-width':1});addText(W-p.r+8,y+4,v+'%');}
-    labels.forEach((lab,i)=>addText(x(i),H-37,lab,{'text-anchor':'end','font-size':7,transform:'rotate(-45 '+x(i)+' '+(H-37)+')'}));
-    [['Betting Amount',colors.bet],['Payout',colors.pay]].forEach(([name,color],si)=>{(map[name]?.values||[]).forEach((v,i)=>{if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*18-9,y:H-p.b-h,width:16,height:Math.max(1,h),rx:2,fill:color,opacity:.9});});});
-    const points=(name,scale)=>(map[name]?.values||[]).map((v,i)=>Number.isFinite(v)?[x(i),scale(v)]:null).filter(Boolean), rtpPts=points('RTP',yR), hitPts=points('Hit Rate',yR);
-    function smooth(pts){if(pts.length<2)return '';let d='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;d+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}return d;}
-    if(rtpPts.length>1)add('path',{d:smooth(rtpPts),fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'}); if(hitPts.length>1)add('path',{d:smooth(hitPts),fill:'none',stroke:colors.hit,'stroke-width':1.8,'stroke-linecap':'round'});
-    rtpPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5})); hitPts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:2.5,fill:colors.hit,stroke:'#fff','stroke-width':1}));
-    labels.forEach((lab,i)=>{const hit=add('rect',{x:x(i)-20,y:p.t,width:40,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const rows=['<b>'+lab+'</b>'];[['Betting Amount','currency'],['Payout','currency'],['RTP','percent'],['Hit Rate','percent']].forEach(([n,u])=>{const v=map[n]?.values?.[i];rows.push(n+': '+(Number.isFinite(v)?(u==='currency'?money(v):v.toFixed(2)+'%'):'--'));});tip.innerHTML=rows.join('<br>');tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  render(source); window.updateHourlyReport=function(date){if(date===source.date)render(source);};
-}());</script>
-<script>(function(){
-  const svg=document.getElementById('daily-performance-30-chart'); if(!svg)return;
-  const source=JSON.parse(document.getElementById('daily-performance-30-data').textContent), ns='http://www.w3.org/2000/svg', W=1100,H=360,p={l:70,r:70,t:28,b:78};
-  const colors={bet:'#386edb',pay:'#4fb4bd',rtp:'#f4a51c'}; const tip=document.createElement('div');tip.className='chart-tooltip';document.body.appendChild(tip); const money=v=>String.fromCharCode(8369)+Number(v).toLocaleString('en-US',{maximumFractionDigits:2});
-  function render(end){
-    const endDate=new Date(end+'T00:00:00'), rows=Object.fromEntries(source.rows.map(r=>[r.date,r])), days=[]; for(let i=0;i<30;i++){const d=new Date(endDate);d.setDate(endDate.getDate()-i);days.push(d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'));}
-    svg.replaceChildren();const add=(tag,a,text)=>{const e=document.createElementNS(ns,tag);Object.entries(a).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;svg.appendChild(e);return e}; const txt=(x,y,t,a={})=>add('text',Object.assign({x,y,fill:'#556275','font-size':10},a),t);
-    const vals=days.map(d=>rows[d]||{}), left=[...vals.flatMap(r=>[r.bet,r.pay])].filter(Number.isFinite), leftMax=Math.max(1,Math.ceil(Math.max(...left,0)/100000)*100000), pctMax=Math.max(140,Math.ceil(Math.max(source.standardRtp,...vals.map(r=>r.rtp).filter(Number.isFinite),0)/20)*20), x=i=>p.l+(W-p.l-p.r)*(i/29), yL=v=>H-p.b-(v/leftMax)*(H-p.t-p.b), yR=v=>H-p.b-(v/pctMax)*(H-p.t-p.b);
-    for(let i=0;i<=7;i++){const v=leftMax*i/7,y=yL(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(p.l-8,y+4,money(v),{'text-anchor':'end'});} for(let i=0;i<=pctMax/20;i++){const v=i*20,y=yR(v);add('line',{x1:p.l,x2:W-p.r,y1:y,y2:y,stroke:'#dce4ef'});txt(W-p.r+8,y+4,v+'%');}
-    days.forEach((d,i)=>txt(x(i),H-48,d.replaceAll('-','/').slice(5),{'text-anchor':'end','font-size':8,transform:'rotate(-55 '+x(i)+' '+(H-48)+')'}));
-    const slot=(W-p.l-p.r)/30,bw=Math.max(2,slot*.28); [['bet',colors.bet],['pay',colors.pay]].forEach(([k,c],si)=>vals.forEach((r,i)=>{const v=r[k];if(!Number.isFinite(v))return;const h=(v/leftMax)*(H-p.t-p.b);add('rect',{x:x(i)+(si-.5)*bw-bw/2,y:H-p.b-h,width:bw-1,height:Math.max(1,h),rx:2,fill:c,opacity:.92});}));
-    const pts=vals.map((r,i)=>Number.isFinite(r.rtp)?[x(i),yR(r.rtp)]:null).filter(Boolean); if(pts.length){let path='M '+pts[0].join(' ');for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i],cx=(a[0]+b[0])/2;path+=' C '+cx+' '+a[1]+' '+cx+' '+b[1]+' '+b[0]+' '+b[1];}add('path',{d:path,fill:'none',stroke:colors.rtp,'stroke-width':3,'stroke-linecap':'round'});pts.forEach(q=>add('circle',{cx:q[0],cy:q[1],r:4,fill:colors.rtp,stroke:'#fff','stroke-width':1.5}));}
-    days.forEach((d,i)=>{const hit=add('rect',{x:x(i)-slot/2,y:p.t,width:slot,height:H-p.t-p.b,fill:'transparent'});hit.addEventListener('mouseenter',()=>{const r=rows[d]||{},f=(k,u)=>Number.isFinite(r[k])?(u==='money'?money(r[k]):u==='pct'?r[k].toFixed(2)+'%':Number(r[k]).toLocaleString('en-US')):'--';tip.innerHTML='<b>'+d+'</b><br>Betting Amount: '+f('bet','money')+'<br>Payout: '+f('pay','money')+'<br>GGR: '+f('ggr','money')+'<br>Players: '+f('players')+'<br>New Players: '+f('newPlayers')+'<br>RTP: '+f('rtp','pct')+'<br>Standard RTP: '+source.standardRtp+'%';tip.style.display='block';});hit.addEventListener('mousemove',e=>{tip.style.left=e.clientX+12+'px';tip.style.top=e.clientY+12+'px';});hit.addEventListener('mouseleave',()=>tip.style.display='none');});
-  }
-  const select=document.getElementById('report-date'), dates=source.rows.map(r=>r.date).sort().reverse(); if(select){select.innerHTML=dates.map(d=>'<option value="'+d+'">'+d+'</option>').join('');select.value=dates[0];select.addEventListener('change',e=>render(e.target.value));} render(dates[0]); window.update30DayPerformance=render;
-}());</script>
+
+
 
 <style id="final-ui-repair-style">
 .report-language-toggle,.report-language-toggle *{pointer-events:auto!important}.report-language-toggle{position:relative!important;z-index:99999!important}.report-language-toggle button{position:relative!important;z-index:100000!important;cursor:pointer!important}.hourly-chart-panel .combo-chart{height:auto!important;aspect-ratio:1100/360!important}.hourly-rtp-legend .hourly-standard{display:block;flex:0 0 15px;width:15px;height:0;border-top:2px dashed #64748b}
