@@ -552,6 +552,64 @@
     .monthly-share-legend i { display: inline-block; width: 6px; height: 6px; margin-right: 4px; border-radius: 50%; }
     .legend-list { display: grid; gap: 12px; } .legend-list div { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; } .legend-list span { color: var(--muted); }
 
+    /* ---- Ring charts restyled to the reference (2026-10-09) --------------------------
+       "gusto ko yung desing ng charts is ganito": the percentage sits INSIDE each segment
+       and the ring carries a big centred total, and "yung color is dapat nag complement sa
+       dark and light background". The shared accents were tuned for the dark panel
+       (--blue #6ea8ff, --yellow #ffca64, --violet #b78cff) and wash out against white, so
+       the ring charts get their own mid-tone set that reads on BOTH: dark enough on white,
+       bright enough on navy. Redefining the variables on the ring containers means every
+       var(--blue)/var(--cyan)/var(--violet) inside them (legend dots, conic-gradient
+       stops) picks up the new hue, and nothing else on the page shifts. */
+    :is(.platform-chart, .compact-pie, .monthly-share-card, .pp-tiers .tiers-pie) {
+      --blue: #2f7fe0; --cyan: #0e9aa7; --violet: #8b5cf6;
+      --yellow: #c07a12; --red: #dd4a52; --green: #1a9a5e;
+      --ring-track: #e3eaf2;
+      position: relative;
+    }
+    html.night :is(.platform-chart, .compact-pie, .monthly-share-card, .pp-tiers .tiers-pie) {
+      --ring-track: #22364f;
+    }
+    /* The platform donuts are only 110px across, so their centre caption is kept small
+       enough that an orbiting % label never touches it. */
+    .platform-chart { --ring-lbl-size: 11px; --ring-centre: 12px; --ring-cap: 6.5px; }
+    .compact-pie { --ring-lbl-size: 10.5px; --ring-centre: 26px; }
+    /* the reference puts a big total in the middle; this is the donut that already had one */
+    .player-grid > .panel:first-child .donut-center strong { font-size: var(--ring-centre, 26px); }
+    .monthly-share-card { --ring-lbl-size: 8.5px; }
+    .pp-tiers .tiers-pie { --ring-lbl-size: 11.5px; --ring-centre: 17px; }
+    /* The arcs carry hard-coded hex strokes, so re-point them here. A presentation
+       attribute loses to any CSS rule, so no markup has to change - which matters because
+       build_v2_dashboard.py splices fresh arcs into this markup every day. */
+    :is(.platform-chart, .compact-pie, .monthly-share-card, .pp-tiers .tiers-pie) svg circle[stroke="#40d9d0"] { stroke: var(--cyan); }
+    :is(.platform-chart, .compact-pie, .monthly-share-card, .pp-tiers .tiers-pie) svg circle[stroke="#6ea8ff"] { stroke: var(--blue); }
+    :is(.platform-chart, .compact-pie, .monthly-share-card, .pp-tiers .tiers-pie) svg circle[stroke="#b78cff"] { stroke: var(--violet); }
+    :is(.platform-chart, .compact-pie, .monthly-share-card, .pp-tiers .tiers-pie) svg circle[stroke="#ffca64"] { stroke: var(--yellow); }
+    :is(.platform-chart, .compact-pie, .monthly-share-card, .pp-tiers .tiers-pie) svg circle[stroke="#ff7388"] { stroke: var(--red); }
+    :is(.platform-chart, .compact-pie, .monthly-share-card, .pp-tiers .tiers-pie) svg circle[stroke="#55d68b"] { stroke: var(--green); }
+    :is(.platform-chart, .compact-pie, .monthly-share-card, .pp-tiers .tiers-pie) svg circle[stroke="#243c55"],
+    :is(.platform-chart, .compact-pie, .monthly-share-card, .pp-tiers .tiers-pie) svg circle[stroke="#dce5ef"] { stroke: var(--ring-track); }
+    /* Spend Tier was a solid disc; the reference rings all have a hole, so give it one. */
+    .pp-tiers .tiers-donut::after {
+      content: ''; position: absolute; inset: 22%; border-radius: 50%; background: var(--panel);
+    }
+    html.night .pp-tiers .tiers-donut::after { background: linear-gradient(145deg, #142943, #0f1c2d); }
+    /* The % that rides each arc. Positioned from JS every frame so it stays locked to its
+       own wedge while the ring spins (ch-spin) and the text stays upright, and coloured
+       from the wedge it sits on so it legible on either panel. */
+    .ring-lbl {
+      position: absolute; transform: translate(-50%, -50%); z-index: 3;
+      font-size: var(--ring-lbl-size, 11px); font-weight: 800;
+      pointer-events: none; white-space: nowrap;
+      text-shadow: 0 1px 2px rgba(6, 16, 30, .3);
+    }
+    .ring-centre {
+      position: absolute; transform: translate(-50%, -50%); z-index: 3;
+      text-align: center; pointer-events: none; line-height: 1.15;
+    }
+    .ring-centre strong { display: block; font-size: var(--ring-centre, 13px); }
+    .ring-centre span { color: var(--muted); font-size: var(--ring-cap, 7.5px); letter-spacing: .04em; }
+
     .retention-row { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 12px; padding: 11px 0; border-top: 1px solid var(--line); } .retention-row:first-child { border-top: 0; padding-top: 0; }
     .retention-row strong { display: block; font-size: 12px; } .retention-row small { color: var(--muted); } .retention-value { text-align: right; font-weight: 800; }
     .spark { width: 100%; height: 28px; display: block; margin-top: 5px; }
@@ -674,7 +732,284 @@
   .monthly-row > .table-scroll > table tfoot td.positive { color: var(--green); }
   .monthly-row > .table-scroll > table tfoot th.negative,
   .monthly-row > .table-scroll > table tfoot td.negative { color: var(--red); }
-  </style>
+  
+    /* ---- animated KPI icons (preview only) ---- */
+    .header-metrics .metric-label { display: flex; align-items: center; gap: 8px; }
+    .kpi-ico { width: 21px; height: 21px; flex: 0 0 21px; display: inline-block; }
+    .kpi-ico svg { width: 100%; height: 100%; display: block; overflow: visible; }
+    .kpi-ico svg * { transform-box: fill-box; transform-origin: center; }
+    .kpi-ico.c-blue { color: #2f6fd0; } .kpi-ico.c-green { color: #1f9d5a; }
+    .kpi-ico.c-orange { color: #c97706; } .kpi-ico.c-violet { color: #7a4fd6; }
+    .kpi-ico.c-cyan { color: #0f8f8a; }
+    html.night .kpi-ico.c-blue { color: var(--blue); }
+    html.night .kpi-ico.c-green { color: var(--green); }
+    html.night .kpi-ico.c-orange { color: #f0a93c; }
+    html.night .kpi-ico.c-violet { color: var(--violet); }
+    html.night .kpi-ico.c-cyan { color: var(--cyan); }
+    @keyframes kpi-bob   { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-2.6px) } }
+    @keyframes kpi-float { 0%,100% { transform: translateY(1.6px) } 50% { transform: translateY(-2.6px) } }
+    @keyframes kpi-draw  { 0% { stroke-dashoffset: 64 } 60% { stroke-dashoffset: 0 } 100% { stroke-dashoffset: 0 } }
+    @keyframes kpi-dot   { 0%,100% { transform: scale(.75); opacity: .55 } 50% { transform: scale(1.25); opacity: 1 } }
+    @keyframes kpi-sweep { 0%,100% { transform: rotate(-26deg) } 50% { transform: rotate(26deg) } }
+    @keyframes kpi-grow  { 0%,100% { transform: scaleY(.42) } 50% { transform: scaleY(1) } }
+    .kpi-ico.coin   { animation: kpi-bob 2.8s ease-in-out infinite; }
+    .kpi-ico.payout { animation: kpi-float 3.4s ease-in-out infinite; }
+    .kpi-ico.ggr .trend { stroke-dasharray: 64; animation: kpi-draw 3.6s ease-in-out infinite; }
+    .kpi-ico.ggr .dot   { animation: kpi-dot 1.8s ease-in-out infinite; }
+    .kpi-ico.rtp .needle { animation: kpi-sweep 3.2s ease-in-out infinite; }
+    .kpi-ico.mtd .bar { animation: kpi-grow 2.6s ease-in-out infinite; }
+    .kpi-ico.mtd .bar:nth-of-type(2) { animation-delay: .16s; }
+    .kpi-ico.mtd .bar:nth-of-type(3) { animation-delay: .32s; }
+    .kpi-ico.mtd .bar:nth-of-type(4) { animation-delay: .48s; }
+    @media (prefers-reduced-motion: reduce) { .kpi-ico, .kpi-ico * { animation: none !important } }
+
+    /* ---- KPI card interior, v2: icon+label left, detail rows right-aligned ----
+       v1 gave the details their own grid COLUMN. Measured at these card widths
+       (264-334px) the big value (170px) + the MTD line (~150px) cannot share a row,
+       so the value overflowed its track and painted over the details. v2 puts every
+       element on its own row - overlap is impossible by construction - and right-aligns
+       the two detail rows so they still occupy the right-hand side of the card. */
+    .header-metrics .card { display: flex; flex-direction: column; justify-content: center;
+        align-items: flex-start; gap: 2px; }
+    .header-metrics .metric-label { display: flex; align-items: center; gap: 8px; }
+    .header-metrics .metric-subtext { align-self: flex-end; text-align: right; margin-top: 3px; }
+    .header-metrics .metric-foot { align-self: flex-end; text-align: right;
+        justify-content: flex-end; flex-wrap: wrap; gap: 2px 10px; margin-top: 3px; }
+    /* each delta stays whole: the line may wrap BETWEEN deltas (right-aligned) but never
+       mid-phrase, which is what produced "…vs prior / day" and "WoW ↑ 1.46 / pp" */
+    .header-metrics .metric-foot span { white-space: nowrap; }
+    @media (max-width: 1699px) {
+      /* the RTP card carries the longest pair ("↑ 0.86 pp vs prior day" + "WoW ↑ 1.46 pp");
+         at 217px cards it wrapped to two lines and made that card taller inside than its
+         siblings. 10.5px is above this dashboard's existing 9px precedent, and 6px gap buys
+         back the ~14px needed to keep all five cards uniform. */
+      .header-metrics .metric-foot { gap: 2px 6px; font-size: 10.5px; }
+    }
+    @media (max-width: 1599px) {
+      /* the 21px icon makes the label line taller than the plain-text label and ate 4px
+         of the fixed 128px card, so give it back: 17px icon + tighter label line-height */
+      .kpi-ico { width: 17px; height: 17px; flex: 0 0 17px; }
+      .header-metrics .metric-label { line-height: 1.15; }
+    }
+
+    /* ---- sub-card icons: INLINE IN THE TITLE, one colour per metric (2026-10-09) ----
+       Placement is user-locked: the icon sits right after the title text. The title is a
+       flex row and the icon is a fixed 13px box, so the title's 13.8px text line stays
+       the tallest item in that row and the sub-card keeps its exact current height
+       (measured: row 114px before and after, delta 0, no title wraps). */
+    .small-grid .submetric-head .metric-label { display: flex; align-items: center;
+        gap: 4px; min-width: 0; }
+    .small-grid .submetric-ico { display: block; flex: 0 0 13px; width: 13px; height: 13px; }
+    /* the title text must never wrap - the icon eats 17px of a ~118px title line, and a
+       second line would push that card past its neighbours. (v1 had this selector pointing
+       at .submetric-ico .label-text, i.e. a child that does not exist, so it never applied;
+       no wrap happened anyway, but the rule now actually does what it says.) */
+    .small-grid .submetric-head .metric-label .label-text { white-space: nowrap; }
+    .small-grid .submetric-ico svg { width: 100%; height: 100%; display: block; overflow: visible; }
+    .small-grid .submetric-ico.c-blue { color: #2f6fd0; }
+    html.night .small-grid .submetric-ico.c-blue { color: #6ea8ff; }
+    .small-grid .submetric-ico.c-gold { color: #9a7412; }
+    html.night .small-grid .submetric-ico.c-gold { color: #ffd24d; }
+    .small-grid .submetric-ico.c-green { color: #248a4a; }
+    html.night .small-grid .submetric-ico.c-green { color: #5fd88a; }
+    .small-grid .submetric-ico.c-magenta { color: #a83f8f; }
+    html.night .small-grid .submetric-ico.c-magenta { color: #ff88d8; }
+    .small-grid .submetric-ico.c-cyan { color: #0e8b9c; }
+    html.night .small-grid .submetric-ico.c-cyan { color: #46cfe8; }
+    .small-grid .submetric-ico.c-orange { color: #b3610f; }
+    html.night .small-grid .submetric-ico.c-orange { color: #ff9d4d; }
+    .small-grid .submetric-ico.c-violet { color: #7a4fd6; }
+    html.night .small-grid .submetric-ico.c-violet { color: #b394ff; }
+    .small-grid .submetric-ico.c-rose { color: #bf4a63; }
+    html.night .small-grid .submetric-ico.c-rose { color: #ff8fa8; }
+    .small-grid .submetric-ico.c-lime { color: #5f8f12; }
+    html.night .small-grid .submetric-ico.c-lime { color: #a8e05f; }
+    .small-grid .submetric-ico svg * { transform-box: fill-box; transform-origin: center; }
+    .small-grid .submetric-ico.a-loop svg    { animation: kpi-spin 9s linear infinite; }
+    .small-grid .submetric-ico.a-people svg  { animation: kpi-bob 3.4s ease-in-out infinite; }
+    .small-grid .submetric-ico.a-new svg     { animation: kpi-pop 2.8s ease-in-out infinite; }
+    .small-grid .submetric-ico.a-wallet svg  { animation: kpi-bob 3.0s ease-in-out .3s infinite; }
+    .small-grid .submetric-ico.a-receipt svg { animation: kpi-float 3.6s ease-in-out infinite; }
+    .small-grid .submetric-ico.a-trophy svg  { animation: kpi-pop 3.2s ease-in-out infinite; }
+    .small-grid .submetric-ico.a-bolt svg    { animation: kpi-pop 2.4s ease-in-out infinite; }
+    .small-grid .submetric-ico.a-stack svg   { animation: kpi-bob 3.2s ease-in-out .2s infinite; }
+    .small-grid .submetric-ico.a-return svg  { animation: kpi-spin 12s linear infinite; }
+    @media (prefers-reduced-motion: reduce) {
+      .small-grid .submetric-ico svg { animation: none !important }
+    }
+
+    /* ---- chart motion (2026-10-09) ----
+       Rings spin forever; bars and lines draw in once on load (see the module docstring:
+       a looping grow would periodically display 0 as the value). */
+    @keyframes ch-spin  { to { transform: rotate(360deg) } }
+    @keyframes ch-growY { from { transform: scaleY(.02) } to { transform: scaleY(1) } }
+    @keyframes ch-growX { from { transform: scaleX(.02) } to { transform: scaleX(1) } }
+    @keyframes ch-draw  { from { stroke-dashoffset: 200 } to { stroke-dashoffset: 0 } }
+
+    .mini-donut { animation: ch-spin 26s linear infinite; }
+    .compact-pie .donut-wrap > svg { animation: ch-spin 44s linear infinite; }
+    .monthly-share-card svg { animation: ch-spin 34s linear infinite; }
+    .tiers-donut { animation: ch-spin 44s linear infinite; }
+
+    /* Bars keyframe the transform, never the measured length: a looping grow would show
+       the value as 0 several times a minute, which an audited page cannot do. */
+    .bar-fill, .mini-bar > i { transform-origin: left center; }
+    .denom-svg rect { transform-box: fill-box; transform-origin: left center; }
+    .eng-svg rect, .tall-svg rect { transform-box: fill-box; transform-origin: bottom; }
+
+    /* ARMED BY .bars-live, added by barMotion() while a chart is on screen and dropped
+       when it leaves. The draw-in used to run at page load, so scrolling down to a bar
+       chart showed every bar already grown. Now the bars draw in as you reach them and
+       again each time you scroll back. Dropping the class only ever leaves a bar at its
+       true length, so a chart that is never observed still reads correctly. */
+    .bars-live .bar-fill,
+    .bars-live .mini-bar > i { animation: ch-growX .9s cubic-bezier(.2,.7,.3,1) both; }
+    .bars-live.denom-svg rect:not(.bar-shine),
+    .bars-live.eng-svg rect:not(.bar-shine) { animation: ch-growY .9s cubic-bezier(.2,.7,.3,1) both; }
+    .bars-live.denom-svg rect:not(.bar-shine) { animation-name: ch-growX; }
+    .bars-live.tall-svg rect {
+        animation: ch-growY .9s cubic-bezier(.2,.7,.3,1) both,
+                   ch-wave 2.8s ease-in-out infinite;
+    }
+    .spark polyline {
+        stroke-dasharray: 200;
+        animation: ch-draw 1.4s ease-out both;
+    }
+
+    /* ---- CONTINUOUS bar movement (2026-10-09: "ng mga bar sa dashboard, gusto ko may
+       movement din") ----
+       A travelling highlight, deliberately NOT a re-grow loop. Animating the bar's LENGTH
+       in a loop would claim the value was 0 several times a minute; sliding a highlight
+       across a bar leaves its measured length untouched at every instant, so the bar is
+       never briefly wrong. This is the one way to run forever on a page whose numbers are
+       audited. The entrance above still runs once; these two never stop. */
+    @keyframes ch-sheen { from { background-position: -60% 0 } to { background-position: 160% 0 } }
+    @keyframes ch-wave  { 0%, 100% { opacity: .55 } 50% { opacity: 1 } }
+
+    .bar-fill, .mini-bar > i { position: relative; overflow: hidden; }
+    .bar-fill::after, .mini-bar > i::after {
+        content: ""; position: absolute; inset: 0; pointer-events: none;
+        background-image: linear-gradient(90deg, transparent, rgba(255,255,255,.78), transparent);
+        background-size: 38% 100%; background-repeat: no-repeat;
+    }
+    .bars-live .bar-fill::after,
+    .bars-live .mini-bar > i::after { animation: ch-sheen 3.2s linear infinite; }
+    /* stagger by ROW so the highlight travels down the panel rather than blinking in
+       unison. The fills are only children of their own track, so the offset has to come
+       from the row, not from :nth-child on the fill itself. */
+    .dynamic-item:nth-child(2) .bar-fill { animation-delay: .08s }
+    .dynamic-item:nth-child(3) .bar-fill { animation-delay: .16s }
+    .dynamic-item:nth-child(4) .bar-fill { animation-delay: .24s }
+    .dynamic-item:nth-child(5) .bar-fill { animation-delay: .32s }
+    .dynamic-item:nth-child(2) .bar-fill::after { animation-delay: .14s }
+    .dynamic-item:nth-child(3) .bar-fill::after { animation-delay: .28s }
+    .dynamic-item:nth-child(4) .bar-fill::after { animation-delay: .42s }
+    .dynamic-item:nth-child(5) .bar-fill::after { animation-delay: .56s }
+    .dynamic-item:nth-child(6) .bar-fill::after { animation-delay: .70s }
+    .dynamic-item:nth-child(7) .bar-fill::after { animation-delay: .84s }
+    tbody tr:nth-child(2) .mini-bar > i::after { animation-delay: .14s }
+    tbody tr:nth-child(3) .mini-bar > i::after { animation-delay: .28s }
+    tbody tr:nth-child(4) .mini-bar > i::after { animation-delay: .42s }
+    tbody tr:nth-child(5) .mini-bar > i::after { animation-delay: .56s }
+    tbody tr:nth-child(6) .mini-bar > i::after { animation-delay: .70s }
+    tbody tr:nth-child(7) .mini-bar > i::after { animation-delay: .84s }
+    tbody tr:nth-child(8) .mini-bar > i::after { animation-delay: .98s }
+
+    /* The tall charts' bars are vertical and sit under two trend lines, so a light wave
+       sweeping across the series reads well there - also length-preserving, also
+       continuous. Two animations on two properties: transform for the one-shot draw-in,
+       opacity for the wave. The delay list is comma-matched to the shorthand (entrance 0s,
+       wave staggered). The flat-bar charts get a light per bar instead - see .bar-shine. */
+    .tall-svg rect:nth-of-type(6n+1) { animation-delay: 0s, 0s }
+    .tall-svg rect:nth-of-type(6n+2) { animation-delay: 0s, .18s }
+    .tall-svg rect:nth-of-type(6n+3) { animation-delay: 0s, .36s }
+    .tall-svg rect:nth-of-type(6n+4) { animation-delay: 0s, .54s }
+    .tall-svg rect:nth-of-type(6n+5) { animation-delay: 0s, .72s }
+    .tall-svg rect:nth-of-type(6n) { animation-delay: 0s, .90s }
+
+    /* ---- a light along each flat bar (2026-10-09) ------------------------------
+       The denomination and engagement bars are SVG, and an SVG shape cannot carry a
+       ::after, so they cannot use the sliding highlight the row bars have. Each bar gets
+       one highlight rect of its own instead, added by barShine(), sized to that bar and
+       swept along the bar's own axis. It is never larger than its bar, and it moves only
+       its own opacity and transform, so the bar's measured length is the real value in
+       every frame. A bar too short for a light to travel in is left alone. */
+    @keyframes bar-shine-x {
+        0%   { transform: translateX(0); opacity: 0 }
+        14%  { opacity: .6 }
+        72%  { opacity: .6 }
+        86%  { opacity: 0 }
+        100% { transform: translateX(var(--travel)); opacity: 0 }
+    }
+    @keyframes bar-shine-y {
+        0%   { transform: translateY(0); opacity: 0 }
+        14%  { opacity: .6 }
+        72%  { opacity: .6 }
+        86%  { opacity: 0 }
+        100% { transform: translateY(var(--travel)); opacity: 0 }
+    }
+    .bar-shine { opacity: 0; pointer-events: none; }
+    .bars-live .bar-shine { animation: bar-shine-x 2.4s ease-in-out infinite; }
+    .bars-live.eng-svg .bar-shine { animation-name: bar-shine-y; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .mini-donut, .compact-pie .donut-wrap > svg, .monthly-share-card svg, .tiers-donut,
+      .bar-fill, .mini-bar > i, .denom-svg rect, .eng-svg rect, .tall-svg rect,
+      .spark polyline, .spark circle.tp-dot { animation: none !important; transform: none !important; }
+      .bar-fill::after, .mini-bar > i::after { animation: none !important; }
+    }
+
+    /* ---- trend-line flow + blinking peak markers (2026-10-09) ---- */
+    /* 1000 is the normalised path length every flow polyline declares via pathLength, so
+       one pass sweeps the dash from end to end with no stretch where the light is off-path. */
+    @keyframes tp-dash  { from { stroke-dashoffset: 1000 } to { stroke-dashoffset: 0 } }
+    @keyframes tp-blink { 0%, 100% { opacity: 1 } 50% { opacity: .16 } }
+    @keyframes tp-halo  { 0%, 100% { opacity: .30 } 50% { opacity: .04 } }
+
+    /* 70 of ink then a 930 gap = exactly one lap of the normalised (pathLength="1000") path,
+       so the light is on the line for the whole cycle. The original 70 2000 tiled once over
+       2070 units of a ~950-1270 unit path, which left the light off-path for 40-58% of every
+       pass: it vanished mid-line and restarted instead of flowing. */
+    .tp-flow { stroke-dasharray: 70 930; animation: tp-dash 4.6s linear infinite; }
+    /* Second light, on the Players trace: same pass, half a cycle behind, so the two
+       read as independent flows rather than one light hopping between lines. */
+    .tp-flow.alt { animation-delay: -2.3s; }
+    /* The glint is white in the NIGHT theme, where it pops off the dark panel. The page
+       SHIPS LIGHT (see the night-mode block above), and there a white dash paints the
+       line it rides pure white - measured: the green trace goes (85,214,139) ->
+       (255,255,255), the panel's own colour - so instead of reading as a light it reads
+       as the trendline being cut. In the default theme the travelling dash therefore
+       takes an ink version of its own line's hue, which is legible on white and still
+       unmistakably a current running along the trace. */
+    .tp-flow     { stroke: var(--tp-ink, #0a7a45); }
+    .tp-flow.alt { stroke: #c2185b; }
+    /* Third trace - the 30-day D1 retention line (orange): same half-cycle offset, ink of
+       its own hue so it stays legible on the default white panel. */
+    .tp-flow.d1  { animation-delay: -2.3s; stroke: #9a5200; }
+    html.night .tp-flow, html.night .tp-flow.alt, html.night .tp-flow.d1 { stroke: #ffffff; }
+    .tp-blink { animation: tp-blink 1.5s ease-in-out infinite; }
+    .tp-halo  { animation: tp-halo 1.5s ease-in-out infinite; }
+
+    /* ---- Player Retention sparklines, 2026-10-09: "may line, lagyan mo ng movements
+       tapos may dot din... nagalaw din yung dots" ------------------------------------
+       Same travelling current, but a sparkline renders ~160px wide, so the dash takes 15%
+       of the lap instead of 7% or the light is too short to read at that size. Note
+       `.spark polyline` is (0,1,1) and outranks `.tp-flow` at (0,1,0), so this rule has to
+       name both or the spark's entrance draw (ch-draw, dasharray 200) wins instead. */
+    .spark polyline.tp-flow { stroke-dasharray: 150 850; animation: tp-dash 4.6s linear infinite; }
+    /* A dot on every data point of the sparkline, pulsing in sequence - the lit dot runs
+       point to point in step with the current (same 4.6s lap), so the row reads as
+       travelling rather than merely blinking. Base opacity keeps them visible when the
+       animation is off. */
+    @keyframes tp-dot { 0%, 100% { opacity: .25 } 28% { opacity: 1 } }
+    .spark circle.tp-dot { animation: tp-dot 4.6s ease-in-out infinite; }
+
+    @media (prefers-reduced-motion: reduce) {
+      /* HIDDEN, not frozen - see the module docstring. */
+      .tp-flow { display: none !important; }
+      .tp-blink, .tp-halo { animation: none !important; }
+    }
+</style>
   <script>
     /* Night mode is applied before first paint so a returning visitor who
        chose it never sees a flash of the light theme. */
@@ -724,21 +1059,21 @@
       <div class="header-right">
         <div class="header-section-head"><div><h2>General Operation Data</h2><p>Daily snapshot · BP1 / Banana Craze</p></div><span class="tag"><i class="dot positive"></i>Report generated</span></div>
         <div class="grid big-grid header-metrics" aria-label="Main operating metrics">
-          <article class="panel pad card accent-blue"><div class="metric-label">Bet Amount</div><div class="metric-value">₱390,248.00</div><div class="metric-subtext">October MTD ₱4,613,161.00</div><div class="metric-foot"><span class="warning">↓ 25.1% DoD</span><span class="warning">WoW ↓ 48.8%</span></div></article>
-          <article class="panel pad card accent-green"><div class="metric-label">Payout</div><div class="metric-value">₱385,499.87</div><div class="metric-subtext">October MTD ₱4,604,214.74</div><div class="metric-foot"><span class="warning">↓ 24.5% DoD</span><span class="warning">WoW ↓ 48.0%</span></div></article>
-          <article class="panel pad card accent-orange"><div class="metric-label">GGR</div><div class="metric-value positive">₱4,748.13</div><div class="metric-subtext">October MTD ₱8,946.26</div><div class="metric-foot"><span class="warning">↓ 56.1% DoD</span><span class="warning">WoW ↓ 76.7%</span></div></article>
-          <article class="panel pad card accent-violet"><div class="metric-label">RTP</div><div class="metric-value positive">98.78%</div><div class="metric-subtext">October MTD average 99.81%</div><div class="metric-foot"><span class="positive">↑ 0.86 pp vs prior day</span><span class="positive">WoW ↑ 1.46 pp</span></div></article>
-          <article class="panel pad card accent-cyan"><div class="metric-label">MTD GGR</div><div class="metric-value positive">₱8,946.26</div><div class="metric-subtext">October 1–8 · per-site archive</div><div class="metric-foot"><span class="positive">Sep MTD ₱312,114.13</span></div></article>
+          <article class="panel pad card accent-blue"><div class="metric-label"><span class="kpi-ico coin c-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="7.5" rx="7.2" ry="3.4" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.8 7.5v9c0 1.9 3.2 3.4 7.2 3.4s7.2-1.5 7.2-3.4v-9" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.8 12c0 1.9 3.2 3.4 7.2 3.4s7.2-1.5 7.2-3.4" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Bet Amount</div><div class="metric-value">₱390,248.00</div><div class="metric-subtext">October MTD ₱4,613,161.00</div><div class="metric-foot"><span class="warning">↓ 25.1% DoD</span><span class="warning">WoW ↓ 48.8%</span></div></article>
+          <article class="panel pad card accent-green"><div class="metric-label"><span class="kpi-ico payout c-green" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 16.4V7.6" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.4 11.2 12 7.6l3.6 3.6" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Payout</div><div class="metric-value">₱385,499.87</div><div class="metric-subtext">October MTD ₱4,604,214.74</div><div class="metric-foot"><span class="warning">↓ 24.5% DoD</span><span class="warning">WoW ↓ 48.0%</span></div></article>
+          <article class="panel pad card accent-orange"><div class="metric-label"><span class="kpi-ico ggr c-orange" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 19.4h18" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><polyline class="trend" points="3.6,16.2 8.4,11.4 12.4,14.2 20.4,5.6" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle class="dot" cx="20.4" cy="5.6" r="2" fill="currentColor" stroke="none"/></svg></span>GGR</div><div class="metric-value positive">₱4,748.13</div><div class="metric-subtext">October MTD ₱8,946.26</div><div class="metric-foot"><span class="warning">↓ 56.1% DoD</span><span class="warning">WoW ↓ 76.7%</span></div></article>
+          <article class="panel pad card accent-violet"><div class="metric-label"><span class="kpi-ico rtp c-violet" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3.4 18.2a9.4 9.4 0 1 1 17.2 0" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path class="needle" d="M12 18.2 16.4 11" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="18.2" r="1.5" fill="currentColor" stroke="none"/></svg></span>RTP</div><div class="metric-value positive">98.78%</div><div class="metric-subtext">October MTD average 99.81%</div><div class="metric-foot"><span class="positive">↑ 0.86 pp vs prior day</span><span class="positive">WoW ↑ 1.46 pp</span></div></article>
+          <article class="panel pad card accent-cyan"><div class="metric-label"><span class="kpi-ico mtd c-cyan" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 20.4h18" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><rect class="bar" x="4.6" y="12.6" width="3.4" height="7.8" rx="1.1" fill="currentColor" stroke="none"/><rect class="bar" x="10.3" y="8.6" width="3.4" height="11.8" rx="1.1" fill="currentColor" stroke="none"/><rect class="bar" x="16" y="5.2" width="3.4" height="15.2" rx="1.1" fill="currentColor" stroke="none"/></svg></span>MTD GGR</div><div class="metric-value positive">₱8,946.26</div><div class="metric-subtext">October 1–8 · per-site archive</div><div class="metric-foot"><span class="positive">Sep MTD ₱312,114.13</span></div></article>
         </div>
         <div class="grid small-grid">
-          <article class="panel pad card"><div class="submetric-head"><div class="metric-label">Total Rounds</div><div class="submetric-dod warning"></div></div><div class="submetric-main"><div class="metric-value">56,130</div><div class="submetric-wow">DoD ↓ 3.0%<br><span class="warning">WoW ↓ 45.5%</span></div></div><div class="submetric-monthly">MTD 648,882</div></article>
-          <article class="panel pad card"><div class="submetric-head"><div class="metric-label">Players</div><div class="submetric-dod warning"></div></div><div class="submetric-main"><div class="metric-value">1,024</div><div class="submetric-wow">DoD ↓ 8.1%<br><span class="warning">WoW ↓ 41.9%</span></div></div><div class="submetric-monthly">MTD 9,951</div></article>
-          <article class="panel pad card"><div class="submetric-head"><div class="metric-label">New Players</div><div class="submetric-dod warning"></div></div><div class="submetric-main"><div class="metric-value">592</div><div class="submetric-wow">DoD ↓ 8.4%<br><span class="warning">WoW —</span></div></div><div class="submetric-monthly">MTD —</div></article>
-          <article class="panel pad card"><div class="submetric-head"><div class="metric-label">ABPU</div><div class="submetric-dod warning"></div></div><div class="submetric-main"><div class="metric-value">₱381.10</div><div class="submetric-wow">DoD ↓ 18.6%<br><span class="warning">WoW ↓ 11.9%</span></div></div><div class="submetric-monthly">MTD ₱463.59</div></article> <article class="panel pad card"><div class="submetric-head"><div class="metric-label">ARPP</div><div class="submetric-dod positive"></div></div><div class="submetric-main"><div class="metric-value">54.81</div><div class="submetric-wow">DoD ↑ 5.5%<br><span class="warning">WoW ↓ 6.3%</span></div></div><div class="submetric-monthly">MTD 65.21</div></article>
-          <article class="panel pad card"><div class="submetric-head"><div class="metric-label">Max Payout</div><div class="submetric-dod positive"></div></div><div class="submetric-main"><div class="metric-value">₱8,550</div><div class="submetric-wow">DoD ↑ 42.5%<br><span class="warning">WoW —</span></div></div><div class="submetric-monthly">MTD ₱40,000</div></article>
-          <article class="panel pad card"><div class="submetric-head"><div class="metric-label">Max Multiplier</div><div class="submetric-dod warning"></div></div><div class="submetric-main"><div class="metric-value">150x</div><div class="submetric-wow">DoD ↓ 40.0%<br><span class="warning">WoW —</span></div></div><div class="submetric-monthly">MTD 750x</div></article>
-          <article class="panel pad card"><div class="submetric-head"><div class="metric-label">Max Bet</div><div class="submetric-dod positive"></div></div><div class="submetric-main"><div class="metric-value">₱4,000</div><div class="submetric-wow">DoD ↑ 100.0%<br><span class="warning">WoW —</span></div></div><div class="submetric-monthly">MTD —</div></article>
-          <article class="panel pad card"><div class="submetric-head"><div class="metric-label">D1 Retention</div><div class="submetric-dod positive"></div></div><div class="submetric-main"><div class="metric-value">7.45%</div><div class="submetric-wow">DoD ↑ 0.93 pp<br><span class="warning">WoW —</span></div></div><div class="submetric-monthly">MTD —</div></article>
+          <article class="panel pad card"><div class="submetric-head"><div class="metric-label"><span class="label-text">Total Rounds</span><span class="submetric-ico a-loop c-blue" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4.2 12a7.8 7.8 0 0 1 13.3-5.5" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M19.8 12a7.8 7.8 0 0 1-13.3 5.5" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.6 3.1v3.5h-3.5" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M6.4 20.9v-3.5h3.5" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="submetric-dod warning"></div></div><div class="submetric-main"><div class="metric-value">56,130</div><div class="submetric-wow">DoD ↓ 3.0%<br><span class="warning">WoW ↓ 45.5%</span></div></div><div class="submetric-monthly">MTD 648,882</div></article>
+          <article class="panel pad card"><div class="submetric-head"><div class="metric-label"><span class="label-text">Players</span><span class="submetric-ico a-people c-gold" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.4 19.4c0-3 2.5-5 5.6-5s5.6 2 5.6 5" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M15.9 7.2a3 3 0 0 1 0 5.6" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.2 14.9c2 .6 3.4 2.3 3.4 4.5" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="submetric-dod warning"></div></div><div class="submetric-main"><div class="metric-value">1,024</div><div class="submetric-wow">DoD ↓ 8.1%<br><span class="warning">WoW ↓ 41.9%</span></div></div><div class="submetric-monthly">MTD 9,951</div></article>
+          <article class="panel pad card"><div class="submetric-head"><div class="metric-label"><span class="label-text">New Players</span><span class="submetric-ico a-new c-green" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10" cy="8.4" r="3.4" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M4.4 19.6c0-3.1 2.6-5.2 5.8-5.2.9 0 1.8.2 2.6.5" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.6 14.4v6" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M14.6 17.4h6" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="submetric-dod warning"></div></div><div class="submetric-main"><div class="metric-value">592</div><div class="submetric-wow">DoD ↓ 8.4%<br><span class="warning">WoW —</span></div></div><div class="submetric-monthly">MTD —</div></article>
+          <article class="panel pad card"><div class="submetric-head"><div class="metric-label"><span class="label-text">ABPU</span><span class="submetric-ico a-wallet c-magenta" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3.4" y="6.6" width="17.2" height="12.8" rx="2.4" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.4 10.6h17.2" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16.4" cy="15.2" r="1.2" fill="currentColor" stroke="none"/></svg></span></div><div class="submetric-dod warning"></div></div><div class="submetric-main"><div class="metric-value">₱381.10</div><div class="submetric-wow">DoD ↓ 18.6%<br><span class="warning">WoW ↓ 11.9%</span></div></div><div class="submetric-monthly">MTD ₱463.59</div></article> <article class="panel pad card"><div class="submetric-head"><div class="metric-label"><span class="label-text">ARPP</span><span class="submetric-ico a-receipt c-cyan" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3.6h12v16.8l-3-2-3 2-3-2-3 2z" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.4 9h5.2" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.4 12.6h5.2" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="submetric-dod positive"></div></div><div class="submetric-main"><div class="metric-value">54.81</div><div class="submetric-wow">DoD ↑ 5.5%<br><span class="warning">WoW ↓ 6.3%</span></div></div><div class="submetric-monthly">MTD 65.21</div></article>
+          <article class="panel pad card"><div class="submetric-head"><div class="metric-label"><span class="label-text">Max Payout</span><span class="submetric-ico a-trophy c-orange" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4.6h10v3.6a5 5 0 0 1-10 0z" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 6.2H4.6v1.4A3.4 3.4 0 0 0 8 11" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 6.2h2.4v1.4A3.4 3.4 0 0 1 16 11" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 13.2v3.4" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M8.8 19.4h6.4" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="submetric-dod positive"></div></div><div class="submetric-main"><div class="metric-value">₱8,550</div><div class="submetric-wow">DoD ↑ 42.5%<br><span class="warning">WoW —</span></div></div><div class="submetric-monthly">MTD ₱40,000</div></article>
+          <article class="panel pad card"><div class="submetric-head"><div class="metric-label"><span class="label-text">Max Multiplier</span><span class="submetric-ico a-bolt c-violet" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13.4 2.6 5.8 13.4h5l-1.2 8 7.6-10.8h-5z" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="submetric-dod warning"></div></div><div class="submetric-main"><div class="metric-value">150x</div><div class="submetric-wow">DoD ↓ 40.0%<br><span class="warning">WoW —</span></div></div><div class="submetric-monthly">MTD 750x</div></article>
+          <article class="panel pad card"><div class="submetric-head"><div class="metric-label"><span class="label-text">Max Bet</span><span class="submetric-ico a-stack c-rose" aria-hidden="true"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="7" rx="6.6" ry="3" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 7v4.4c0 1.7 3 3 6.6 3s6.6-1.3 6.6-3V7" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M5.4 11.4V15.8c0 1.7 3 3 6.6 3s6.6-1.3 6.6-3v-4.4" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="submetric-dod positive"></div></div><div class="submetric-main"><div class="metric-value">₱4,000</div><div class="submetric-wow">DoD ↑ 100.0%<br><span class="warning">WoW —</span></div></div><div class="submetric-monthly">MTD —</div></article>
+          <article class="panel pad card"><div class="submetric-head"><div class="metric-label"><span class="label-text">D1 Retention</span><span class="submetric-ico a-return c-lime" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-3.2-6.4" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M20.4 4.2v4.2h-4.2" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="2.2" stroke="currentColor" fill="none" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div><div class="submetric-dod positive"></div></div><div class="submetric-main"><div class="metric-value">7.45%</div><div class="submetric-wow">DoD ↑ 0.93 pp<br><span class="warning">WoW —</span></div></div><div class="submetric-monthly">MTD —</div></article>
         </div>
       </div>
     </header>
@@ -837,7 +1172,7 @@
             <div class="alert-row"><div><strong>GGR Status</strong><small>Positive daily GGR ₱4,748.13</small></div><span class="status ok">Healthy</span></div>
             <div class="alert-row"><div><strong>RTP Status</strong><small>98.78% vs target ≈ 98.3%</small></div><span class="status ok">Healthy</span></div>
             <div class="alert-row"><div style="min-width:0"><strong>Top Winning Player Alerts</strong><small>No high-multiplier win reached the alert threshold.</small></div><span class="status ok">Clear</span></div>
-            <div class="incident-notes"><strong>Notes</strong><p>Fuse-breaker GC notifications were not scanned for this date.</p></div>
+            <div class="incident-notes"><strong>Notes</strong><p>No incident report or important operational note recorded for this date.</p></div>
           </div>
           </div>
       </div>
@@ -1177,6 +1512,10 @@
         });
         const points = rtp.map((value, i) => `${x(i)},${yRtp(value)}`).join(' ');
         hourly.appendChild(make('polyline', { points, fill: 'none', stroke: '#55d68b', 'stroke-width': 2.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+        // Travelling highlight along the RTP trendline. A SECOND polyline with identical
+        // points over the real one: the trend never moves, only a light travels through
+        // it. Hidden entirely under prefers-reduced-motion (see the stylesheet).
+        hourly.appendChild(make('polyline', { points, fill: 'none', stroke: '#ffffff', 'stroke-width': 2.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'pathLength': '1000', 'class': 'tp-flow' }));
         rtp.forEach((value, i) => {
           const point = make('circle', { cx: x(i), cy: yRtp(value), r: 3.5, fill: '#55d68b' });
           setTip(point, `<b>${hours[i]}</b><br>RTP: ${value.toFixed(1)}%`, `<b>${hours[i]}</b><br>RTP：${value.toFixed(1)}%`);
@@ -1187,11 +1526,33 @@
         // can cross without either reading as wrong.
         const playerPoints = hourPlayers.map((value, i) => `${x(i)},${yPlayers(value)}`).join(' ');
         hourly.appendChild(make('polyline', { points: playerPoints, fill: 'none', stroke: '#ff79c6', 'stroke-width': 2.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+        // Travelling highlight along the Players trace - the same treatment as the RTP
+        // line above, so BOTH trendlines on this chart are alive, not just RTP. Offset
+        // half a cycle (see .tp-flow.alt) so the two lights do not move as one. Appended
+        // before the player dots so the dots still sit on top, and hidden entirely under
+        // prefers-reduced-motion by the same rule that hides the RTP light.
+        hourly.appendChild(make('polyline', { points: playerPoints, fill: 'none', stroke: '#ffffff', 'stroke-width': 2.5, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'pathLength': '1000', 'class': 'tp-flow alt' }));
         hourPlayers.forEach((value, i) => {
           const point = make('circle', { cx: x(i), cy: yPlayers(value), r: 3.5, fill: '#ff79c6' });
           setTip(point, `<b>${hours[i]}</b><br>Players: ${intFmt(value)}<br>Rounds: ${intFmt(hourRounds[i])}`, `<b>${hours[i]}</b><br>玩家数：${intFmt(value)}<br>回合数：${intFmt(hourRounds[i])}`);
           hourly.appendChild(point);
         });
+        // --- blinking peaks: highest RTP hour + busiest hour -----------------
+        // The index comes from the DATA, never a hard-coded hour, so a rebuild on another
+        // day marks that day's peak. Each marker carries a hover card like every other
+        // point on this chart.
+        const peakHr = (series, yOf, colour, en, cn, unit) => {
+          const i = series.indexOf(Math.max(...series));
+          const cx = x(i), cy = yOf(series[i]);
+          const v = unit === '%' ? `${series[i].toFixed(1)}%` : intFmt(series[i]);
+          hourly.appendChild(make('circle', { cx, cy, r: 9, fill: colour, opacity: .3, 'class': 'tp-halo' }));
+          const dot = make('circle', { cx, cy, r: 5.2, fill: colour, stroke: '#ffffff', 'stroke-width': 1.6, 'class': 'tp-blink' });
+          setTip(dot, `<b>Highest ${en} \u00b7 ${hours[i]}</b><br>${en}: ${v}`,
+                      `<b>\u6700\u9ad8${cn} \u00b7 ${hours[i]}</b><br>${cn}\uff1a${v}`);
+          hourly.appendChild(dot);
+        };
+        peakHr(hourPlayers, yPlayers, '#ff79c6', 'Players', '\u73a9\u5bb6\u6570', '');
+        peakHr(rtp, yRtp, '#55d68b', 'RTP', 'RTP', '%');
         const thresholdY = yRtp(98.3);
         hourly.appendChild(make('line', { x1: pad.l, y1: thresholdY, x2: W - pad.r, y2: thresholdY, stroke: '#f2a65a', 'stroke-width': 2, 'stroke-dasharray': '7 6' }));
         drawLabel(hourly, W - 150, thresholdY - 7, '98.3% target', { fill: '#f2a65a', 'font-size': 9 });
@@ -1250,11 +1611,22 @@
           setTip(bar, `<b>${dates[i]}</b><br>Payout: ${pesoFmt(payoutPhp30[i])}`, `<b>${dates[i]}</b><br>派彩：${pesoFmt(payoutPhp30[i])}`);
           thirtyDay.appendChild(bar);
         });
-        thirtyDay.appendChild(make('polyline', { points: rtp.map((value, i) => `${x(i)},${yRtp(value)}`).join(' '), fill: 'none', stroke: '#55d68b', 'stroke-width': 2.3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
-        thirtyDay.appendChild(make('polyline', { points: d1Retention.map((value, i) => `${x(i)},${yRetention(value)}`).join(' '), fill: 'none', stroke: '#f2a65a', 'stroke-width': 2.3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }));
+        // Both 30-day trendlines carry the same travelling current as the hourly chart.
+        // Each flow is a SECOND polyline with points identical to its own trace, laid over
+        // it, so the trend itself can never move or reshape - only a light runs through it.
+        // pathLength normalises the dash maths to 1000 units whatever the real path length
+        // is (see the tp-dash keyframes); without it the light falls off the end mid-cycle.
+        const rtp30 = rtp.map((value, i) => `${x(i)},${yRtp(value)}`).join(' ');
+        const d1_30  = d1Retention.map((value, i) => `${x(i)},${yRetention(value)}`).join(' ');
+        const trace30 = (points, stroke) => make('polyline', { points, fill: 'none', stroke, 'stroke-width': 2.3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+        const flow30  = (points, cls) => make('polyline', { points, fill: 'none', stroke: '#ffffff', 'stroke-width': 2.3, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', 'pathLength': '1000', 'class': cls });
+        thirtyDay.appendChild(trace30(rtp30, '#55d68b'));
+        thirtyDay.appendChild(flow30(rtp30, 'tp-flow'));     // RTP - same green ink as the hourly chart
+        thirtyDay.appendChild(trace30(d1_30, '#f2a65a'));
+        thirtyDay.appendChild(flow30(d1_30, 'tp-flow d1'));  // D1 retention - orange ink, half a cycle behind
         [rtp, d1Retention].forEach((series, seriesIndex) => series.forEach((value, i) => {
           const isRtpChange = !seriesIndex && dates[i] === 'Sep 18';
-          const point = make('circle', { cx: x(i), cy: seriesIndex ? yRetention(value) : yRtp(value), r: isRtpChange ? 4.8 : 2.4, fill: isRtpChange ? '#ef4444' : (seriesIndex ? '#f2a65a' : '#55d68b'), stroke: isRtpChange ? '#ffffff' : 'none', 'stroke-width': isRtpChange ? 1.5 : 0 });
+          const point = make('circle', { cx: x(i), cy: seriesIndex ? yRetention(value) : yRtp(value), r: isRtpChange ? 4.8 : 2.4, fill: isRtpChange ? '#ef4444' : (seriesIndex ? '#f2a65a' : '#55d68b'), stroke: isRtpChange ? '#ffffff' : 'none', 'stroke-width': isRtpChange ? 1.5 : 0, 'class': isRtpChange ? 'tp-blink' : '' });
           const rtpChange = isRtpChange ? '<br>RTP change: 97.0% → 98.3%' : (!seriesIndex && i === rtp.length - 1 ? '<br>DoD: ↑ 3.62 pp' : '');
           const rtpChangeCn = isRtpChange ? '<br>RTP变化：97.0% → 98.3%' : (!seriesIndex && i === rtp.length - 1 ? '<br>日环比：↑ 3.62 个百分点' : '');
           const english = seriesIndex ? `<b>${dates[i]}</b><br>D1 Retention: ${value.toFixed(2)}%` : `<b>${dates[i]}</b><br>RTP: ${value.toFixed(2)}%${rtpChange}`;
@@ -1262,6 +1634,21 @@
           setTip(point, english, chinese);
           thirtyDay.appendChild(point);
         }));
+        // --- blinking peaks: highest RTP day + highest D1 retention day ---------
+        // Data-driven, so a rebuild moves the marker to the new peak instead of freezing
+        // on the day this was written.
+        const peak30 = (series, yOf, colour, en, cn) => {
+          const i = series.indexOf(Math.max(...series));
+          const cx = x(i), cy = yOf(series[i]);
+          const v = `${series[i].toFixed(2)}%`;
+          thirtyDay.appendChild(make('circle', { cx, cy, r: 10, fill: colour, opacity: .3, 'class': 'tp-halo' }));
+          const dot = make('circle', { cx, cy, r: 5.6, fill: colour, stroke: '#ffffff', 'stroke-width': 1.8, 'class': 'tp-blink' });
+          setTip(dot, `<b>Highest ${en} \u00b7 ${dates[i]}</b><br>${en}: ${v}`,
+                      `<b>\u6700\u9ad8${cn} \u00b7 ${dates[i]}</b><br>${cn}\uff1a${v}`);
+          thirtyDay.appendChild(dot);
+        };
+        peak30(d1Retention, yRetention, '#f2a65a', 'D1 Retention', 'D1\u7559\u5b58\u7387');
+        peak30(rtp, yRtp, '#55d68b', 'RTP', 'RTP');
       }
 
       const bindStaticRects = (selector, tips) => {
@@ -1371,6 +1758,299 @@
         setTip(row.querySelector('.retention-value'), en, cn);
       });
 
+      // ---- Player Retention: travelling current + dots that move -------------------
+      // Both the light and the dots are DERIVED from each sparkline's own polyline points,
+      // never hard-coded, so a dot can never drift off the line it marks when the day's
+      // shape changes. The dots pulse in sequence, which is what makes the row read as
+      // travelling: each one lights as the current reaches it, on the same 4.6s lap.
+      document.querySelectorAll('.pg-retention .spark').forEach(svg => {
+        const trace = svg.querySelector('polyline:not(.tp-flow)');
+        if (!trace) return;
+        const pts = (trace.getAttribute('points') || '').trim().split(/\s+/).filter(Boolean);
+        if (pts.length < 2) return;
+        const stroke = (trace.getAttribute('stroke') || '').toLowerCase();
+        // Ink version of the trace's own hue: a white light would erase the line on the
+        // default white panel (see the trend-line rules). Keyed by the trace's own colour,
+        // so re-colouring a sparkline in the template cannot silently mismatch the light.
+        const SPARK_INK = { '#ffca64': '#8f5200', '#6ea8ff': '#0d4a9c', '#b78cff': '#5a2fa8' };
+        const flow = make('polyline', {
+          points: pts.join(' '), fill: 'none', stroke: '#ffffff', 'stroke-width': 2,
+          'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+          'pathLength': '1000', 'class': 'tp-flow'
+        });
+        flow.style.setProperty('--tp-ink', SPARK_INK[stroke] || '#0a7a45');
+        svg.appendChild(flow);
+        pts.forEach((pt, i) => {
+          const pair = pt.split(',');
+          const cx = Number(pair[0]), cy = Number(pair[1]);
+          if (!isFinite(cx) || !isFinite(cy)) return;
+          const dot = make('circle', {
+            cx, cy, r: 2.6, fill: stroke || '#8ea4bd', opacity: .85, 'class': 'tp-dot'
+          });
+          dot.style.animationDelay = (-(i / pts.length) * 4.6).toFixed(2) + 's';
+          svg.appendChild(dot);
+        });
+      });
+
+      // ---- Ring charts: % inside each wedge + a big centred total (reference, 2026-10-09)
+      // Every number here is DERIVED from the geometry actually drawn - each arc's own
+      // dasharray against its own pathLength/circumference, or the conic-gradient's own
+      // stops - never from a literal. build_v2_dashboard.py splices fresh arcs into this
+      // markup every day, so a label placed from a hard-coded copy would eventually sit on
+      // the wrong wedge. These rings also spin (ch-spin, 26-44s), so each label is
+      // re-positioned every frame rather than once: that keeps it locked to its own segment
+      // while the text stays upright, which a label baked into the rotating SVG cannot do.
+      const setupRings = function ringCharts() {
+        if (window.__ringRAF) cancelAnimationFrame(window.__ringRAF);
+        document.querySelectorAll('.ring-lbl, .ring-centre').forEach(el => el.remove());
+        const HOSTS = ':is(.platform-chart, .compact-pie, .monthly-share-card, .pp-tiers .tiers-pie)';
+        const followers = [];
+
+        // Label ink is picked from the wedge it sits on, so it is legible on either panel.
+        const inkFor = css => {
+          const m = (css || '').match(/(\d+(?:\.\d+)?)\D+(\d+(?:\.\d+)?)\D+(\d+(?:\.\d+)?)/);
+          if (!m) return '#0b1a2b';
+          const ch = i => { const v = (+m[i]) / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+          const L = 0.2126 * ch(1) + 0.7152 * ch(2) + 0.0722 * ch(3);
+          return L < 0.52 ? '#ffffff' : '#0b1a2b';
+        };
+        // Shrink a centred total until it fits the hole it has to live in.
+        const fit = (el, max, start, min) => {
+          let size = start;
+          el.style.fontSize = size + 'px';
+          while (size > min && el.offsetWidth > max) { size -= 1; el.style.fontSize = size + 'px'; }
+          return el.offsetWidth <= max;
+        };
+
+        document.querySelectorAll(HOSTS).forEach(host => {
+          const ring = host.querySelector('.tiers-donut') || host.querySelector('svg');
+          if (!ring) return;
+          const hb = host.getBoundingClientRect();
+          const bb = ring.getBoundingClientRect();
+          if (!bb.width || !bb.height) return;
+          const segs = [];
+          let cx, cy, rMid, holeW;
+
+          if (ring.tagName.toLowerCase() === 'svg') {
+            const vb = (ring.getAttribute('viewBox') || '0 0 100 100').split(/\s+/).map(Number);
+            const vw = vb[2] || 100, vh = vb[3] || 100;
+            // The computed width/height, NOT the bounding rect: these rings spin, and the
+            // axis-aligned box of a rotated square grows by up to 41%, which would push every
+            // label off the ring (and make a centred total look like it fits when it does
+            // not). offsetWidth is undefined on SVG, so it must come from the computed style.
+            // The box CENTRE is unaffected by rotation, so the bounding rect is still right.
+            const cs = getComputedStyle(ring);
+            const rw = parseFloat(cs.width) || bb.width, rh = parseFloat(cs.height) || bb.height;
+            const sc = Math.min(rw / vw, rh / vh);
+            const ox = bb.left + bb.width / 2 - hb.left - (vw * sc) / 2;
+            const oy = bb.top + bb.height / 2 - hb.top - (vh * sc) / 2;
+            const arcs = [...ring.querySelectorAll('circle[stroke-dasharray]')];
+            arcs.forEach(arc => {
+              const r = +arc.getAttribute('r') || 0;
+              const total = +arc.getAttribute('pathLength') || (2 * Math.PI * r);
+              const dash = +((arc.getAttribute('stroke-dasharray') || '').split(/[\s,]+/)[0]);
+              if (!(dash > 0) || !(total > 0)) return;
+              // An arc longer than the circle no longer encodes a share - the GGR donut hits
+              // this because one platform's share is negative (-185.65%), so the next arc
+              // over-fills and would be labelled "100.0%". Say nothing rather than a number
+              // that contradicts the legend beside it.
+              if (dash > total * 1.001) return;
+              const start = (((-(+arc.getAttribute('stroke-dashoffset') || 0)) / total) % 1 + 1) % 1;
+              segs.push({ frac: Math.min(dash / total, 1), start, colour: getComputedStyle(arc).stroke });
+            });
+            const arc0 = arcs[0];
+            const r = arc0 ? (+arc0.getAttribute('r') || 0) : 0;
+            const sw = arc0 ? (+arc0.getAttribute('stroke-width') || 0) : 0;
+            cx = ox + (vb[0] + vw / 2) * sc;
+            cy = oy + (vb[1] + vh / 2) * sc;
+            rMid = r * sc;
+            holeW = Math.max(24, 2 * Math.max(0, r - sw / 2) * sc);
+          } else {
+            const stops = (getComputedStyle(ring).backgroundImage || '')
+              .match(/rgba?\([^)]*\)\s*[\d.]+%(?:\s*[\d.]+%)?/g) || [];
+            let prev = 0;
+            stops.forEach(stop => {
+              const col = (stop.match(/rgba?\([^)]*\)/) || [''])[0];
+              const ps = (stop.match(/[\d.]+%/g) || []).map(v => parseFloat(v) / 100);
+              const start = ps.length > 1 ? ps[0] : prev;
+              const end = ps.length > 1 ? ps[1] : (ps[0] !== undefined ? ps[0] : 1);
+              prev = end;
+              if (end - start > 0) segs.push({ frac: end - start, start, colour: col });
+            });
+            const rw = parseFloat(getComputedStyle(ring).width) || bb.width;
+            cx = bb.left - hb.left + bb.width / 2;
+            cy = bb.top - hb.top + bb.height / 2;
+            rMid = rw / 2 * 0.78;                // matches the 22% inset hole
+            holeW = rw * 0.56;
+          }
+          if (!segs.length) return;
+
+          // one dot per wedge, gated on whether the text actually fits that wedge
+          segs.forEach(seg => {
+            if (seg.frac < 0.045) return;                       // too thin to hold a number
+            const chord = 2 * rMid * Math.sin(Math.min(seg.frac, 0.5) * Math.PI);
+            const el = document.createElement('span');
+            el.className = 'ring-lbl';
+            el.textContent = (seg.frac * 100).toFixed(1) + '%';
+            el.style.color = inkFor(seg.colour);
+            el.style.left = '0px'; el.style.top = '0px';
+            host.appendChild(el);
+            if (el.offsetWidth > chord * 0.92) { el.remove(); return; }
+            followers.push({ el, cx, cy, r: rMid, base: (seg.start + seg.frac / 2) * 360, spin: ring });
+          });
+
+          // centred total, where the chart actually carries one
+          let totalEl = null, caption = '';
+          const small = host.querySelector('small');
+          if (host.matches('.platform-chart')) {
+            const m = /=\s*(₱?[\d,]+(?:\.\d+)?)/.exec(small ? small.textContent : '');
+            const title = (host.querySelector('strong') || {}).textContent || '';
+            if (m) {
+              totalEl = m[1];
+              caption = 'TOTAL ' + title.replace(/\s*share\s*$/i, '').toUpperCase().replace(/^PLAYER$/, 'PLAYERS');
+            }
+          } else if (host.matches('.pp-tiers .tiers-pie')) {
+            const n = [...host.querySelectorAll('.tiers-legend b')]
+              .reduce((a, b) => a + (parseInt((b.textContent.match(/[\d,]+/) || ['0'])[0].replace(/,/g, ''), 10) || 0), 0);
+            if (n > 0) { totalEl = n.toLocaleString('en-US'); caption = 'PLAYERS'; }
+          }
+          if (totalEl) {
+            const box = document.createElement('div');
+            box.className = 'ring-centre';
+            const strong = document.createElement('strong');
+            strong.textContent = totalEl;
+            const cap = document.createElement('span');
+            cap.textContent = caption;
+            box.appendChild(strong); box.appendChild(cap);
+            box.style.left = cx + 'px'; box.style.top = cy + 'px';
+            host.appendChild(box);
+            const size = parseFloat(getComputedStyle(strong).fontSize) || 13;
+            // 0.84 of the hole, not 0.94: a % label orbits at the ring's midline, and at the
+            // 3 o'clock and 9 o'clock points its inner glyph edge reaches toward this number.
+            // Filling the hole edge-to-edge would make the two touch as the ring turns.
+            fit(strong, holeW * 0.84, size, 7.5);
+          }
+        });
+
+        if (!followers.length) return;
+        const tick = () => {
+          const seen = new Map();
+          followers.forEach(f => {
+            if (!seen.has(f.spin)) {
+              let a = 0;
+              const m = getComputedStyle(f.spin).transform;
+              const p = m && m.match(/matrix\(([^)]+)\)/);
+              if (p) { const v = p[1].split(',').map(Number); a = Math.atan2(v[1], v[0]) * 180 / Math.PI; }
+              seen.set(f.spin, a);
+            }
+            const th = (f.base + seen.get(f.spin)) * Math.PI / 180;
+            f.el.style.left = (f.cx + f.r * Math.sin(th)) + 'px';
+            f.el.style.top = (f.cy - f.r * Math.cos(th)) + 'px';
+          });
+          requestAnimationFrame(tick);
+        };
+        window.__ringRAF = requestAnimationFrame(tick);
+      };
+      setupRings();
+      // A resize re-flows the panels, so the centres and radii measured at setup go stale
+      // and the labels would drift off their wedges. Rebuild instead of leaving them wrong.
+      let ringRT = null;
+      window.addEventListener('resize', () => { clearTimeout(ringRT); ringRT = setTimeout(setupRings, 150); });
+      // Web fonts and other late layout work move the panels after the first measurement, and
+      // a label keeps the radius it was born with - so re-measure once the page has settled.
+      window.addEventListener('load', setupRings);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(setupRings);
+
+      // ---- bars move while they are on screen (2026-10-09) ----------------------
+      // The draw-in used to fire at page load, so by the time anyone scrolled down to a
+      // bar chart every bar was already grown and the chart read as a still image.
+      // .bars-live is added while a bar chart is in the viewport and removed once it
+      // leaves, so the bars draw in as you reach them and again on every scroll back.
+      // Dropping the class only ever leaves a bar at its true length, so a chart that is
+      // never observed still reads correctly.
+      const barMotion = function () {
+        const hosts = document.querySelectorAll(
+          '.dynamic-list, table, svg.denom-svg, svg.eng-svg, #hourlyRtpChart, #thirtyDayChart');
+        if (!hosts.length) return;
+        if (!('IntersectionObserver' in window)) {
+          hosts.forEach(el => el.classList.add('bars-live'));
+          return;
+        }
+        // The root is trimmed at the bottom so a chart arms only once it is properly on
+        // screen; a chart taller than the window still counts as intersecting.
+        const io = new IntersectionObserver(entries => {
+          entries.forEach(entry => entry.target.classList.toggle('bars-live', entry.isIntersecting));
+        }, { threshold: 0, rootMargin: '-6% 0px -12% 0px' });
+        hosts.forEach(el => io.observe(el));
+      };
+      barMotion();
+
+      // ---- a light travelling along each flat bar (2026-10-09) ------------------
+      // The denomination and engagement charts are SVG, so their bars cannot carry the
+      // ::after the row bars use. Each bar gets one highlight rect of its own, sized to
+      // that bar and swept along the bar's own axis, which leaves the bar's geometry
+      // untouched - the highlight is never wider or longer than the bar it belongs to.
+      const barShine = function () {
+        const NS = 'http://www.w3.org/2000/svg';
+        const charts = document.querySelectorAll('svg.denom-svg, svg.eng-svg');
+        if (!charts.length) return;
+        // One gradient per axis, shared by every highlight on the page.
+        const host = charts[0];
+        if (!host.querySelector('#barShineGradX')) {
+          const defs = document.createElementNS(NS, 'defs');
+          [['barShineGradX', 'x1', 'x2'], ['barShineGradY', 'y1', 'y2']].forEach(pair => {
+            const g = document.createElementNS(NS, 'linearGradient');
+            g.setAttribute('id', pair[0]);
+            g.setAttribute(pair[1], '0');
+            g.setAttribute(pair[2], '1');
+            [[0, 0], [0.5, 0.62], [1, 0]].forEach(stop => {
+              const s = document.createElementNS(NS, 'stop');
+              s.setAttribute('offset', stop[0]);
+              s.setAttribute('stop-color', '#ffffff');
+              s.setAttribute('stop-opacity', stop[1]);
+              g.appendChild(s);
+            });
+            defs.appendChild(g);
+          });
+          host.insertBefore(defs, host.firstChild);
+        }
+        charts.forEach(svg => {
+          if (svg.querySelector('.bar-shine')) return;
+          const vertical = svg.classList.contains('eng-svg');
+          Array.from(svg.querySelectorAll('rect')).forEach((bar, i) => {
+            const bx = +bar.getAttribute('x'), by = +bar.getAttribute('y');
+            const bw = +bar.getAttribute('width'), bh = +bar.getAttribute('height');
+            if (![bx, by, bw, bh].every(Number.isFinite)) return;
+            const rx = +(bar.getAttribute('rx') || 0);
+            let len, thick, travel, sx, sy;
+            if (vertical) {
+              thick = bw;                                  // share the bar's own column
+              len = Math.min(bh * 0.45, 30);
+              travel = -(bh - len);                        // rise from the baseline
+              sx = bx; sy = by + bh - len;
+            } else {
+              thick = bh;
+              len = Math.min(bw * 0.45, 46);
+              travel = bw - len;
+              sx = bx; sy = by;
+            }
+            if (len + 16 > (vertical ? bh : bw)) return;    // no room to travel in
+            const shine = document.createElementNS(NS, 'rect');
+            shine.setAttribute('class', 'bar-shine');
+            shine.setAttribute('x', sx.toFixed(2));
+            shine.setAttribute('y', sy.toFixed(2));
+            shine.setAttribute('width', (vertical ? thick : len).toFixed(2));
+            shine.setAttribute('height', (vertical ? len : thick).toFixed(2));
+            shine.setAttribute('rx', Math.min(rx, len / 2).toFixed(2));
+            shine.setAttribute('fill', vertical ? 'url(#barShineGradY)' : 'url(#barShineGradX)');
+            shine.setAttribute('style',
+              '--travel:' + travel.toFixed(2) + 'px; animation-delay:' + (i * 0.14).toFixed(2) + 's');
+            svg.appendChild(shine);
+          });
+        });
+      };
+      barShine();
+
       // Players by Spend Tier: the ring is a conic-gradient, so the hovered tier
       // is resolved from the cursor's angle; the legend rows are targets too.
       document.querySelectorAll('.pp-tiers .tiers-donut').forEach(donut => {
@@ -1393,8 +2073,24 @@
           // conic-gradient starts at 12 o'clock and runs clockwise, the same
           // order as the legend rows, so the cursor's bearing converts straight
           // to a 0-100 share and is matched against the rows' cumulative share.
-          const bearing = (Math.atan2(event.clientY - (box.top + box.height / 2),
-                                      event.clientX - (box.left + box.width / 2)) * 180 / Math.PI + 450) % 360;
+          // The ring SPINS (CSS animation), so the gradient's 12 o'clock has moved away
+          // from the top. Read the element's live rotation off its computed matrix and take
+          // it back out of the cursor bearing first - without this the ring resolves the
+          // cursor to the WRONG tier and the tooltip names the wrong band.
+          let spin = 0;
+          {
+            const _tr = getComputedStyle(donut).transform;
+            if (_tr && _tr !== 'none') {
+              const _m = _tr.match(/matrix\(([^)]+)\)/);
+              if (_m) {
+                const _v = _m[1].split(',').map(Number);
+                spin = Math.atan2(_v[1], _v[0]) * 180 / Math.PI;
+              }
+            }
+          }
+          const bearing = ((Math.atan2(event.clientY - (box.top + box.height / 2),
+                                      event.clientX - (box.left + box.width / 2)) * 180 / Math.PI
+                           + 450 - spin) % 360 + 360) % 360;
           // Pointer coordinates arrive as whole pixels while the ring's centre is
           // fractional, so a cursor on the top edge of the ring measures a hair
           // clockwise of 12 o'clock (359.75 on a 170px ring) and would resolve to
@@ -1778,8 +2474,8 @@
       // Performance notes) live on window.__dynCN: `cn` is IIFE-scoped here, so
       // an earlier block cannot reach it directly.
       Object.assign(cn, window.__dynCN || {});
-      /* gc-alerts-i18n */ Object.assign(cn, {"Fuse-breaker GC notifications were not scanned for this date.": "本日期未扫描保险丝告警通知。"});
-      /* incident-panel-i18n */ Object.assign(cn, {"High Winning Defense Alert": "高倍中奖防御警报", "High Winning Defense": "高倍中奖防御", "Top Winning Player Alerts": "高额中奖玩家警报", "No high-multiplier win reached the alert threshold.": "当日无高倍中奖达到警报阈值。", "day RTP": "当日RTP", "Original": "原始", "Repeat": "重复", "Retries": "重试", "Trigger Repeat": "重复触发", "Trigger": "触发"});
+      /* gc-alerts-i18n */ Object.assign(cn, {"No incident report or important operational note recorded for this date.": "此日期暂无事件报告或重要运营备注。"});
+      /* incident-panel-i18n */ Object.assign(cn, {"Fuse-breaker Alert": "熔断警报", "High Winning Defense Alert": "高倍中奖防御警报", "High Winning Defense": "高倍中奖防御", "Top Winning Player Alerts": "高额中奖玩家警报", "No high-multiplier win reached the alert threshold.": "当日无高倍中奖达到警报阈值。", "day RTP": "当日RTP", "Original": "原始", "Repeat": "重复", "Retries": "重试", "Trigger Repeat": "重复触发", "Trigger": "触发"});
       const entries = Object.entries(cn).sort((a, b) => b[0].length - a[0].length);
 
       const translateText = (source, lang) => {
