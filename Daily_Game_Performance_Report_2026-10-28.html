@@ -824,6 +824,14 @@
     .gp-compact > .panel .metric-value { font-size: 17px; }
     .gp-compact > .panel .chart-note { font-size: 9px; margin-top: 6px; }
     .game-summary { grid-column: 1 / span 10; grid-row: 1; margin-bottom: 0; }
+    /* 2026-10-29 (user, red boxes = dead space): the Hourly RTP and Dynamic RTP
+       cards were being stretched by the grid row to match the tallest panel, so
+       each carried a tall empty band under its content. Panels now size to their
+       own content inside .big-grid; the leftover space moves OUT of the cards. */
+    /* 2026-10-29 (user, red boxes = the empty bands): these two cards were
+       stretched by their grid row to match the tallest panel beside them, leaving
+       a tall empty area inside each card. They now size to their own content. */
+    .hourly-rtp, .dynamic-rtp { align-self: start; }
     .dynamic-rtp { grid-column: 11 / span 10; grid-row: 1; }
     .hourly-rtp { grid-column: 1 / span 10; grid-row: 2; }
     .multiplier-distribution { grid-column: 11 / span 10; grid-row: 2; }
@@ -1003,47 +1011,6 @@
        already fill the panel (`.gp-overview > .go-band { flex: 1 1 auto }`). */
     .go-shareline { margin: 6px 1px 0; font-size: 8px; line-height: 1.5; color: var(--muted); }
     .go-note { margin: 4px 1px 0; font-size: 8px; line-height: 1.5; color: var(--muted); }
-    /* 2026-10-29 (boss request via Melly): "add traffic log 【can hide if no
-       traffic support】". One compact row of 24 hour cells: the colour is player
-       volume, the number is that hour's players, and the tooltip carries rounds
-       + bet. Hidden when the capture has no hourly traffic, so a day without
-       support simply does not show it.
-       2026-10-29 (Melly): "siguro yung traffic log mas maganda if nasa hourly
-       rtp?" -- moved out of the Game Overview band (per-game cards) into the
-       Hourly RTP panel, because it is whole-day, all-platform, per-hour data:
-       the same scope as that chart, and the same array as its pink Players line.
-       Its cells were 16px wide at 7px type in the 476px Game Overview column;
-       inside the hourly panel the strip sits under the plot area and gets the
-       plot's own inset, so the numbers line up with the hours they belong to. */
-    .go-traffic { margin: 5px 1px 0; border-top: 1px solid var(--line); padding-top: 4px; }
-    .go-traffic-top { display: flex; justify-content: space-between; align-items: baseline;
-                      gap: 8px; margin-bottom: 3px; }
-    .go-traffic-top span { font-size: 8px; font-weight: 800; letter-spacing: .08em; color: var(--muted); }
-    .go-traffic-top small { font-size: 7.5px; color: var(--muted); }
-    .go-traffic-grid { display: grid; grid-template-columns: repeat(24, minmax(0, 1fr)); gap: 2px; }
-    .go-traffic-cell { position: relative; border-radius: 3px; padding: 2px 1px 1px;
-                       background: color-mix(in srgb, var(--cyan) calc(var(--heat) * 1%), transparent);
-                       border: 1px solid color-mix(in srgb, var(--cyan) calc(18% + var(--heat) * .6%), transparent);
-                       text-align: center; cursor: default; }
-    .go-traffic-cell b { display: block; font-size: 7px; line-height: 1.1; color: var(--text); }
-    .go-traffic-cell i { display: block; font-style: normal; font-size: 6px; line-height: 1.1; color: var(--muted); }
-    /* In the Hourly RTP panel the strip sits under the plot area and is inset to
-       the chart's own padding (pad.l 40/900 = 4.4%, pad.r 108/900 = 12%), so each
-       cell reads directly beneath the hour it belongs to. The panel is 596px wide
-       against the 476px Game Overview column, so the cells go 16px -> 19px and the
-       number goes 7px -> 9.5px: readable without hovering. */
-    .hourly-rtp .go-traffic { margin: 7px 0 0; padding-top: 6px; }
-    .hourly-rtp .go-traffic-top span { font-size: 9px; }
-    .hourly-rtp .go-traffic-top small { font-size: 8px; }
-    /* 2% inset, not the chart's full 4.4%/12%: matching the plot exactly squeezed
-       the cell to 14px of content and clipped every 3-digit hour count (175-374
-       players). The strip reads hour-by-hour off the same 24 columns; the numbers
-       win the space. */
-    .hourly-rtp .go-traffic-grid { gap: 2px; padding: 0 2%; }
-    .hourly-rtp .go-traffic-cell { padding: 3px 0 2px; border-radius: 4px; }
-    .hourly-rtp .go-traffic-cell b { font-size: 9.5px; }
-    .hourly-rtp .go-traffic-cell i { font-size: 7px; }
-    @media (max-width: 1180px) { .go-traffic-grid { grid-template-columns: repeat(12, minmax(0, 1fr)); } }
     /* ---- Game Overview: games live on BingoPlus (BP1) ----------------------
        2026-10-27 (user): "Game Overview - add the Ginto Match and Blazing 7s".
        2026-10-27 (user, correction): "sa bingoplus live na yung lucky color,
@@ -2163,7 +2130,7 @@
         <div class="grid big-grid header-metrics" aria-label="Main operating metrics">
           <article class="panel pad card accent-blue"><div class="metric-label"><span class="kpi-ico kpi-img bet c-blue" aria-hidden="true"></span>Bet Amount</div><div class="metric-value">₱2,173,644.50</div><div class="metric-foot"><span class="positive">↑ 69.3% DoD</span><span class="positive">WoW ↑ 330.1%</span></div></article>
           <article class="panel pad card accent-green"><div class="metric-label"><span class="kpi-ico kpi-img payout c-green" aria-hidden="true"></span>Payout</div><div class="metric-value">₱2,066,625.45</div><div class="metric-foot"><span class="positive">↑ 64.3% DoD</span><span class="positive">WoW ↑ 306.8%</span></div></article>
-          <article class="panel pad card accent-orange"><div class="metric-label"><span class="kpi-ico kpi-img ggr c-orange" aria-hidden="true"></span>GGR</div><div class="metric-value positive">₱107,019.05</div><div class="metric-foot"><span class="positive">↑ 312.4% DoD</span><span class="warning">WoW —</span></div></article>
+          <article class="panel pad card accent-orange"><div class="metric-label"><span class="kpi-ico kpi-img ggr c-orange" aria-hidden="true"></span>GGR</div><div class="metric-value positive">₱107,019.05</div><div class="metric-foot"><span class="positive">↑ 312.4% DoD</span><span class="positive">WoW ↑ ₱109,652.05</span></div></article>
           <article class="panel pad card accent-cyan"><div class="metric-label"><span class="kpi-ico kpi-img players c-cyan" aria-hidden="true"></span>Players</div><div class="metric-value">3,183</div><div class="metric-subtext">New players 2,353 · 73.9%</div><div class="metric-foot"><span class="positive">↑ 130.7% DoD</span><span class="positive">WoW ↑ 330.7%</span></div></article>
         </div>
 <div class="grid small-grid mtd-grid">
@@ -2236,7 +2203,7 @@
     </section>
 
     <section class="section">
-  <div class="section-head"><div><h2>Game Performance</h2><p>Banana Craze operating behavior and outcome distribution</p></div></div>
+  <div class="section-head"><div><h2>Game Performance</h2></div></div>
   <div class="game-performance-grid">
 
  <div class="gp-row-1">
@@ -2312,15 +2279,9 @@
           <div class="panel pad chart-box tall hourly-rtp"><div class="side-title"><h3>Hourly RTP (00:00–23:59)</h3><span>Bars: bet amount + payout (₱000s) · Lines: RTP + players + 97.5% threshold</span></div>
           <svg id="hourlyRtpChart" class="chart tall-svg" viewBox="0 0 760 315" preserveAspectRatio="none" role="img" aria-label="Hourly RTP combo chart"></svg>
           <div class="legend"><span><i style="background:var(--blue)"></i>Bet amount</span><span><i style="background:var(--violet)"></i>Payout</span><span><i class="line" style="background:var(--green)"></i>RTP trendline</span><span><i class="line" style="background:#ff79c6"></i>Players</span><span><i class="line" style="background:#f2a65a"></i>RTP threshold 97.5%</span></div>
-          <!-- TRAFFIC LOG (2026-10-29 Melly): moved here from the Game Overview band.
-               Whole-day, all-platform, per-hour data: same scope as this chart and the
-               same array as its pink Players line. Hidden when there is no hourly data. -->
-          <div class="go-traffic" id="trafficLog" hidden><div class="go-traffic-top"><span>TRAFFIC LOG</span><small id="trafficLogSum">Players per hour</small></div><div class="go-traffic-grid" id="trafficLogGrid"></div></div>
-          <div class="chart-note">Hourly totals for the reporting day — each bar pair is the total bet and payout for that hour, summed across every platform (BingoPlus, GameZone, ArenaPlus) and all settled rounds; hover a bar for the exact peso amount. These bars are the settled ledger for Banana Craze + Lucky Color, totalling ₱1,872,547.50 against the ₱2,173,644.50 day total above; Ginto Match and Blazing 7's settle outside these hours. The green line is hourly RTP against the 97.5% target. The pink line counts the distinct players who settled at least one round in that hour; it is a headcount, not a partition of the day, so a player who plays in two hours counts in both and the 24 values must not be added up. The strip below is that same headcount in numbers, hour by hour; hover a cell for its rounds and bet.</div>
         </div>
           <div class="panel pad chart-box multiplier-distribution"><div class="side-title"><h3>Multiplier Distribution</h3><span>Winning outcome bands</span></div>
-          <table class="dist-table"><thead><tr><th>Multiplier band</th><th>Rounds</th><th>Share</th><th></th></tr></thead><tbody><tr><td>0x</td><td>107,562</td><td>64.75%</td><td><div class="mini-bar"><i style="width:72%"></i></div></td></tr><tr><td>>0x - 5x</td><td>52,964</td><td>31.88%</td><td><div class="mini-bar"><i style="width:35%"></i></div></td></tr><tr><td>>5x - 20x</td><td>4,849</td><td>2.92%</td><td><div class="mini-bar"><i style="width:3%"></i></div></td></tr><tr><td>>20x - 50x</td><td>665</td><td>0.40%</td><td><div class="mini-bar"><i style="width:2%"></i></div></td></tr><tr><td>>50x - 100x</td><td>69</td><td>0.04%</td><td><div class="mini-bar"><i style="width:2%"></i></div></td></tr><tr><td>>100x - 300x</td><td>18</td><td>0.01%</td><td><div class="mini-bar"><i style="width:2%"></i></div></td></tr><tr><td>>300x - 500x</td><td>0</td><td>0.00%</td><td><div class="mini-bar"><i style="width:0%"></i></div></td></tr><tr><td>>500x - 1000x</td><td>1</td><td>0.00%</td><td><div class="mini-bar"><i style="width:2%"></i></div></td></tr><tr><td>>1000x</td><td>0</td><td>0.00%</td><td><div class="mini-bar"><i style="width:0%"></i></div></td></tr></tbody></table>
-          <div class="chart-note">Source multiplier bands covering 166,128 of 199,620 settled rounds; the tail ends at 750x for this day.</div>
+          <table class="dist-table"><thead><tr><th>Multiplier band</th><th>Rounds</th><th>Share</th><th></th></tr></thead><tbody><tr><td>0x</td><td>107,562</td><td>64.75%</td><td><div class="mini-bar"><i style="width:72%"></i></div></td></tr><tr><td>>0x - 5x</td><td>52,964</td><td>31.88%</td><td><div class="mini-bar"><i style="width:35%"></i></div></td></tr><tr><td>>5x - 20x</td><td>4,849</td><td>2.92%</td><td><div class="mini-bar"><i style="width:3%"></i></div></td></tr><tr><td>>20x - 50x</td><td>665</td><td>0.40%</td><td><div class="mini-bar"><i style="width:2%"></i></div></td></tr><tr><td>>50x - 100x</td><td>69</td><td>0.04%</td><td><div class="mini-bar"><i style="width:2%"></i></div></td></tr><tr><td>>100x - 300x</td><td>18</td><td>0.01%</td><td><div class="mini-bar"><i style="width:2%"></i></div></td></tr><tr><td>>500x - 1000x</td><td>1</td><td>0.00%</td><td><div class="mini-bar"><i style="width:2%"></i></div></td></tr></tbody></table>
         </div>
           <div class="gp-compact">
             <div class="panel pad pp-mixed">
@@ -2334,7 +2295,6 @@
           <div class="side-title"><h3>Win/Loss Streaks</h3><span>longest runs</span></div>
           <!--PP:MIXED_B:START-->
           <div style="display:flex;gap:18px;flex-wrap:wrap"><div><div class="metric-label">Longest win streak</div><div class="metric-value positive">16 rounds</div><div class="metric-subtext">consecutive winning rounds, one player</div></div><div><div class="metric-label">Longest losing streak</div><div class="metric-value negative">30 rounds</div><div class="metric-subtext">consecutive losing rounds, one player</div></div></div>
-          <div class="chart-note" style="margin-top:12px">A win is a settled round with a payout greater than zero, and a streak counts consecutive rounds for one player inside the reporting day: the longest win run anyone reached is 16 rounds and the longest losing run is 30 rounds. Most players never get past a short run — the commonest best win run is 3 rounds, and 2,708 players recorded at least one winning round.</div>
           <!--PP:MIXED_B:END-->
         </div>
           </div>
@@ -2383,7 +2343,7 @@
         <div class="panel pad pg-4 pp-avg">
           <div class="side-title"><h3>Average Bet &amp; Rounds per Player</h3><span>Loteria vs Slot</span></div>
           <!--PP:AVG:START-->
-          <table><colgroup><col><col><col><col></colgroup><thead><tr><th>Metric</th><th>Loteria</th><th>Slot</th><th>Bingo</th></tr></thead><tbody><tr><th scope="row">Average Bet / Player</th><td>₱562.03</td><td>₱308.61</td><td>₱1,839.17</td></tr><tr><th scope="row">Average Rounds / Player</th><td>54.3</td><td>72.0</td><td>47.6</td></tr><tr><th scope="row">Median Rounds / Player</th><td>29.0</td><td>42.0</td><td>12.0</td></tr></tbody></table><div class="chart-note">Loteria = BP1 · Slot = GP + AP · Bingo = Lucky Color, carried inside each platform (BP1 5,945 · GP 5,282 · AP 1,301 rounds) rather than as a fourth line. Average = total rounds ÷ distinct players: 111,676 ÷ 2,056 and 54,452 ÷ 756. Bingo: 12,528 ÷ 263. Median = the middle player’s rounds for the day.</div>
+          <table><colgroup><col><col><col><col></colgroup><thead><tr><th>Metric</th><th>Loteria</th><th>Slot</th><th>Bingo</th></tr></thead><tbody><tr><th scope="row">Average Bet / Player</th><td>₱562.03</td><td>₱308.61</td><td>₱1,839.17</td></tr><tr><th scope="row">Average Rounds / Player</th><td>54.3</td><td>72.0</td><td>47.6</td></tr><tr><th scope="row">Median Rounds / Player</th><td>29.0</td><td>42.0</td><td>12.0</td></tr></tbody></table>
           <!--PP:AVG:END-->
         </div>
         
@@ -2518,36 +2478,9 @@
         // (orders_flat). A player who plays in two hours counts in both, so these
         // 24 values are NOT a partition of the day's player total - never sum them.
         const hourPlayers = [79, 58, 54, 42, 24, 24, 43, 41, 44, 67, 175, 179, 184, 240, 191, 173, 167, 218, 238, 266, 368, 374, 284, 232];
-        // 2026-10-29 (boss request via Melly): "add traffic log 【can hide if no
-        // traffic support】". Built from the SAME injected hourly arrays as the
-        // chart, so the two can never disagree. No hourly players = no block.
-        const traffic = document.getElementById('trafficLog');
-        if (traffic) {
-          const fmtPeso = v => '₱' + Number(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          const fmtInt = v => Number(v).toLocaleString('en-US');
-          const grid = document.getElementById('trafficLogGrid');
-          const trafficSum = document.getElementById('trafficLogSum');
-          const nums = hourPlayers.map(v => Number(v) || 0);
-          const totalTraffic = nums.reduce((a, b) => a + b, 0);
-          if (!grid || !totalTraffic) {
-            traffic.hidden = true;
-          } else {
-            const peak = Math.max(...nums);
-            const peakIdx = nums.indexOf(peak);
-            grid.innerHTML = hours.map((h, i) => {
-              const pl = nums[i], rd = Number(hourRounds[i]) || 0, bet = Number(betPhp[i]) || 0;
-              const heat = peak ? Math.round(pl / peak * 100) : 0;
-              return `<div class="go-traffic-cell" style="--heat:${heat}" data-en="${h} · ${fmtInt(pl)} players · ${fmtInt(rd)} rounds · ${fmtPeso(bet)}" data-cn="${h} · ${fmtInt(pl)} 位玩家 · ${fmtInt(rd)} 回合 · ${fmtPeso(bet)}"><b>${pl}</b><i>${h.slice(0, 2)}</i></div>`;
-            }).join('');
-            if (trafficSum) trafficSum.textContent = `Peak ${fmtInt(peak)} players at ${hours[peakIdx]} · ${fmtInt(totalTraffic)} player-hours`;
-            traffic.hidden = false;
-            grid.querySelectorAll('.go-traffic-cell').forEach(cell => {
-              bindTooltip(cell);
-              cell.setAttribute('data-tooltip-en', cell.dataset.en);
-              cell.setAttribute('data-tooltip-cn', cell.dataset.cn);
-            });
-          }
-        }
+        // 2026-10-29 (user): the Hourly RTP keynote is written from these same
+        // arrays, so the sentence can never disagree with the chart.
+        window.__hourlyRtp = { hours, rtp, players: hourPlayers, betPhp };
         const pesoFmt = v => '₱' + Number(v).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const intFmt = v => Number(v).toLocaleString('en-US');
         const plotW = W - pad.l - pad.r, plotH = H - pad.t - pad.b;
@@ -3316,9 +3249,6 @@
       const notes = [
         ['.platform-matrix', 'BingoPlus settled ₱1,155,540.00 of ₱2,173,644.50 total bet on October 28, 2026; GameZone ₱229,937.50 and ArenaPlus ₱3,369.00.'],
         ['.game-summary', 'Game Performance is grouped into Loteria and Slot. Slot combines GameZone and ArenaPlus. Popular bet amount is the most frequent settled bet denomination by category.'],
-        ['.hourly-rtp', 'Hourly RTP is evaluated against the 97.5% target while bet amount and payout intensity are shown by hour.'],
-        ['.dynamic-rtp', 'NON rounds carry most volume; Cumulative and Daily adjustments apply to a small share of rounds but pay far above their stake, which drives daily RTP variance.'],
-        ['.multiplier-distribution', '0x is the largest multiplier band by rounds.'],
         ['.player-grid > .panel:first-child', 'Players created on October 28, 2026 accounted for most of the day’s activity.'],
         ['.player-grid > .panel:nth-child(2)', 'GP has the largest active-player base among the three platforms.'],
         ['.pg-retention', 'D1 retention is the main player-engagement metric to monitor.'],
@@ -3342,6 +3272,61 @@
         else panel.appendChild(note);
       });
 
+      // ---- Hourly RTP keynote (2026-10-29, user) --------------------------
+      // "ANG ILALAGAY MO DYAN, KUNG ANONG ORAS MAY PINAKAMATAAS NA RTP AT
+      //  PLAYER. AT KAPAG MATAAS ANG DAMI NG PLAYERS, ILAGAY MO DITO BAKIT
+      //  MATAAS." Peak RTP hour + peak players hour, then the evening share and
+      // the reason the lobby was busy, read off the page's own changelog rows so
+      // the "why" is the day's own recorded change and not a guess.
+      (() => {
+        const h = window.__hourlyRtp;
+        const panel = document.querySelector('.hourly-rtp');
+        if (!h || !panel || panel.querySelector('.keynote')) return;
+        const nums = (h.players || []).map(v => Number(v) || 0);
+        const rtps = (h.rtp || []).map(v => Number(v) || 0);
+        if (!nums.length || !rtps.length) return;
+        const hrs = h.hours || [];
+        const pIdx = nums.indexOf(Math.max(...nums));
+        const rIdx = rtps.indexOf(Math.max(...rtps));
+        const tot = nums.reduce((a, b) => a + b, 0) || 1;
+        const eve = nums.slice(18).reduce((a, b) => a + b, 0);
+        const eveShare = Math.round(eve / tot * 100);
+        const nf = v => Number(v).toLocaleString('en-US');
+        const why = [];
+        [...document.querySelectorAll('.changelog-table tbody tr')].slice(0, 4).forEach(tr => {
+          const t = (tr.innerText || '').replace(/\s+/g, ' ');
+          if (/new games/i.test(t) && !why.length) why.push('all four titles sat in the BP1 Loteria new-games entry');
+          else if (/now live/i.test(t) && why.length < 2) why.push('three of them had just gone live on BP1');
+          else if (/minimum bet/i.test(t) && why.length < 2) why.push('the lower minimum bet kept entry cheap');
+        });
+        const reasonEn = why.length
+          ? 'Traffic is not luck: ' + why.join(' and ') + ', so the games stay visible where players browse.'
+          : 'Traffic tracks the evening window, when the lobby is busiest.';
+        const reasonCn = why.length
+          ? '流量并非偶然：' + why.join('；').replace(/all four titles sat in the BP1 Loteria new-games entry/, '四款游戏均出现在 BP1 乐透的新游戏入口').replace(/three of them had just gone live on BP1/, '其中三款刚在 BP1 上线').replace(/the lower minimum bet kept entry cheap/, '最低投注额下调') + '，因此游戏持续出现在玩家浏览的位置。'
+          : '流量集中在傍晚时段，此时大厅最为繁忙。';
+        const en = 'Highest RTP was ' + rtps[rIdx].toFixed(2) + '% at ' + hrs[rIdx] +
+          '; the most players were ' + nf(nums[pIdx]) + ' at ' + hrs[pIdx] + '. ' +
+          'The 18:00–23:00 window carried ' + eveShare + '% of the day’s hourly players. ' + reasonEn;
+        const cn = '最高 RTP 为 ' + rtps[rIdx].toFixed(2) + '%（' + hrs[rIdx] + '）；玩家最多 ' +
+          nf(nums[pIdx]) + ' 人（' + hrs[pIdx] + '）。18:00–23:00 占全天各小时玩家数的 ' +
+          eveShare + '%。' + reasonCn;
+        const note = document.createElement('div');
+        note.className = 'keynote';
+        note.innerHTML = '<b>Key Insight</b><span></span>';
+        note.querySelector('span').textContent = en;
+        note.dataset.en = en;
+        note.dataset.cn = cn;
+        panel.appendChild(note);
+      })();
+      document.addEventListener('dashboard-language-change', event => {
+        const lang = event.detail === 'cn' ? 'cn' : 'en';
+        document.querySelectorAll('.hourly-rtp .keynote').forEach(n => {
+          const span = n.querySelector('span');
+          if (span && n.dataset[lang]) span.textContent = n.dataset[lang];
+        });
+      });
+
       // --- CN wording for the Player Performance row-2 panels. Rewritten every build:
       // these sentences carry the day's own figures, so a literal left here would
       // hardcode the previous day's numbers into CN mode.
@@ -3360,7 +3345,6 @@
       });/*ANALYSISCN:END*/
       Object.assign(window.__dynCN, {
         /*CN:PPNOTES:START*/
-        "Loteria = BP1 · Slot = GP + AP · Bingo = Lucky Color, carried inside each platform (BP1 5,945 · GP 5,282 · AP 1,301 rounds) rather than as a fourth line. Average = total rounds ÷ distinct players: 111,676 ÷ 2,056 and 54,452 ÷ 756. Bingo: 12,528 ÷ 263. Median = the middle player’s rounds for the day.": "乐透 = BP1 · 老虎机 = GP + AP · 宾果 = Lucky Color，包含在各平台内（BP1 5,945 · GP 5,282 · AP 1,301 局），并非第四条线。平均值 = 总回合数 ÷ 去重玩家人数：111,676 ÷ 2,056，54,452 ÷ 756。 宾果：12,528 ÷ 263。 中位数 = 当日处于中间位置玩家的回合数。",
         "The average rounds per player sits above the median on both Loteria and Slot, so a small group of high-frequency accounts pulls the average up.": "乐透与老虎机的人均回合数均高于中位数，说明少数高频玩家拉高了平均值。",
         "Loteria carries the larger player group in the 1–10 and 11–20 and 21–50 and 51–100 and >100 bands; the largest band overall is 21–50 rounds with 615 Loteria and 217 Slot player entries.": "乐透在 1–10、11–20、21–50、51–100、>100 回合区间的玩家数高于老虎机；最大的区间为 21–50 回合，乐透 615 条、老虎机 217 条玩家记录。"
         /*CN:PPNOTES:END*/
@@ -3375,7 +3359,6 @@
         "Per settled round: a round that paid an extra win (`otherWinAmount` > 0) counts as a Bonus Round (2,806 rounds, 1.69%). Player entries count a player once per product: 1,028 saw a bonus.": "按已结算回合计：产生额外奖金的回合（`otherWinAmount` > 0）计为奖励回合（2,806 个回合，1.69%）。玩家记录按产品分别计入：1,028 位触发奖励回合。",
         "Per settled round: `betType` BUY_FEATURE counts as a Buy Feature (596 rounds, 0.36%). Player entries count a player once per product: 358 bought a feature.": "按已结算回合计：`betType` 为 BUY_FEATURE 的计为购买功能（596 个回合，0.36%）。玩家记录按产品分别计入：358 位购买功能。",
         "Repeat-round rate = players with 2 or more settled rounds that day ÷ every player the ledger settled (2,807); 201 players (7.2%) settled exactly one round.": "回合重复率 = 当日结算回合数达 2 次或以上的玩家 ÷ 账本结算的全部玩家（2,807）；有 201 位玩家（7.2%）只结算了一个回合。",
-        "A win is a settled round with a payout greater than zero, and a streak counts consecutive rounds for one player inside the reporting day: the longest win run anyone reached is 16 rounds and the longest losing run is 30 rounds. Most players never get past a short run — the commonest best win run is 3 rounds, and 2,708 players recorded at least one winning round.": "中奖 = 派彩大于零的已结算回合，连胜/连败指同一位玩家当日内连续的回合：最长连胜为 16 个回合，最长连败为 30 个回合。大多数玩家最佳连胜很短，最常见的最佳连胜为 3 个回合；2,708 位玩家至少记录到一个中奖回合。",
         "RTP by Template": "按模板的 RTP",
         "rtp_template · 7 templates": "rtp_template · 7 个模板",
         "RTP template": "RTP 模板",
@@ -3446,7 +3429,6 @@
         ' were visible as new games': '均作为新游戏可见',
         'All four games are discoverable from the BP1 Loteria new-games list, giving the full portfolio stronger visibility': '四款游戏均可从 BP1 乐透专区的新游戏列表中找到，整体产品组合的曝光度更高',
         'REAL HITRATE counts settled rounds whose payout is above the bet amount (payout > bet), not every round that paid something. MTD RTP is month-to-date through the report day, reconciled to the month ledger.': '真实命中率按已结算回合计：派彩高于投注金额（payout > bet）的回合，而非所有有派彩的回合。月累计RTP为报告日止的当月累计值，并与月度账本核对。',
-        'TRAFFIC LOG': '流量日志', 'Players per hour': '每小时玩家数', 'Peak': '峰值',
         'Platform Performance': '平台表现', 'Platform-level contribution, status, and operational notes': '平台贡献、状态与运营备注',
         'Platform': '平台', 'Loteria': '乐透', 'Slot': '老虎机', 'Metric': '指标', 'Value': '数值', 'Active Players': '活跃玩家',
         'D1 Retention': 'D1留存率', 'Winning Tickets': '中奖票数', 'Avg Bet / Player': '每位玩家平均投注', 'GGR Share': 'GGR占比',
@@ -3462,10 +3444,9 @@
         'Positive daily GGR': '每日GGR为正', 'Healthy': '正常', 'RTP Status': 'RTP状态', 'vs target ≈': 'vs 目标 ≈', 'Negative daily GGR': '每日GGR为负', 'Flat daily GGR': '每日GGR持平', 'Below target': '低于目标', 'Above 100%': '高于100%', 'Alert': '警报', 'Clear': '无异常',
         'Fusebreak / Alarm': 'Fusebreak / 警报', 'No fuse or melt alert captured for this date.': '此日期未捕获熔断或警报通知。', 'Fuse-breaker GCs not scanned for this date.': '此日期未扫描熔断监控群。', 'Monitor': '监控中',
         'Notes': '备注', 'No incident report or important operational note recorded for this date.': '此日期暂无事件报告或重要运营备注。',
-        'Game Performance': '游戏表现', 'Banana Craze operating behavior and outcome distribution': 'Banana Craze运营行为与结果分布',
+        'Game Performance': '游戏表现',
         'Rounds': '回合数', 'Total': '总计', 'Avg Round / Game': '平均每局回合投注', 'Hourly RTP (00:00–23:59)': '每小时RTP（00:00–23:59）', 'Hourly RTP': '每小时RTP',
         'Bars: bet amount + payout (₱000s) · Lines: RTP + players + 97.5% threshold': '柱状图：投注金额 + 派彩（₱千元）· 折线：RTP + 玩家数 + 97.5%阈值',
-        'Hourly totals for the reporting day — each bar pair is the total bet and payout for that hour, summed across every platform (BingoPlus, GameZone, ArenaPlus) and all settled rounds; hover a bar for the exact peso amount. These bars are the settled ledger for Banana Craze + Lucky Color, totalling ₱1,872,547.50 against the ₱2,173,644.50 day total above; Ginto Match and Blazing 7's settle outside these hours. The green line is hourly RTP against the 97.5% target. The pink line counts the distinct players who settled at least one round in that hour; it is a headcount, not a partition of the day, so a player who plays in two hours counts in both and the 24 values must not be added up.': '报告日每小时合计 — 每对柱形表示该小时的投注金额与派彩总额，覆盖所有平台（BingoPlus、GameZone、ArenaPlus）及全部已结算回合；将鼠标悬停在柱形上可查看精确金额。绿线为每小时 RTP，对照 97.5% 目标。粉线统计该小时内有已结算回合的去重玩家人数；此为人数统计，并非当日玩家的划分，因此在两个小时内游玩过的玩家会被重复计入，24 个数值不可相加。',
         'Bet amount': '投注金额', 'RTP trendline': 'RTP趋势线', 'RTP threshold 97.5%': 'RTP阈值 97.5%',
         'Dynamic RTP': '动态RTP', 'Mode contribution': '模式贡献', 'rounds': '回合数',
         'Winning Rounds vs Losing Rounds': '中奖回合与未中奖回合', 'Loss vs win rounds': '未中奖与中奖回合', 'Total rounds': '总回合数',
